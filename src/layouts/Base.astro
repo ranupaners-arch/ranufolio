@@ -47,18 +47,14 @@ const abs = (p: string) => new URL(p, SITE).href;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     {
       variant === 'rapi' ? (
-        <script is:inline>
-          {`try{var d=document.documentElement,v=localStorage.getItem("glass-level");
+        <script is:inline set:html={`try{var d=document.documentElement,v=localStorage.getItem("glass-level");
 if(v!==null)d.style.setProperty("--g",String(Math.min(100,Math.max(0,+v))/100));
 var t=localStorage.getItem("theme")||"light";
 var dark=t==="dark"||(t==="auto"&&matchMedia("(prefers-color-scheme: dark)").matches);
 d.dataset.theme=dark?"dark":"light";
-var n=localStorage.getItem("nav-pos");d.dataset.navPos=n==="top"||n==="left"?n:"right"}catch(e){}`}
-        </script>
+var n=localStorage.getItem("nav-pos");d.dataset.navPos=n==="top"||n==="left"?n:"right"}catch(e){}`} />
       ) : (
-        <script is:inline>
-          {`try{if(sessionStorage.getItem("hero-seen"))document.documentElement.setAttribute("data-hero-seen","");else sessionStorage.setItem("hero-seen","1")}catch(e){}`}
-        </script>
+        <script is:inline set:html={`try{if(sessionStorage.getItem("hero-seen"))document.documentElement.setAttribute("data-hero-seen","");else sessionStorage.setItem("hero-seen","1")}catch(e){}`} />
       )
     }
   </head>
