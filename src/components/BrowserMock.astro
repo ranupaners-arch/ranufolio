@@ -1,0 +1,51 @@
+---
+interface Props {
+  url: string;
+  image?: string;
+  class?: string;
+}
+const { url, image, class: cls = '' } = Astro.props;
+const host = new URL(url).host;
+---
+
+<!-- Mockup jendela browser. Dekoratif: nama proyek dibacakan lewat teks di sekitarnya. -->
+<div
+  aria-hidden="true"
+  class:list={[
+    'flex flex-col overflow-hidden rounded-lg bg-white shadow-[0_14px_34px_-10px_rgb(13_13_20/0.45)]',
+    cls,
+  ]}
+>
+  <div class="flex shrink-0 items-center gap-1.5 border-b border-black/5 px-3 py-2">
+    <span class="size-2 rounded-full bg-black/15"></span>
+    <span class="size-2 rounded-full bg-black/15"></span>
+    <span class="size-2 rounded-full bg-black/15"></span>
+    <span class="ml-2 min-w-0 truncate rounded bg-black/5 px-2 py-0.5 text-[11px] text-mute">{host}</span>
+  </div>
+
+  {
+    image ? (
+      <img src={image} alt="" loading="lazy" class="min-h-0 w-full flex-1 object-cover object-top" />
+    ) : (
+      <div class="flex min-h-0 flex-1 flex-col gap-2.5 p-4">
+        <div class="flex items-center justify-between">
+          <span class="h-2.5 w-16 rounded bg-black/15"></span>
+          <span class="flex gap-2">
+            <span class="h-2 w-8 rounded bg-black/10"></span>
+            <span class="h-2 w-8 rounded bg-black/10"></span>
+            <span class="h-2 w-8 rounded bg-black/10"></span>
+          </span>
+        </div>
+        <span class="mt-2 h-5 w-4/5 rounded bg-black/20"></span>
+        <span class="h-5 w-3/5 rounded bg-black/20"></span>
+        <span class="h-2 w-2/3 rounded bg-black/10"></span>
+        <span class="mt-1 h-7 w-24 rounded-md bg-black/25"></span>
+        <div class="mt-auto grid grid-cols-3 gap-2">
+          <span class="h-12 rounded bg-black/10"></span>
+          <span class="h-12 rounded bg-black/10"></span>
+          <span class="h-12 rounded bg-black/10"></span>
+        </div>
+      </div>
+    )
+  }
+</div>

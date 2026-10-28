@@ -1,0 +1,92 @@
+---
+import { copy, testimonials } from '../data/content';
+import type { Lang } from '../data/content';
+import Arrow from './Arrow.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = copy[lang];
+const many = testimonials.length > 1;
+const initials = (name: string) =>
+  name
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((w) => w.charAt(0).toUpperCase())
+    .join('');
+---
+
+<section class="dark-zone bg-cobalt text-white" data-testimonials>
+  <div class="mx-auto grid max-w-[1240px] gap-6 px-4 py-16 md:px-10 md:py-24 lg:grid-cols-[240px_1fr] lg:gap-16">
+    <div class="flex items-center justify-between gap-4 lg:block">
+      <h2 class="text-lg font-semibold text-white/85">{t.testimonial.title}</h2>
+      {
+        many && (
+          <div class="flex items-center gap-2 lg:mt-5">
+            <span class="mr-1 text-[15px] tabular-nums text-white/85" aria-live="polite" data-counter>
+              1 / {testimonials.length}
+            </span>
+            <button
+              type="button"
+              data-step="-1"
+              aria-label={t.testimonial.prev}
+              class="grid size-11 place-items-center rounded-full bg-white/15 transition-colors hover:bg-white/25"
+            >
+              <Arrow dir="left" />
+            </button>
+            <button
+              type="button"
+              data-step="1"
+              aria-label={t.testimonial.next}
+              class="grid size-11 place-items-center rounded-full bg-white/15 transition-colors hover:bg-white/25"
+            >
+              <Arrow dir="right" />
+            </button>
+          </div>
+        )
+      }
+    </div>
+
+    <div>
+      {
+        testimonials.map((q, i) => (
+          <figure data-quote hidden={i > 0} class="max-w-[48ch]">
+            <blockquote class="text-lg leading-relaxed md:text-[22px] md:leading-[1.55]">
+              <p>{q.quote[lang]}</p>
+            </blockquote>
+            <figcaption class="mt-6 flex items-center gap-3">
+              <span
+                aria-hidden="true"
+                class="grid size-10 shrink-0 place-items-center rounded-full bg-white/15 text-sm font-semibold"
+              >
+                {initials(q.name)}
+              </span>
+              <span>
+                <span class="block font-semibold">{q.name}</span>
+                <span class="block text-[15px] text-white/80">{q.role[lang]}</span>
+              </span>
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  // Carousel testimoni: hanya aktif kalau tombolnya ada (testimoni lebih dari satu).
+  document.querySelectorAll<HTMLElement>('[data-testimonials]').forEach((root) => {
+    const quotes = Array.from(root.querySelectorAll<HTMLElement>('[data-quote]'));
+    const counter = root.querySelector<HTMLElement>('[data-counter]');
+    let index = 0;
+    const show = (next: number) => {
+      index = (next + quotes.length) % quotes.length;
+      quotes.forEach((el, i) => (el.hidden = i !== index));
+      if (counter) counter.textContent = `${index + 1} / ${quotes.length}`;
+    };
+    root.querySelectorAll<HTMLButtonElement>('[data-step]').forEach((btn) => {
+      btn.addEventListener('click', () => show(index + Number(btn.dataset.step)));
+    });
+  });
+</script>

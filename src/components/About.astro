@@ -1,0 +1,37 @@
+---
+import { copy } from '../data/content';
+import type { Lang } from '../data/content';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = copy[lang];
+---
+
+<section id="tentang" class="dark-zone scroll-mt-4 bg-ink text-white">
+  <div class="mx-auto max-w-[1240px] px-4 py-16 md:px-10 md:py-24">
+    <div class="grid gap-3 lg:grid-cols-[1.25fr_1fr]">
+      <article class="rounded-3xl bg-ink-2 p-6 ring-1 ring-white/10 md:p-10">
+        <h2 class="display text-4xl md:text-5xl">{t.about.title}</h2>
+        <div class="mt-6 max-w-[56ch] space-y-4 text-lg leading-relaxed text-mute-dark">
+          {t.about.body.map((para) => <p>{para}</p>)}
+        </div>
+      </article>
+
+      <article class="rounded-3xl bg-ink-2 p-6 ring-1 ring-white/10 md:p-10">
+        <h2 class="display text-4xl md:text-5xl">{t.about.doTitle}</h2>
+        <ul class="mt-6 divide-y divide-white/10">
+          {
+            t.about.does.map((item) => (
+              <li class="py-4 first:pt-0 last:pb-0">
+                <h3 class="text-lg font-semibold">{item.title}</h3>
+                <p class="mt-1 text-[16px] leading-relaxed text-mute-dark">{item.text}</p>
+              </li>
+            ))
+          }
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>

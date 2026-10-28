@@ -1,0 +1,218 @@
+---
+import { contact, copy, projects, routes, testimonials } from '../data/content';
+import type { Lang } from '../data/content';
+import Arrow from './Arrow.astro';
+import BrowserMock from './BrowserMock.astro';
+import Footer from './Footer.astro';
+import NavBar from './NavBar.astro';
+import ProjectCard from './ProjectCard.astro';
+
+interface Props {
+  lang: Lang;
+  slug: string;
+}
+const { lang, slug } = Astro.props;
+const t = copy[lang];
+const other: Lang = lang === 'id' ? 'en' : 'id';
+const p = projects.find((x) => x.slug === slug)!;
+const quote = testimonials.find((q) => q.project === p.slug);
+const more = projects.filter((x) => x.slug !== p.slug);
+const host = new URL(p.url).host;
+const waHref = `https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(t.contact.waText)}`;
+const initials = (name: string) =>
+  name
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((w) => w.charAt(0).toUpperCase())
+    .join('');
+
+const sections = p.sections.map((s) => ({ id: s.id, title: s.title[lang], body: s.body.map((b) => b[lang]) }));
+const toc = [
+  ...sections.map((s) => ({ id: s.id, title: s.title })),
+  ...(quote ? [{ id: 'testimoni', title: t.detail.clientWords }] : []),
+];
+const showToc = toc.length > 1;
+---
+
+<NavBar lang={lang} altHref={routes.project(other, p.slug)} />
+
+<main id="konten" class="bg-paper pt-24">
+  <div class="mx-auto max-w-[1100px] px-4 pb-16 md:px-10 md:pb-24">
+    <a
+      href={`${routes.home[lang]}#proyek`}
+      class="inline-flex min-h-11 items-center gap-2 text-[15px] text-mute transition-colors hover:text-ink"
+    >
+      <Arrow dir="left" size={16} />
+      {t.detail.back}
+    </a>
+
+    <div class:list={['mt-4', showToc && 'lg:grid lg:grid-cols-[190px_minmax(0,1fr)] lg:gap-14']}>
+      {
+        showToc && (
+          <aside class="lg:order-first">
+            <details class="mb-8 rounded-xl bg-white ring-1 ring-line lg:hidden">
+              <summary class="flex min-h-12 cursor-pointer items-center px-4 font-medium">{t.detail.toc}</summary>
+              <ul class="border-t border-line px-2 py-2">
+                {toc.map((i) => (
+                  <li>
+                    <a href={`#${i.id}`} class="flex min-h-11 items-center rounded-lg px-2 hover:bg-paper">
+                      {i.title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </details>
+
+            <nav aria-label={t.detail.toc} class="sticky top-28 hidden lg:block">
+              <p class="mb-3 text-[15px] font-semibold">{t.detail.toc}</p>
+              <ul class="border-l border-line">
+                {toc.map((i) => (
+                  <li>
+                    <a
+                      href={`#${i.id}`}
+                      data-toc={i.id}
+                      class="-ml-px block border-l-2 border-transparent py-2 pl-4 text-[15px] text-mute transition-colors hover:text-ink data-[active=true]:border-ink data-[active=true]:font-medium data-[active=true]:text-ink"
+                    >
+                      {i.title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </aside>
+        )
+      }
+
+      <article class="min-w-0">
+        <header>
+          <h1 class="display text-4xl md:text-6xl">{p.name}</h1>
+          <p class="mt-4 max-w-[52ch] text-lg leading-relaxed text-mute">{p.tagline[lang]}</p>
+          <p class="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[16px]">
+            <span>{p.role[lang]}</span>
+            {p.year && <span aria-hidden="true">·</span>}
+            {p.year && <span>{p.year}</span>}
+            <span aria-hidden="true">·</span>
+            <a
+              href={p.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex min-h-11 items-center gap-1 font-medium underline decoration-line underline-offset-4 hover:decoration-ink"
+            >
+              {host}
+              <Arrow size={14} />
+              <span class="sr-only">{t.detail.visit}</span>
+            </a>
+          </p>
+        </header>
+
+        <div
+          class="relative mt-6 aspect-[16/10] overflow-hidden rounded-xl md:aspect-[16/9]"
+          style={`background:${p.gradient}`}
+        >
+          <BrowserMock url={p.url} image={p.image} class="absolute inset-[5%]" />
+        </div>
+
+        {
+          sections.map((s) => (
+            <section id={s.id} class="mt-12 scroll-mt-28">
+              <h2 class="display text-3xl md:text-4xl">{s.title}</h2>
+              <div class="measure mt-4 space-y-4 text-[17px] leading-relaxed md:text-lg">
+                {s.body.map((para) => (
+                  <p>{para}</p>
+                ))}
+              </div>
+            </section>
+          ))
+        }
+
+        {
+          quote && (
+            <section id="testimoni" class="mt-12 scroll-mt-28">
+              <h2 class="display text-3xl md:text-4xl">{t.detail.clientWords}</h2>
+              <figure class="mt-4 max-w-[52ch]">
+                <blockquote class="text-[17px] leading-relaxed md:text-lg">
+                  <p>{quote.quote[lang]}</p>
+                </blockquote>
+                <figcaption class="mt-5 flex items-center gap-3">
+                  <span
+                    aria-hidden="true"
+                    class="grid size-9 shrink-0 place-items-center rounded-full bg-ink/10 text-sm font-semibold"
+                  >
+                    {initials(quote.name)}
+                  </span>
+                  <span>
+                    <span class="block font-semibold">{quote.name}</span>
+                    <span class="block text-[15px] text-mute">{quote.role[lang]}</span>
+                  </span>
+                </figcaption>
+              </figure>
+            </section>
+          )
+        }
+
+        <div class="dark-zone mt-14 rounded-3xl bg-ink p-6 text-white md:p-9">
+          <h2 class="display text-3xl md:text-4xl">{t.detail.ctaTitle}</h2>
+          <p class="mt-3 text-[17px] text-mute-dark">{t.detail.ctaText}</p>
+          <div class="mt-6 flex flex-col gap-3 sm:flex-row">
+            <a
+              href={waHref}
+              class="inline-flex min-h-12 w-full items-center justify-center rounded-full bg-sun px-6 font-semibold text-ink transition-transform hover:-translate-y-0.5 sm:w-auto sm:min-w-[210px]"
+            >
+              {t.detail.ctaButton}
+            </a>
+            <a
+              href={p.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-6 font-semibold ring-1 ring-white/40 transition-colors hover:bg-white/10 sm:w-auto sm:min-w-[210px]"
+            >
+              {t.detail.visit}
+              <Arrow size={16} />
+            </a>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    {
+      more.length > 0 && (
+        <section class="mt-20" aria-labelledby="more-work">
+          <h2 id="more-work" class="display text-3xl md:text-4xl">
+            {t.detail.moreWork}
+          </h2>
+          <ul class="mt-6 grid gap-x-5 gap-y-8 sm:grid-cols-2">
+            {more.map((m) => (
+              <li>
+                <ProjectCard project={m} lang={lang} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+  </div>
+</main>
+
+<Footer lang={lang} />
+
+<script>
+  // Scroll-spy untuk daftar isi di desktop.
+  const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-toc]'));
+  const targets = links
+    .map((link) => ({ link, el: document.getElementById(link.dataset.toc!) }))
+    .filter((x): x is { link: HTMLAnchorElement; el: HTMLElement } => x.el !== null);
+
+  if (targets.length && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          for (const { link, el } of targets) link.dataset.active = String(el === entry.target);
+        }
+      },
+      { rootMargin: '-20% 0px -65% 0px' },
+    );
+    targets.forEach(({ el }) => io.observe(el));
+    targets[0].link.dataset.active = 'true';
+  }
+</script>

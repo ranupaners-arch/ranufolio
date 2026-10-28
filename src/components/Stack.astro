@@ -1,0 +1,61 @@
+---
+import { copy, techGroups } from '../data/content';
+import type { Lang } from '../data/content';
+import { brandFill, getIcon } from '../lib/icons';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = copy[lang];
+
+const groups = techGroups.map((g) => ({
+  label: g.label[lang],
+  items: g.items.map((item) => ({ name: item.name, icon: getIcon(item.icon) })),
+}));
+---
+
+<section id="stack" class="scroll-mt-4 bg-paper">
+  <div class="mx-auto max-w-[1240px] px-4 py-16 md:px-10 md:py-24">
+    <div class="rounded-3xl bg-white p-6 ring-1 ring-line md:p-10">
+      <h2 class="display text-4xl md:text-5xl">{t.stack.title}</h2>
+
+      <div class="mt-8 grid gap-x-8 gap-y-9 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          groups.map((g) => (
+            <div>
+              <h3 class="mb-3 font-semibold">{g.label}</h3>
+              <ul class="flex flex-wrap gap-2">
+                {g.items.map((item) => (
+                  <li class="inline-flex min-h-9 items-center gap-2 rounded-full bg-paper px-3 py-1.5 text-[15px] ring-1 ring-line">
+                    {item.icon ? (
+                      <svg
+                        viewBox="0 0 24 24"
+                        width="16"
+                        height="16"
+                        fill={brandFill(item.icon)}
+                        role="img"
+                        aria-hidden="true"
+                        class="shrink-0"
+                      >
+                        <path d={item.icon.path} />
+                      </svg>
+                    ) : (
+                      <span
+                        aria-hidden="true"
+                        class="grid size-4 shrink-0 place-items-center rounded bg-ink/10 text-[10px] font-bold leading-none"
+                      >
+                        {item.name.charAt(0)}
+                      </span>
+                    )}
+                    {item.name}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>

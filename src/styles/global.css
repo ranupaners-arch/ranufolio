@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Bricolage Grotesque", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --color-ink: #0d0d14;
+  --color-ink-2: #181822;
+  --color-cobalt: #1a00b0;
+  --color-paper: #f4f5f7;
+  --color-line: #d9dbe2;
+  --color-mute: #565a69; /* teks sekunder di latar terang, kontras > 6:1 */
+  --color-mute-dark: #c4c7d3; /* teks sekunder di latar gelap, kontras > 10:1 */
+  --color-sun: #ffd23f;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--color-paper);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Fokus keyboard: kobalt di latar terang, kuning di latar gelap. */
+:focus-visible {
+  outline: 3px solid var(--color-cobalt);
+  outline-offset: 3px;
+}
+.dark-zone :focus-visible {
+  outline-color: var(--color-sun);
+}
+
+/* Judul: sumbu lebar Bricolage Grotesque dirapatkan, berat ekstra. */
+.display {
+  font-stretch: 80%;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+  line-height: 0.98;
+}
+
+.measure {
+  max-width: 62ch;
+}
+
+/* Carousel: sembunyikan scrollbar, tetap bisa digeser. */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Satu momen gerak saat halaman dibuka: headline naik, foto terbuka dari bawah. */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes reveal {
+  from { clip-path: inset(100% 0 0 0); }
+  to   { clip-path: inset(0 0 0 0); }
+}
+.hero-rise   { animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.hero-reveal { animation: reveal 0.9s cubic-bezier(0.7, 0, 0.2, 1) 0.1s both; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .hero-rise,
+  .hero-reveal {
+    animation: none;
+  }
+}

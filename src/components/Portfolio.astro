@@ -1,0 +1,29 @@
+---
+import type { Lang } from '../data/content';
+import { routes } from '../data/content';
+import About from './About.astro';
+import Contact from './Contact.astro';
+import Footer from './Footer.astro';
+import Hero from './Hero.astro';
+import NavBar from './NavBar.astro';
+import Projects from './Projects.astro';
+import Stack from './Stack.astro';
+import Testimonials from './Testimonials.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const other: Lang = lang === 'id' ? 'en' : 'id';
+---
+
+<NavBar lang={lang} altHref={routes.home[other]} />
+<main id="konten">
+  <Hero lang={lang} />
+  <Projects lang={lang} />
+  <About lang={lang} />
+  <Stack lang={lang} />
+  <Testimonials lang={lang} />
+  <Contact lang={lang} />
+</main>
+<Footer lang={lang} />
