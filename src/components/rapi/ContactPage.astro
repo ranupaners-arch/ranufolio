@@ -42,12 +42,12 @@ const accessKey = import.meta.env.PUBLIC_FORM_ACCESS_KEY as string | undefined;
         <div class="grid gap-5 sm:grid-cols-2">
           <label class="flex flex-col gap-2">
             <span class="text-sm font-semibold">{f.name}</span>
-            <input class="field" type="text" name="name" autocomplete="name" placeholder={p.namePlaceholder} requiredaria-describedby="err-name" />
+            <input class="field" type="text" name="name" autocomplete="name" placeholder={p.namePlaceholder} required aria-describedby="err-name" />
             <span id="err-name" data-err="name" class="text-sm font-semibold text-red-600" hidden></span>
           </label>
           <label class="flex flex-col gap-2">
             <span class="text-sm font-semibold">{f.email}</span>
-            <input class="field" type="email" name="email" autocomplete="email" placeholder={p.emailPlaceholder} requiredaria-describedby="err-email" />
+            <input class="field" type="email" name="email" autocomplete="email" placeholder={p.emailPlaceholder} required aria-describedby="err-email" />
             <span id="err-email" data-err="email" class="text-sm font-semibold text-red-600" hidden></span>
           </label>
         </div>
