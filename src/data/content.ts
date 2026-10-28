@@ -322,7 +322,7 @@ export const copy = {
     },
     footer: { socials: 'Sosial media', made: 'Dibuat di Wonogiri.' },
     contactCta: { q: 'Tertarik dengan saya?', a: 'Hubungi' },
-    shipping: { title: 'Shipping in public', summary: '{x} kontribusi dalam {n} bulan terakhir', one: 'kontribusi', many: 'kontribusi', on: 'pada', unavailable: 'Data kontribusi sedang tidak tersedia.' },
+    shipping: { title: 'Shipping in public', summary: '{x} kontribusi dalam {n} bulan terakhir', one: 'kontribusi', many: 'kontribusi', on: 'pada', none: 'Tidak ada kontribusi', unavailable: 'Data kontribusi sedang tidak tersedia.' },
     resume: {
       title: 'Resume',
       lead: 'Ringkasan pengalaman, pendidikan, penghargaan, dan keahlian saya.',
@@ -498,7 +498,7 @@ export const copy = {
     },
     footer: { socials: 'Social media', made: 'Made in Wonogiri.' },
     contactCta: { q: 'Interested in me?', a: 'Contact' },
-    shipping: { title: 'Shipping in public', summary: '{x} contributions in the last {n} months', one: 'contribution', many: 'contributions', on: 'on', unavailable: 'Contribution data is unavailable right now.' },
+    shipping: { title: 'Shipping in public', summary: '{x} contributions in the last {n} months', one: 'contribution', many: 'contributions', on: 'on', none: 'No contributions', unavailable: 'Contribution data is unavailable right now.' },
     resume: {
       title: 'Resume',
       lead: 'A summary of my experience, education, awards, and skills.',

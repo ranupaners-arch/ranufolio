@@ -47,6 +47,7 @@ const sp = summaryParts(t.summary, lang, total, months);
         data-one={t.one}
         data-many={t.many}
         data-on={t.on}
+        data-none={t.none}
         data-tpl={t.summary}
         class="relative flex gap-[3px]"
       >
@@ -148,7 +149,7 @@ const sp = summaryParts(t.summary, lang, total, months);
       active = sq;
       sq.setAttribute('data-active', '');
       const c = Number(sq.dataset.c);
-      tn.textContent = `${c.toLocaleString(lang)} ${c === 1 ? grid.dataset.one : grid.dataset.many}`;
+      tn.textContent = c === 0 ? (grid.dataset.none ?? "") : `${c.toLocaleString(lang)} ${c === 1 ? grid.dataset.one : grid.dataset.many}`;
       td.textContent = `${grid.dataset.on} ${fmt.format(new Date(sq.dataset.date + 'T00:00:00Z'))}`;
       const g = grid.getBoundingClientRect();
       const r = sq.getBoundingClientRect();
