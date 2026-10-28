@@ -30,6 +30,10 @@ const accessKey = import.meta.env.PUBLIC_FORM_ACCESS_KEY as string | undefined;
         data-sent={f.sent}
         data-error={f.error}
         data-fallback={f.fallback}
+        data-err-name={f.errName}
+        data-err-email={f.errEmail}
+        data-err-email-invalid={f.errEmailInvalid}
+        data-err-message={f.errMessage}
         class="flex flex-col gap-5"
         novalidate
       >
@@ -38,11 +42,13 @@ const accessKey = import.meta.env.PUBLIC_FORM_ACCESS_KEY as string | undefined;
         <div class="grid gap-5 sm:grid-cols-2">
           <label class="flex flex-col gap-2">
             <span class="text-sm font-semibold">{f.name}</span>
-            <input class="field" type="text" name="name" autocomplete="name" placeholder={p.namePlaceholder} required />
+            <input class="field" type="text" name="name" autocomplete="name" placeholder={p.namePlaceholder} requiredaria-describedby="err-name" />
+            <span id="err-name" data-err="name" class="text-sm font-semibold text-red-600" hidden></span>
           </label>
           <label class="flex flex-col gap-2">
             <span class="text-sm font-semibold">{f.email}</span>
-            <input class="field" type="email" name="email" autocomplete="email" placeholder={p.emailPlaceholder} required />
+            <input class="field" type="email" name="email" autocomplete="email" placeholder={p.emailPlaceholder} requiredaria-describedby="err-email" />
+            <span id="err-email" data-err="email" class="text-sm font-semibold text-red-600" hidden></span>
           </label>
         </div>
         <fieldset>
@@ -62,12 +68,12 @@ const accessKey = import.meta.env.PUBLIC_FORM_ACCESS_KEY as string | undefined;
         </fieldset>
         <label class="flex flex-col gap-2">
           <span class="text-sm font-semibold">{f.message}</span>
-          <textarea class="field resize-none" name="message" rows="5" placeholder={p.messagePlaceholder} required></textarea>
+          <textarea class="field resize-none" name="message" rows="5" placeholder={p.messagePlaceholder} required aria-describedby="err-message"></textarea>
+          <span id="err-message" data-err="message" class="text-sm font-semibold text-red-600" hidden></span>
         </label>
         <div>
           <button
             type="submit"
-            disabled
             class="rounded-full bg-inv px-7 py-3.5 font-semibold text-invink transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0"
           >
             {f.send}
@@ -92,10 +98,29 @@ const accessKey = import.meta.env.PUBLIC_FORM_ACCESS_KEY as string | undefined;
     const status = form.querySelector<HTMLElement>('[data-status]')!;
     const button = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
     const sentCard = document.querySelector<HTMLElement>('[data-sent-card]')!;
-    const sync = () => (button.disabled = !form.checkValidity());
-    form.addEventListener('input', sync);
-    form.addEventListener('change', sync);
-    sync();
+    const sync = () => (button.disabled = false);
+    let attempted = false;
+    const fields = ['name', 'email', 'message'] as const;
+    const msgFor = (el: HTMLInputElement | HTMLTextAreaElement) => {
+      if (el.validity.valid) return '';
+      if (el.name === 'email' && !el.validity.valueMissing) return form.dataset.errEmailInvalid ?? '';
+      const key = { name: 'errName', email: 'errEmail', message: 'errMessage' }[el.name as (typeof fields)[number]];
+      return form.dataset[key] ?? '';
+    };
+    const validate = () => {
+      let ok = true;
+      for (const n of fields) {
+        const el = form.elements.namedItem(n) as HTMLInputElement | HTMLTextAreaElement;
+        const err = form.querySelector<HTMLElement>(`[data-err="${n}"]`)!;
+        const msg = msgFor(el);
+        err.textContent = msg;
+        err.hidden = !msg;
+        el.setAttribute('aria-invalid', msg ? 'true' : 'false');
+        if (msg) ok = false;
+      }
+      return ok;
+    };
+    form.addEventListener('input', () => attempted && validate());
 
     document.querySelector('[data-again]')?.addEventListener('click', () => {
       sentCard.hidden = true;
@@ -106,7 +131,11 @@ const accessKey = import.meta.env.PUBLIC_FORM_ACCESS_KEY as string | undefined;
 
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
-      if (!form.reportValidity()) return;
+      attempted = true;
+      if (!validate()) {
+        (form.querySelector('[aria-invalid="true"]') as HTMLElement | null)?.focus();
+        return;
+      }
       const data = new FormData(form);
       if (data.get('_gotcha')) return; // jebakan bot
 
