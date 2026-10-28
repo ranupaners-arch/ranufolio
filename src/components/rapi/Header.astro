@@ -1,0 +1,244 @@
+---
+import { copy, person, routes } from '../../data/content';
+import type { Lang } from '../../data/content';
+import Icon from '../Icon.astro';
+
+interface Props {
+  lang: Lang;
+  paths: Record<Lang, string>;
+  current?: 'home' | 'learn' | 'resume' | 'contact';
+  /** Tema header di posisi awal (halaman yang dibuka dengan zona hero gelap memakai 'dark'). */
+  initialTheme?: 'dark' | 'light';
+}
+const { lang, paths, current, initialTheme } = Astro.props;
+const t = copy[lang];
+const other: Lang = lang === 'id' ? 'en' : 'id';
+
+const items = [
+  { key: 'home', label: t.nav.home, href: routes.home[lang] },
+  { key: 'learn', label: t.nav.learn, href: routes.page(lang, 'learn') },
+  { key: 'resume', label: t.nav.resume, href: routes.page(lang, 'resume') },
+  { key: 'contact', label: t.nav.contact, href: routes.page(lang, 'contact') },
+] as const;
+const m = t.menu;
+const themes = [
+  ['light', m.light],
+  ['dark', m.dark],
+  ['auto', m.auto],
+] as const;
+---
+
+<header data-rapi-header data-theme={initialTheme} class="sticky top-0 z-40 text-ink">
+  <div class="mx-auto flex max-w-[1180px] items-center justify-between gap-2 px-3.5 py-3.5 sm:px-7 sm:py-5">
+    <a
+      href={routes.home[lang]}
+      aria-label={t.nav.homeAria}
+      class="hidden px-1.5 font-display text-lg font-extrabold tracking-[-0.02em] sm:block"
+    >
+      {person.short}
+    </a>
+
+    <div class="flex flex-1 items-center justify-end gap-2 sm:flex-none">
+      <nav aria-label={t.nav.aria} class="glass flex-1 rounded-full p-1 sm:flex-none">
+        <ul class="relative flex justify-between sm:justify-start">
+          {
+            items.map((i) => {
+              const active = i.key === current;
+              return (
+                <li class="relative">
+                  <a
+                    href={i.href}
+                    aria-current={active ? 'page' : undefined}
+                    style={active ? 'view-transition-name:nav-pill' : undefined}
+                    class:list={[
+                      'block rounded-full px-3 py-2 text-[13.5px] font-semibold transition-colors duration-300 sm:px-4 sm:text-sm',
+                      active ? 'bg-inv text-invink' : 'hover:bg-soft',
+                    ]}
+                  >
+                    {i.label}
+                  </a>
+                </li>
+              );
+            })
+          }
+        </ul>
+      </nav>
+
+      <a
+        href={paths[other]}
+        hreflang={other}
+        lang={other}
+        aria-label={t.nav.switchAria}
+        title={t.nav.switchAria}
+        class="glass hidden h-11 w-11 shrink-0 place-items-center rounded-full text-[13px] font-bold uppercase transition-transform duration-300 hover:scale-105 active:scale-95 min-[430px]:grid"
+      >
+        {other}
+      </a>
+
+      <div class="relative">
+        <button
+          type="button"
+          data-settings-btn
+          aria-expanded="false"
+          aria-controls="settings-pop"
+          aria-label={t.nav.settings}
+          class="glass grid h-11 w-11 place-items-center rounded-full transition-transform duration-300 hover:scale-105 active:scale-95"
+        >
+          <Icon name="theme" size={19} />
+        </button>
+
+        <div
+          id="settings-pop"
+          data-settings-pop
+          hidden
+          class="glass glass-strong absolute right-0 top-[calc(100%+8px)] z-50 w-[260px] rounded-2xl p-4 shadow-[0_8px_20px_-10px_rgb(0_0_0/0.35)]"
+        >
+          <p class="text-[13px] font-semibold text-muted">{m.theme}</p>
+          <div role="radiogroup" aria-label={m.theme} class="mt-2 grid grid-cols-3 gap-1 rounded-xl bg-soft p-1">
+            {
+              themes.map(([value, label]) => (
+                <button
+                  type="button"
+                  role="radio"
+                  aria-checked="false"
+                  data-theme-opt={value}
+                  class="rounded-lg py-1.5 text-[13px] font-semibold text-muted transition-colors hover:text-ink aria-checked:bg-panel aria-checked:text-ink aria-checked:shadow-[0_1px_2px_rgb(0_0_0/0.12)]"
+                >
+                  {label}
+                </button>
+              ))
+            }
+          </div>
+
+          <div class="mt-4 flex items-center justify-between text-[13px] font-semibold">
+            <label for="glass-range" class="text-muted">{m.glass}</label>
+            <span data-glass-label class="tabular-nums">55%</span>
+          </div>
+          <input id="glass-range" data-glass-range type="range" min="0" max="100" value="55" class="range mt-1" />
+          <div class="flex justify-between text-xs text-muted">
+            <span>{m.clear}</span>
+            <span>{m.frosted}</span>
+          </div>
+
+          <p class="mt-4 text-[13px] font-semibold text-muted">{m.language}</p>
+          <ul class="mt-2 grid grid-cols-2 gap-1">
+            {
+              (['en', 'id'] as const).map((l) => (
+                <li>
+                  <a
+                    href={paths[l]}
+                    hreflang={l}
+                    lang={l}
+                    aria-current={l === lang ? 'true' : undefined}
+                    class="block rounded-lg px-3 py-1.5 text-center text-[13px] font-semibold text-muted transition-colors hover:text-ink aria-[current=true]:bg-soft aria-[current=true]:text-ink"
+                  >
+                    {l === 'en' ? 'English' : 'Indonesia'}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-rapi-header]');
+  if (header) {
+    const root = document.documentElement;
+    const btn = header.querySelector<HTMLButtonElement>('[data-settings-btn]')!;
+    const pop = header.querySelector<HTMLElement>('[data-settings-pop]')!;
+
+    const setOpen = (open: boolean) => {
+      btn.setAttribute('aria-expanded', String(open));
+      if (open) {
+        pop.hidden = false;
+        pop.classList.remove('pop');
+        void pop.offsetWidth;
+        pop.classList.add('pop');
+      } else {
+        pop.hidden = true;
+        pop.classList.remove('pop');
+      }
+    };
+    btn.addEventListener('click', () => setOpen(pop.hidden));
+    document.addEventListener('pointerdown', (e) => {
+      const target = e.target as Node;
+      if (!pop.hidden && !pop.contains(target) && !btn.contains(target)) setOpen(false);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !pop.hidden) {
+        setOpen(false);
+        btn.focus();
+      }
+    });
+
+    /* Tema: light | dark | auto, default light. Peralihan lewat View Transitions API. */
+    const mq = matchMedia('(prefers-color-scheme: dark)');
+    const stored = () => localStorage.getItem('theme') || 'light';
+    const apply = (mode: string) => {
+      const dark = mode === 'dark' || (mode === 'auto' && mq.matches);
+      root.dataset.theme = dark ? 'dark' : 'light';
+    };
+    const opts = [...header.querySelectorAll<HTMLElement>('[data-theme-opt]')];
+    const paint = () => opts.forEach((o) => o.setAttribute('aria-checked', String(o.dataset.themeOpt === stored())));
+    const onMq = () => apply('auto');
+    const syncListener = () => {
+      mq.removeEventListener('change', onMq);
+      if (stored() === 'auto') mq.addEventListener('change', onMq);
+    };
+    paint();
+    syncListener();
+    opts.forEach((o) =>
+      o.addEventListener('click', () => {
+        const mode = o.dataset.themeOpt!;
+        localStorage.setItem('theme', mode);
+        paint();
+        syncListener();
+        const doc = document as Document & { startViewTransition?: (cb: () => void) => unknown };
+        if (doc.startViewTransition) doc.startViewTransition(() => apply(mode));
+        else apply(mode);
+      }),
+    );
+
+    /* Kaca: 0 sampai 100 -> --g */
+    const range = header.querySelector<HTMLInputElement>('[data-glass-range]')!;
+    const label = header.querySelector<HTMLElement>('[data-glass-label]')!;
+    const saved = localStorage.getItem('glass-level');
+    if (saved !== null) range.value = String(Math.min(100, Math.max(0, +saved)));
+    label.textContent = `${range.value}%`;
+    range.addEventListener('input', () => {
+      root.style.setProperty('--g', String(+range.value / 100));
+      localStorage.setItem('glass-level', range.value);
+      label.textContent = `${range.value}%`;
+    });
+
+    /* Header sticky mengikuti tema zona yang ada di bawahnya (dark / light / auto = ikut tema situs). */
+    const zones = [...document.querySelectorAll<HTMLElement>('[data-zone]')];
+    if (zones.length) {
+      let ticking = false;
+      const update = () => {
+        ticking = false;
+        const y = header.getBoundingClientRect().top + header.offsetHeight / 2;
+        const zone = zones.find((z) => {
+          const r = z.getBoundingClientRect();
+          return r.top <= y && r.bottom > y;
+        });
+        const theme = zone?.dataset.zone;
+        if (theme === 'dark' || theme === 'light') header.dataset.theme = theme;
+        else header.removeAttribute('data-theme');
+      };
+      const onScroll = () => {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(update);
+        }
+      };
+      addEventListener('scroll', onScroll, { passive: true });
+      addEventListener('resize', onScroll);
+      update();
+    }
+  }
+</script>

@@ -1,0 +1,53 @@
+---
+import { contact, copy, routes } from '../../data/content';
+import type { Lang } from '../../data/content';
+import { getIcon } from '../../lib/icons';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = copy[lang];
+const waHref = `https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(t.contact.waText)}`;
+const wa = getIcon(['siWhatsapp']);
+---
+
+<section
+  id="kontak"
+  class="flex scroll-mt-20 flex-col gap-6 rounded-[28px] bg-inv p-6 text-invink sm:p-10 lg:flex-row lg:items-end lg:justify-between"
+>
+  <div>
+    <h2 class="font-display text-[1.8rem] font-extrabold leading-tight tracking-[-0.02em] sm:text-[2.4rem]">{t.contact.title}</h2>
+    <p class="mt-3 max-w-[44ch] text-[17px] opacity-90">{t.contact.lead}</p>
+  </div>
+  <div class="flex flex-wrap gap-3">
+    <a
+      href={waHref}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="group inline-flex items-center gap-2 rounded-full bg-invink px-6 py-3.5 font-semibold text-inv transition-transform hover:-translate-y-0.5"
+    >
+      {
+        wa && (
+          <svg
+            viewBox="0 0 24 24"
+            width="24"
+            height="24"
+            fill="currentColor"
+            aria-hidden="true"
+            class="transition-colors group-hover:text-[#25D366]"
+          >
+            <path d={wa.path} />
+          </svg>
+        )
+      }
+      WhatsApp
+    </a>
+    <a
+      href={routes.page(lang, 'contact')}
+      class="inline-flex items-center rounded-full px-6 py-3.5 font-semibold shadow-[inset_0_0_0_1px_currentColor] transition-opacity hover:opacity-80"
+    >
+      {t.contact.formLink}
+    </a>
+  </div>
+</section>

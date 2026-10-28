@@ -1,0 +1,59 @@
+---
+import { contact, copy, person } from '../../data/content';
+import type { Lang } from '../../data/content';
+import { getIcon } from '../../lib/icons';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = copy[lang];
+
+const brand: Record<string, string> = {
+  LinkedIn: '#0A66C2',
+  Instagram: '#E4405F',
+  WhatsApp: '#25D366',
+};
+const links = [
+  ...contact.socials.map((s) => ({ label: s.label, url: s.url, icon: getIcon(s.icon), glyph: s.glyph })),
+  { label: 'WhatsApp', url: `https://wa.me/${contact.whatsapp}`, icon: getIcon(['siWhatsapp']), glyph: 'WA' },
+];
+---
+
+<footer class="glass mt-3 flex flex-col gap-4 rounded-[28px] px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
+  <p class="text-sm text-muted">
+    © 2026 {person.name} ·
+    <a href={`mailto:${contact.email}`} class="font-semibold text-ink hover:underline">{contact.email}</a>
+  </p>
+  <ul aria-label={t.footer.socials} class="flex gap-2">
+    {
+      links.map((l) => (
+        <li>
+          <a
+            href={l.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={l.label}
+            style={brand[l.label] ? `--brand:${brand[l.label]}` : undefined}
+            class="group grid h-11 w-11 place-items-center rounded-full bg-soft transition-transform hover:scale-105"
+          >
+            {l.icon ? (
+              <svg
+                viewBox="0 0 24 24"
+                width="20"
+                height="20"
+                fill="currentColor"
+                aria-hidden="true"
+                class="transition-colors group-hover:text-[var(--brand,currentColor)]"
+              >
+                <path d={l.icon.path} />
+              </svg>
+            ) : (
+              <span class="text-xs font-bold">{l.glyph}</span>
+            )}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</footer>

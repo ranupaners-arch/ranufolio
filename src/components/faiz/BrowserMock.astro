@@ -1,4 +1,5 @@
 ---
+// Mockup jendela browser (dekoratif, nama proyek dibacakan lewat teks di sekitarnya).
 interface Props {
   url: string;
   image?: string;
@@ -8,21 +9,16 @@ const { url, image, class: cls = '' } = Astro.props;
 const host = new URL(url).host;
 ---
 
-<!-- Mockup jendela browser. Dekoratif: nama proyek dibacakan lewat teks di sekitarnya. -->
 <div
   aria-hidden="true"
-  class:list={[
-    'flex flex-col overflow-hidden rounded-lg bg-white shadow-[0_14px_34px_-10px_rgb(13_13_20/0.45)]',
-    cls,
-  ]}
+  class:list={['flex flex-col overflow-hidden rounded-[10px] bg-white shadow-[0_14px_34px_-10px_rgb(10_10_10/0.45)]', cls]}
 >
   <div class="flex shrink-0 items-center gap-1.5 border-b border-black/5 px-3 py-2">
     <span class="size-2 rounded-full bg-black/15"></span>
     <span class="size-2 rounded-full bg-black/15"></span>
     <span class="size-2 rounded-full bg-black/15"></span>
-    <span class="ml-2 min-w-0 truncate rounded bg-black/5 px-2 py-0.5 text-[11px] text-mute">{host}</span>
+    <span class="ml-2 min-w-0 truncate rounded bg-black/5 px-2 py-0.5 text-[11px] text-fg-secondary">{host}</span>
   </div>
-
   {
     image ? (
       <img src={image} alt="" loading="lazy" class="min-h-0 w-full flex-1 object-cover object-top" />

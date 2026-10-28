@@ -1,0 +1,29 @@
+---
+import Base from './Base.astro';
+import Header from '../components/rapi/Header.astro';
+import Footer from '../components/rapi/Footer.astro';
+import type { Lang } from '../data/content';
+
+interface Props {
+  lang: Lang;
+  paths: Record<Lang, string>;
+  current?: 'home' | 'learn' | 'resume' | 'contact';
+  title?: string;
+  description?: string;
+  /** false = konten mengatur lebar sendiri (beranda dengan zona penuh lebar). */
+  contained?: boolean;
+  initialTheme?: 'dark' | 'light';
+}
+const { lang, paths, current, title, description, contained = true, initialTheme } = Astro.props;
+---
+
+<Base lang={lang} paths={paths} title={title} description={description} variant="rapi">
+  <div class="grid-bg" aria-hidden="true"></div>
+  <Header lang={lang} paths={paths} current={current} initialTheme={initialTheme} />
+  <main id="konten">
+    {contained ? <div class="mx-auto max-w-[1180px] px-3.5 sm:px-7"><slot /></div> : <slot />}
+  </main>
+  <div class="mx-auto max-w-[1180px] px-3.5 pb-6 sm:px-7">
+    <Footer lang={lang} />
+  </div>
+</Base>

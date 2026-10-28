@@ -1,0 +1,16 @@
+---
+import RapiPage from '../../layouts/RapiPage.astro';
+import LearnPage from '../../components/rapi/LearnPage.astro';
+import { copy, routes } from '../../data/content';
+
+const lang = 'en';
+---
+
+<RapiPage
+  lang={lang}
+  current="learn"
+  paths={routes.pair((l) => routes.page(l, 'learn'))}
+  title={`${copy[lang].learn.title} | Ranupane Rimba Argana`}
+>
+  <LearnPage lang={lang} />
+</RapiPage>

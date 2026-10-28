@@ -1,0 +1,16 @@
+---
+import RapiPage from '../layouts/RapiPage.astro';
+import ResumePage from '../components/rapi/ResumePage.astro';
+import { copy, routes } from '../data/content';
+
+const lang = 'id';
+---
+
+<RapiPage
+  lang={lang}
+  current="resume"
+  paths={routes.pair((l) => routes.page(l, 'resume'))}
+  title={`${copy[lang].resume.title} | Ranupane Rimba Argana`}
+>
+  <ResumePage lang={lang} />
+</RapiPage>

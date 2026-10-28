@@ -1,0 +1,91 @@
+---
+import Icon from '../Icon.astro';
+
+interface Props {
+  close: string;
+  prev: string;
+  next: string;
+}
+const { close, prev, next } = Astro.props;
+const round =
+  'flex size-12 shrink-0 items-center justify-center rounded-full bg-white/10 text-white transition-[background-color,scale] duration-150 ease-out hover:bg-white/20 active:scale-[0.96] focus-visible:outline-white motion-reduce:transition-none';
+---
+
+<dialog
+  data-lightbox
+  aria-label="Image viewer"
+  class="fixed inset-0 m-0 h-full max-h-none w-full max-w-none bg-[#0A0A0A]/96 p-0 text-white backdrop:bg-transparent open:flex motion-safe:open:animate-[fade-in_200ms_var(--ease-out)]"
+>
+  <div class="flex size-full flex-col gap-5 px-4 pb-6 pt-4 md:px-6 md:pb-7 md:pt-5">
+    <div class="flex items-center justify-between">
+      <p data-lightbox-counter class="font-mono text-[13px] tracking-[-0.3px] text-white/70 tabular-nums" aria-live="polite"></p>
+      <button
+        type="button"
+        data-lightbox-close
+        class="flex items-center gap-2 rounded-full bg-white/10 py-2 pl-3.5 pr-3 text-[14px] font-medium transition-[background-color,scale] duration-150 ease-out hover:bg-white/20 active:scale-[0.96] focus-visible:outline-white motion-reduce:transition-none"
+      >
+        {close}
+        <kbd class="hidden rounded-[5px] border border-white/25 px-1.5 font-mono text-[13px] text-white/70 md:inline">Esc</kbd>
+      </button>
+    </div>
+    <div class="flex min-h-0 flex-1 items-center gap-3 md:gap-6">
+      <button type="button" data-lightbox-prev aria-label={prev} class:list={[round, 'hidden md:flex']}>
+        <Icon name="chevron-left" size={20} stroke={56} />
+      </button>
+      <div class="flex size-full min-h-0 min-w-0 items-center justify-center">
+        <div
+          data-lightbox-stage
+          class="aspect-[1440/900] max-h-full overflow-hidden rounded-xl outline-1 -outline-offset-1 outline-white/10"
+          style="width:min(100%, calc((100dvh - 200px) * 1.6))"
+        >
+        </div>
+      </div>
+      <button type="button" data-lightbox-next aria-label={next} class:list={[round, 'hidden md:flex']}>
+        <Icon name="chevron-right" size={20} stroke={56} />
+      </button>
+    </div>
+    <p data-lightbox-caption class="text-pretty text-center text-[14px] text-white/70"></p>
+    <div class="flex justify-center gap-3 md:hidden">
+      <button type="button" data-lightbox-prev aria-label={prev} class={round}><Icon name="chevron-left" size={20} stroke={56} /></button>
+      <button type="button" data-lightbox-next aria-label={next} class={round}><Icon name="chevron-right" size={20} stroke={56} /></button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('[data-lightbox]');
+  const triggers = [...document.querySelectorAll<HTMLElement>('[data-lightbox-trigger]')];
+  if (dialog && triggers.length) {
+    const stage = dialog.querySelector<HTMLElement>('[data-lightbox-stage]')!;
+    const counter = dialog.querySelector<HTMLElement>('[data-lightbox-counter]')!;
+    const caption = dialog.querySelector<HTMLElement>('[data-lightbox-caption]')!;
+    let index = 0;
+
+    const render = (n: number) => {
+      index = (n + triggers.length) % triggers.length;
+      const trigger = triggers[index];
+      const art = trigger.querySelector('[data-art]');
+      stage.replaceChildren(art ? art.cloneNode(true) : '');
+      counter.textContent = `${index + 1} / ${triggers.length}`;
+      caption.textContent = trigger.dataset.lightboxCaption ?? '';
+    };
+    triggers.forEach((t, i) =>
+      t.addEventListener('click', () => {
+        render(i);
+        dialog.showModal();
+      }),
+    );
+    if (triggers.length < 2) dialog.querySelectorAll('[data-lightbox-prev],[data-lightbox-next]').forEach((b) => b.remove());
+    dialog.querySelectorAll('[data-lightbox-prev]').forEach((b) => b.addEventListener('click', () => render(index - 1)));
+    dialog.querySelectorAll('[data-lightbox-next]').forEach((b) => b.addEventListener('click', () => render(index + 1)));
+    dialog.querySelector('[data-lightbox-close]')!.addEventListener('click', () => dialog.close());
+    dialog.addEventListener('click', (e) => {
+      const el = e.target as HTMLElement;
+      if (!el.closest('button, [data-lightbox-stage]')) dialog.close();
+    });
+    dialog.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') render(index - 1);
+      if (e.key === 'ArrowRight') render(index + 1);
+    });
+  }
+</script>

@@ -1,0 +1,90 @@
+---
+import { copy, routes, talks } from '../../data/content';
+import type { Lang } from '../../data/content';
+import Article from './Article.astro';
+import Figure from './Figure.astro';
+import Icon from '../Icon.astro';
+
+interface Props {
+  lang: Lang;
+  slug: string;
+}
+const { lang, slug } = Astro.props;
+const t = copy[lang];
+const s = t.speaking;
+const other: Lang = lang === 'id' ? 'en' : 'id';
+const talk = talks.find((x) => x.slug === slug)!;
+const id = (k: string) => `${slug}-${k}`;
+const toc = [
+  { id: id('top'), label: s.toc[0] },
+  { id: id('why'), label: s.toc[1] },
+  { id: id('covered'), label: s.toc[2] },
+];
+const h2 = 'scroll-mt-24 text-balance pt-8 text-[16px]/[1.4] font-medium';
+const para = 'article-text text-pretty text-[16px]/[1.6] text-fg-secondary [&_a]:text-fg';
+const rows = [
+  [s.date, talk.facts.date],
+  [s.venue, talk.facts.venue],
+  [s.host, talk.facts.host],
+  [s.format, talk.facts.format],
+  [s.audience, talk.facts.audience],
+] as const;
+const art = { gradient: talk.gradient, url: 'https://kukerjain.dev' };
+---
+
+<Article
+  lang={lang}
+  slug={slug}
+  otherHref={routes.talk(other, slug)}
+  backHref={routes.home[lang]}
+  backLabel={s.back}
+  title={talk.title[lang]}
+  tagline={talk.tagline[lang]}
+  toc={toc}
+  art={art}
+  caption={t.detail.figureCaption}
+>
+  <Fragment slot="meta">{talk.meta[lang]}</Fragment>
+
+  <p class={para}>{talk.paragraphs[0][lang]}</p>
+
+  <dl class="my-2 border-t border-border-subtle">
+    {
+      rows.map(([label, value]) => (
+        <div class="grid grid-cols-[96px_1fr] gap-4 border-b border-border-subtle py-3 @xl:grid-cols-[120px_1fr]">
+          <dt class="text-[14px]/[1.6] text-fg-secondary">{label}</dt>
+          <dd class="text-pretty text-[16px]/[1.5]">{value[lang]}</dd>
+        </div>
+      ))
+    }
+  </dl>
+
+  <h2 id={id('why')} class={h2}>{s.toc[1]}</h2>
+  <p class={para}>{talk.paragraphs[1][lang]}</p>
+
+  <h2 id={id('covered')} class={h2}>{s.toc[2]}</h2>
+  <ul class={`${para} flex flex-col gap-2`}>
+    {
+      talk.covered.map((b) => (
+        <li class="flex gap-2.5">
+          <span aria-hidden="true">–</span>
+          <span>{b[lang]}</span>
+        </li>
+      ))
+    }
+  </ul>
+
+  <Figure gradient={talk.gradient} url="https://kukerjain.dev" caption={t.detail.figureCaption} zoom={t.detail.zoom} seed={1} />
+
+  <Fragment slot="footer">
+    <p>
+      <a
+        href={routes.home[lang]}
+        class="group inline-flex items-center gap-1.5 font-medium decoration-fg/30 decoration-1 underline-offset-[3px] transition-opacity duration-150 ease-out hover:underline active:opacity-70 motion-reduce:transition-none"
+      >
+        {s.back}
+        <Icon name="arrow-right" size={14} stroke={56} class="transition-transform duration-150 ease-out group-hover:translate-x-0.5" />
+      </a>
+    </p>
+  </Fragment>
+</Article>

@@ -1,0 +1,57 @@
+---
+import { copy } from '../../data/content';
+import type { Lang } from '../../data/content';
+import Icon from '../Icon.astro';
+
+interface Props {
+  lang: Lang;
+  file: string;
+  lines: string[];
+}
+const { lang, file, lines } = Astro.props;
+const t = copy[lang];
+---
+
+<figure class="my-2 overflow-hidden rounded-xl bg-bg-subtle ring-1 ring-inset ring-border [&_pre]:overflow-x-auto [&_pre]:bg-transparent [&_pre]:px-4 [&_pre]:py-3 [&_pre]:font-mono [&_pre]:text-[13px]/[1.65] [&_pre]:tracking-[-0.3px]" data-code-block>
+  <figcaption class="flex items-center justify-between border-b border-border-subtle py-1.5 pl-4 pr-1.5">
+    <span class="font-mono text-[13px] tracking-[-0.3px] text-fg-secondary">{file}</span>
+    <button
+      type="button"
+      data-copy
+      class="group/copy flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[13px] font-medium text-fg-secondary transition-[background-color,color,scale] duration-150 ease-out hover:bg-bg-hover active:scale-[0.96] active:bg-bg-muted data-[copied]:text-fg motion-reduce:transition-none"
+      data-label-copy={t.detail.copy}
+      data-label-copied={t.detail.copied}
+    >
+      <Icon name="check" size={14} stroke={56} />
+      <span data-copy-label>{t.detail.copy}</span>
+    </button>
+  </figcaption>
+  <pre><code>{lines.join('\n')}</code></pre>
+  <span role="status" class="sr-only" data-copy-status></span>
+</figure>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-code-block]').forEach((block) => {
+    const btn = block.querySelector<HTMLButtonElement>('[data-copy]')!;
+    const label = block.querySelector<HTMLElement>('[data-copy-label]')!;
+    const status = block.querySelector<HTMLElement>('[data-copy-status]')!;
+    const pre = block.querySelector('pre')!;
+    let timer = 0;
+    btn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(pre.innerText);
+        btn.setAttribute('data-copied', '');
+        label.textContent = btn.dataset.labelCopied!;
+        status.textContent = btn.dataset.labelCopied!;
+        clearTimeout(timer);
+        timer = window.setTimeout(() => {
+          btn.removeAttribute('data-copied');
+          label.textContent = btn.dataset.labelCopy!;
+          status.textContent = '';
+        }, 2000);
+      } catch {
+        status.textContent = 'Unable to copy. Select the code and copy it by hand.';
+      }
+    });
+  });
+</script>

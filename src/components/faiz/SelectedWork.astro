@@ -1,0 +1,94 @@
+---
+import { copy, projects, routes } from '../../data/content';
+import type { Lang } from '../../data/content';
+import Icon from '../Icon.astro';
+import ProjectArt from './ProjectArt.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = copy[lang];
+// Faiz memulai carousel dari tile ke-2 (tile pertama mengintip di kiri). Dengan sedikit proyek, mulai dari yang pertama.
+const start = projects.length > 3 ? 1 : 0;
+
+const arrow =
+  'relative grid size-8 place-items-center rounded-full text-fg/65 transition-[background-color,color,opacity] duration-150 ease-out after:absolute after:-inset-1.5 hover:bg-bg-hover hover:text-fg disabled:pointer-events-none disabled:opacity-35 active:scale-[0.96]';
+---
+
+<section id="work" data-zone="light" class="faiz @container scroll-mt-6" aria-labelledby="work-h">
+  <div class="page-grid pb-16 pt-20 @3xl:pb-24 @3xl:pt-[120px]">
+    <div class="page-sub group/carousel" data-carousel data-start={start}>
+      <div class="flex items-center justify-between">
+        <h2 id="work-h" class="text-[14px] text-fg/65">{t.projects.title}</h2>
+        <div class="flex items-center gap-1 [@media(hover:none)]:hidden">
+          <button type="button" data-prev aria-label={t.projects.prev} class={arrow}>
+            <Icon name="chevron-left" size={16} stroke={64} />
+          </button>
+          <button type="button" data-next aria-label={t.projects.next} class={arrow}>
+            <Icon name="chevron-right" size={16} stroke={64} />
+          </button>
+        </div>
+      </div>
+
+      <ul
+        data-track
+        class="col-full pad-content scrollbar-none mt-3 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain py-1 @3xl:gap-6"
+      >
+        {
+          projects.map((p, i) => (
+            <li class="shrink-0 snap-start">
+              <a
+                href={routes.project(lang, p.slug)}
+                aria-label={p.name}
+                class="group relative block aspect-[1120/746] w-[min(560px,82cqw)] overflow-hidden rounded-2xl supports-[corner-shape:squircle]:rounded-[32px] supports-[corner-shape:squircle]:[corner-shape:squircle]"
+              >
+                <span class="block size-full transition-[scale] duration-300 ease-out group-hover:scale-[1.04] group-focus-visible:scale-[1.04] motion-reduce:transition-none">
+                  <ProjectArt gradient={p.gradient} url={p.url} image={p.image} seed={i} />
+                </span>
+                <span class="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-black/10 supports-[corner-shape:squircle]:rounded-[32px] supports-[corner-shape:squircle]:[corner-shape:squircle]" />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-carousel]').forEach((root) => {
+    const track = root.querySelector<HTMLElement>('[data-track]')!;
+    const prev = root.querySelector<HTMLButtonElement>('[data-prev]')!;
+    const next = root.querySelector<HTMLButtonElement>('[data-next]')!;
+    const tiles = [...track.children] as HTMLElement[];
+    const reduce = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const step = () => {
+      const [a, b] = tiles;
+      return b ? b.offsetLeft - a.offsetLeft : track.clientWidth;
+    };
+    const go = (d: number) => track.scrollBy({ left: d * step(), behavior: reduce() ? 'auto' : 'smooth' });
+    const sync = () => {
+      prev.disabled = track.scrollLeft <= 1;
+      next.disabled = track.scrollLeft + track.clientWidth >= track.scrollWidth - 1;
+    };
+
+    const start = Number(root.dataset.start || 0);
+    if (start > 0 && tiles[start]) track.scrollLeft = tiles[start].offsetLeft - tiles[0].offsetLeft;
+
+    let raf = 0;
+    track.addEventListener(
+      'scroll',
+      () => {
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(sync);
+      },
+      { passive: true },
+    );
+    prev.addEventListener('click', () => go(-1));
+    next.addEventListener('click', () => go(1));
+    new ResizeObserver(sync).observe(track);
+    sync();
+  });
+</script>

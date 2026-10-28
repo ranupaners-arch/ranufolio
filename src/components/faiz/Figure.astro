@@ -1,0 +1,38 @@
+---
+import ProjectArt from './ProjectArt.astro';
+import Icon from '../Icon.astro';
+
+interface Props {
+  gradient: string;
+  url: string;
+  image?: string;
+  caption: string;
+  zoom: string;
+  seed?: number;
+  breakout?: boolean;
+}
+const { gradient, url, image, caption, zoom, seed = 0, breakout = true } = Astro.props;
+---
+
+<figure class:list={['my-3 flex flex-col gap-3', breakout && 'col-breakout']}>
+  <div class="group/media relative">
+    <button
+      type="button"
+      aria-label={`${zoom}: ${caption}`}
+      aria-haspopup="dialog"
+      data-lightbox-trigger
+      data-lightbox-caption={caption}
+      class="block aspect-[1440/900] w-full cursor-zoom-in overflow-hidden rounded-2xl bg-bg-muted outline-1 -outline-offset-1 outline-black/10"
+    >
+      <ProjectArt gradient={gradient} url={url} image={image} seed={seed} />
+    </button>
+    <span
+      aria-hidden="true"
+      class="pointer-events-none absolute right-2 top-2 flex items-center gap-1 rounded-full bg-[#0A0A0A]/70 px-2.5 py-1 text-[13px] font-medium text-white opacity-0 transition-opacity duration-150 ease-out group-hover/media:opacity-100 group-has-focus-visible/media:opacity-100 motion-reduce:transition-none"
+    >
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" /></svg>
+      {zoom}
+    </span>
+  </div>
+  <figcaption class="text-balance text-center text-[13px]/[1.5] text-fg-secondary">{caption}</figcaption>
+</figure>

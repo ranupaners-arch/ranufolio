@@ -1,0 +1,163 @@
+---
+import { copy, detailPlaceholder as dp, projects, routes, testimonials } from '../../data/content';
+import type { Lang } from '../../data/content';
+import Icon from '../Icon.astro';
+import Article from './Article.astro';
+import CodeBlock from './CodeBlock.astro';
+import Figure from './Figure.astro';
+
+interface Props {
+  lang: Lang;
+  slug: string;
+}
+const { lang, slug } = Astro.props;
+const t = copy[lang];
+const other: Lang = lang === 'id' ? 'en' : 'id';
+const p = projects.find((x) => x.slug === slug)!;
+const quote = testimonials.find((q) => q.project === slug);
+const more = projects.filter((x) => x.slug !== slug);
+const host = new URL(p.url).host;
+const [intro, ...rest] = p.sections;
+const id = (s: string) => `${slug}-${s}`;
+const toc = [
+  { id: id('top'), label: intro.title[lang] },
+  ...rest.map((s) => ({ id: id(s.id), label: s.title[lang] })),
+  { id: id('challenge'), label: t.detail.challenge },
+  { id: id('approach'), label: t.detail.approach },
+  { id: id('result'), label: t.detail.result },
+];
+const h2 = 'scroll-mt-24 text-balance pt-8 text-[16px]/[1.4] font-medium';
+const para = 'article-text text-pretty text-[16px]/[1.6] text-fg-secondary [&_a]:text-fg';
+const art = { gradient: p.gradient, url: p.url, image: p.image };
+---
+
+<Article
+  lang={lang}
+  slug={slug}
+  otherHref={routes.project(other, slug)}
+  backHref={`${routes.home[lang]}#work`}
+  backLabel={t.detail.back}
+  title={p.name}
+  tagline={p.tagline[lang]}
+  toc={toc}
+  art={art}
+  caption={t.detail.figureCaption}
+>
+  <Fragment slot="meta">
+    <span>{p.role[lang]}</span>
+    {
+      p.year && (
+        <>
+          <span aria-hidden="true">·</span>
+          <span>{p.year}</span>
+        </>
+      )
+    }
+    <span aria-hidden="true">·</span>
+    <a
+      href={p.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="flex items-center gap-0.5 text-fg underline decoration-fg/30 decoration-1 underline-offset-[3px] transition-[text-decoration-color] duration-150 ease-out hover:decoration-fg"
+    >
+      {host}
+      <Icon name="arrow-up-right" size={12} stroke={56} />
+    </a>
+  </Fragment>
+
+  {intro.body.map((b) => <p class={para}>{b[lang]}</p>)}
+
+  {
+    rest.map((s) => (
+      <>
+        <h2 id={id(s.id)} class={h2}>{s.title[lang]}</h2>
+        {s.body.map((b) => <p class={para}>{b[lang]}</p>)}
+      </>
+    ))
+  }
+
+  <h2 id={id('challenge')} class={h2}>{t.detail.challenge}</h2>
+  {dp.challenge.map((b) => <p class={para}>{b[lang]}</p>)}
+
+  <h2 id={id('approach')} class={h2}>{t.detail.approach}</h2>
+  {dp.approach.map((b) => <p class={para}>{b[lang]}</p>)}
+  <CodeBlock lang={lang} file={dp.code.file} lines={dp.code.lines} />
+
+  <figure class="my-3 flex flex-col gap-3">
+    <div class="flex h-[220px] items-center justify-center rounded-2xl bg-bg-subtle px-4 ring-1 ring-inset ring-border-subtle">
+      <div aria-hidden="true" class="flex w-full max-w-[360px] items-center gap-2 rounded-full bg-bg py-1.5 pl-4 pr-1.5 shadow-pill">
+        <span class="flex-1 text-[16px]">Lorem ipsum</span>
+        <span class="rounded-full bg-bg-inverse px-3.5 py-2 text-[13px] font-medium text-fg-inverse">Dolor</span>
+      </div>
+    </div>
+    <figcaption class="text-balance text-center text-[13px]/[1.5] text-fg-secondary">{t.detail.figureCaption}</figcaption>
+  </figure>
+
+  <Figure gradient={p.gradient} url={p.url} image={p.image} caption={t.detail.figureCaption} zoom={t.detail.zoom} seed={1} />
+
+  <ul class={`${para} flex flex-col gap-2`}>
+    {
+      dp.list.map((b) => (
+        <li class="flex gap-2.5">
+          <span aria-hidden="true">–</span>
+          <span>{b[lang]}</span>
+        </li>
+      ))
+    }
+  </ul>
+
+  <h2 id={id('result')} class={h2}>{t.detail.result}</h2>
+  {dp.result.map((b) => <p class={para}>{b[lang]}</p>)}
+
+  <Figure gradient={p.gradient} url={p.url} image={p.image} caption={t.detail.figureCaption} zoom={t.detail.zoom} seed={0} />
+
+  <figure class="my-3 flex flex-col gap-2 border-l-2 border-fg/15 pl-5">
+    <blockquote class="text-pretty text-[18px]/[1.5]">
+      <p>“{quote ? quote.quote[lang] : dp.quote[lang]}”</p>
+    </blockquote>
+    <figcaption class="text-[13px] text-fg-secondary">
+      {quote ? `${quote.name}, ${quote.role[lang]}` : `${dp.quoteBy[lang]}, ${dp.quoteBy[lang]}`}
+    </figcaption>
+  </figure>
+
+  <aside class="my-2 flex gap-3 rounded-xl bg-bg-subtle px-5 py-4 ring-1 ring-inset ring-border-subtle">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 shrink-0 text-fg-secondary" aria-hidden="true">
+      <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5M9 18h6M10 22h4" />
+    </svg>
+    <div class="article-text text-pretty text-[16px]/[1.6]">{dp.callout[lang]}</div>
+  </aside>
+
+  <Fragment slot="footer">
+    <p>
+      <a
+        href={p.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="group inline-flex items-center gap-1.5 font-medium decoration-fg/30 decoration-1 underline-offset-[3px] transition-opacity duration-150 ease-out hover:underline active:opacity-70 motion-reduce:transition-none"
+      >
+        {t.detail.tryIt} {p.name}
+        <Icon name="arrow-up-right" size={14} stroke={56} class="transition-transform duration-150 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+      </a>
+    </p>
+    {
+      more.length > 0 && (
+        <section aria-labelledby={id('more')}>
+          <h2 id={id('more')} class="text-[14px] text-fg-secondary">{t.detail.moreWork}</h2>
+          <ul class="mt-3 divide-y divide-border-subtle">
+            {more.map((m) => (
+              <li>
+                <a href={routes.project(lang, m.slug)} class="group flex items-center justify-between gap-6 py-3">
+                  <span class="font-medium decoration-fg/30 decoration-1 underline-offset-[3px] group-hover:underline">{m.name}</span>
+                  <span class="flex items-center gap-1 text-[13px] text-fg-secondary">
+                    {new URL(m.url).host}
+                    <Icon name="arrow-right" size={12} stroke={56} />
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+  </Fragment>
+</Article>

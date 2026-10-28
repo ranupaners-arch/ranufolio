@@ -1,75 +1,445 @@
 @import "tailwindcss";
 
-@theme {
-  --font-sans: "Bricolage Grotesque", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+/* ------------------------------------------------------------------ fonts */
+/* Wix Madefor (Rapi), Geist + Caveat (Faiz) dimuat lewat @fontsource di Base.astro. Paper Mono self-host. */
+@font-face {
+  font-family: "Paper Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/PaperMono-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Paper Mono";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/PaperMono-Medium.woff2") format("woff2");
+}
+/* Fallback dengan metrik terkoreksi (nilai dari referensi) */
+@font-face {
+  font-family: "Wix Madefor Display Fallback";
+  src: local("Arial");
+  size-adjust: 104.31%;
+  ascent-override: 96.64%;
+  descent-override: 24.16%;
+}
+@font-face {
+  font-family: "Wix Madefor Text Fallback";
+  src: local("Arial");
+  size-adjust: 104.76%;
+  ascent-override: 96.22%;
+  descent-override: 24.06%;
+}
+@font-face {
+  font-family: "Geist Fallback";
+  src: local("Arial");
+  size-adjust: 104.7553%;
+  ascent-override: 95.9379%;
+  descent-override: 28.1609%;
+}
+@font-face {
+  font-family: "Paper Mono Fallback";
+  src: local("Courier New");
+  size-adjust: 100.9836%;
+}
 
-  --color-ink: #0d0d14;
-  --color-ink-2: #181822;
-  --color-cobalt: #1a00b0;
-  --color-paper: #f4f5f7;
-  --color-line: #d9dbe2;
-  --color-mute: #565a69; /* teks sekunder di latar terang, kontras > 6:1 */
-  --color-mute-dark: #c4c7d3; /* teks sekunder di latar gelap, kontras > 10:1 */
-  --color-sun: #ffd23f;
+/* ------------------------------------------------------------------ theme */
+@theme {
+  --font-display: "Wix Madefor Display Variable", "Wix Madefor Display Fallback", system-ui, sans-serif;
+  --font-sans: "Wix Madefor Text Variable", "Wix Madefor Text Fallback", system-ui, sans-serif;
+  --font-geist: "Geist Variable", "Geist Fallback", system-ui, sans-serif;
+  --font-mono: "Paper Mono", "Paper Mono Fallback", ui-monospace, monospace;
+  --font-hand: "Caveat", cursive;
+
+  /* Faiz (tidak berubah per tema) */
+  --color-bg: #fff;
+  --color-bg-subtle: #f9f8f6;
+  --color-bg-muted: #f2f1ef;
+  --color-bg-hover: #0a0a0a0a;
+  --color-bg-inverse: #0a0a0a;
+  --color-fg: #0a0a0a;
+  --color-fg-secondary: #0a0a0aa6;
+  --color-fg-inverse: #fff;
+  --color-border: #0a0a0a14;
+  --color-border-subtle: #0a0a0a0a;
+  --color-border-strong: #0a0a0a40;
+  --color-accent: #ff6308;
+  --color-accent-subtle: #ff63081a;
+  --color-focus: oklch(62% 0.186 42.2);
+  --color-success: #28c840;
+  --color-success-text: #0c8463;
+  --color-danger: #ff5f57;
+  --color-paper: #f7f3ea;
+  --color-ink-pen: #1f2a44;
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1); /* easing Faiz; Rapi memakai --ease-rapi */
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-lift: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-back: cubic-bezier(0.34, 1.45, 0.64, 1);
+
+  --shadow-print: 0 0 0 1px #0000000d, 0 2px 4px #0000000f, 0 14px 28px -8px #00000038;
+  --shadow-avatar: 0 4px 12px #0000001f;
+  --shadow-button: 0 8px 24px #0000002e;
+  --shadow-pill: 0 0 1px #0000000f, 0 6px 16px #0000001a;
+  --shadow-float: 0 0 1px #0000000f, 0 4px 12px #00000024;
+  --shadow-overlay: 0 0 1px #0000000f, 0 18px 40px #0000001f;
+  --shadow-dialog: 0 0 0.5px #0003, 0 18px 20px #0000001f;
+}
+
+/* Rapi: token berpindah mengikuti [data-theme] / .theme-dark */
+@theme inline {
+  --color-frame: var(--frame);
+  --color-panel: var(--panel);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-soft: var(--soft);
+  --color-line: var(--line);
+  --color-inv: var(--inv);
+  --color-invink: var(--invink);
+}
+
+:root,
+[data-theme="light"] {
+  --frame: #e5e5e3;
+  --panel: #fff;
+  --ink: #121212;
+  --muted: #404040;
+  --soft: rgba(0, 0, 0, 0.055);
+  --line: #e7e7e6;
+  --tab: #fff;
+  --fav: hsla(0, 0%, 100%, 0.6);
+  --inv: #121212;
+  --invink: #fff;
+  --glass-rgb: 255 255 255;
+  --grid-line: rgba(0, 0, 0, 0.045);
+  color-scheme: light;
+}
+:root[data-theme="dark"],
+[data-theme="dark"],
+.theme-dark {
+  --frame: #1b1b1b;
+  --panel: #0e0e0e;
+  --ink: #f1f1f0;
+  --muted: #bdbdbb;
+  --soft: hsla(0, 0%, 100%, 0.08);
+  --line: #272727;
+  --tab: #2b2b2b;
+  --fav: hsla(0, 0%, 100%, 0.07);
+  --inv: #f1f1f0;
+  --invink: #121212;
+  --glass-rgb: 20 20 20;
+  --grid-line: hsla(0, 0%, 100%, 0.04);
+  color-scheme: dark;
+}
+:root {
+  --g: 0.55;
+  --ease-rapi: cubic-bezier(0.16, 1, 0.3, 1);
+  --hh: 73px; /* tinggi header Rapi */
+}
+@media (min-width: 640px) {
+  :root {
+    --hh: 84px;
+  }
 }
 
 html {
+  background: var(--frame);
   scroll-behavior: smooth;
 }
-
 body {
   font-family: var(--font-sans);
-  background: var(--color-paper);
-  color: var(--color-ink);
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--ink);
   -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
 }
-
-/* Fokus keyboard: kobalt di latar terang, kuning di latar gelap. */
+::selection {
+  background: var(--inv);
+  color: var(--invink);
+}
 :focus-visible {
-  outline: 3px solid var(--color-cobalt);
+  outline: 2px solid var(--ink);
   outline-offset: 3px;
 }
-.dark-zone :focus-visible {
-  outline-color: var(--color-sun);
+
+/* ------------------------------------------------------------------ Rapi: komponen */
+.glass {
+  background: rgb(var(--glass-rgb) / calc(0.12 + var(--g) * 0.72));
+  -webkit-backdrop-filter: blur(calc(4px + var(--g) * 30px)) saturate(160%);
+  backdrop-filter: blur(calc(4px + var(--g) * 30px)) saturate(160%);
+  box-shadow: inset 0 1px 0 hsla(0, 0%, 100%, 0.22), inset 0 0 0 1px hsla(0, 0%, 50%, 0.14);
+}
+.glass-strong {
+  background: rgb(var(--glass-rgb) / calc(0.8 + var(--g) * 0.15));
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-radius: 999px;
+  background: var(--soft);
+  padding: 0.32rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.field {
+  width: 100%;
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  font-size: 1rem;
+  color: var(--ink);
+  background: var(--soft);
+  box-shadow: inset 0 0 0 1px var(--line);
+  transition: box-shadow 0.2s;
+}
+.field::placeholder {
+  color: var(--muted);
+}
+.field:focus {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--ink);
+}
+.range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 22px;
+  background: transparent;
+  cursor: pointer;
+}
+.range::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--line);
+}
+.range::-moz-range-track {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--line);
+}
+.range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 22px;
+  width: 22px;
+  margin-top: -8px;
+  border-radius: 999px;
+  background: var(--inv);
+  border: 3px solid var(--panel);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+.range::-moz-range-thumb {
+  height: 16px;
+  width: 16px;
+  border-radius: 999px;
+  background: var(--inv);
+  border: 3px solid var(--panel);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 }
 
-/* Judul: sumbu lebar Bricolage Grotesque dirapatkan, berat ekstra. */
-.display {
-  font-stretch: 80%;
-  font-weight: 750;
-  letter-spacing: -0.02em;
-  line-height: 0.98;
+/* Latar grid yang melayang pelan */
+.grid-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-mask-image: radial-gradient(ellipse 75% 70% at 50% 45%, #000 35%, transparent 100%);
+  mask-image: radial-gradient(ellipse 75% 70% at 50% 45%, #000 35%, transparent 100%);
+}
+.grid-bg--zone {
+  position: absolute;
+  z-index: -1;
+}
+.grid-bg::before {
+  content: "";
+  position: absolute;
+  inset: -48px;
+  background-image: linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+  background-size: 48px 48px;
+  will-change: transform;
 }
 
-.measure {
-  max-width: 62ch;
+/* Zona hero gelap: bingkai penuh lebar di belakang header sticky */
+.zone-hero {
+  position: relative;
+  isolation: isolate;
+  margin-top: calc(var(--hh) * -1);
+  padding-top: var(--hh);
+  color: var(--ink);
+}
+.zone-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: var(--frame);
 }
 
-/* Carousel: sembunyikan scrollbar, tetap bisa digeser. */
-.no-scrollbar {
-  scrollbar-width: none;
+/* ------------------------------------------------------------------ Rapi: animasi */
+@keyframes settle {
+  0% { transform: translateY(14px) scale(0.96); filter: blur(6px); }
+  to { transform: none; filter: none; }
 }
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
+@keyframes deal {
+  0% { transform: translateX(16px); opacity: 0; }
+  to { transform: none; opacity: 1; }
 }
-
-/* Satu momen gerak saat halaman dibuka: headline naik, foto terbuka dari bawah. */
-@keyframes rise {
-  from { opacity: 0; transform: translateY(18px); }
-  to   { opacity: 1; transform: none; }
+@keyframes pop {
+  0% { transform: translateY(-4px) scale(0.96); opacity: 0; }
+  to { transform: none; opacity: 1; }
 }
-@keyframes reveal {
-  from { clip-path: inset(100% 0 0 0); }
-  to   { clip-path: inset(0 0 0 0); }
+@keyframes fade {
+  0% { opacity: 0; }
+  to { opacity: 1; }
 }
-.hero-rise   { animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
-.hero-reveal { animation: reveal 0.9s cubic-bezier(0.7, 0, 0.2, 1) 0.1s both; }
-
+@keyframes grid-drift {
+  0% { transform: translateZ(0); }
+  to { transform: translate3d(48px, 48px, 0); }
+}
+@keyframes ping {
+  75%, to { transform: scale(2); opacity: 0; }
+}
+.pop {
+  transform-origin: top right;
+  animation: fade 0.16s ease-out both;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .settle { animation: settle 0.8s var(--ease-rapi) both; animation-delay: calc(min(var(--i, 0), 4) * 70ms); }
+  .deal { animation: deal 0.45s var(--ease-rapi) both; animation-delay: calc(min(var(--i, 0), 5) * 45ms); }
+  .pop { animation: pop 0.2s var(--ease-rapi) both; }
+  .grid-bg::before { animation: grid-drift 24s linear infinite; }
+  .ping-dot { animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite; }
+}
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .hero-rise,
-  .hero-reveal {
-    animation: none;
+}
+
+/* ------------------------------------------------------------------ Faiz: animasi */
+@keyframes rise-in {
+  0% { opacity: 0; filter: blur(2px); translate: 0 8px; }
+}
+@keyframes fade-in {
+  0% { opacity: 0; }
+}
+@keyframes reveal {
+  0% { opacity: 0; translate: 0 12px; }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.rise-in { animation: rise-in 0.35s var(--ease-out) both; animation-delay: calc(var(--n, 0) * 90ms); }
+@media (prefers-reduced-motion: reduce) {
+  .rise-in { animation: none; }
+}
+[data-hero-seen] .hero-piece { animation: none; }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal var(--ease-out) both;
+      animation-timeline: view();
+      animation-range: entry entry 40%;
+    }
   }
+}
+
+/* ------------------------------------------------------------------ Faiz: grid halaman + teks artikel */
+.faiz {
+  font-family: var(--font-geist);
+  line-height: 1.5;
+  color: var(--color-fg);
+  background: var(--color-bg);
+}
+.faiz ::selection {
+  background: var(--color-accent-subtle);
+  color: inherit;
+}
+.faiz :focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+.page-grid,
+.page-sub {
+  --gutter: 20px;
+  display: grid;
+  grid-template-columns:
+    [full-start] minmax(var(--gutter), 1fr)
+    [breakout-start] minmax(0, 180px)
+    [content-start] min(600px, 100% - 2 * var(--gutter))
+    [content-end] minmax(0, 180px)
+    [breakout-end] minmax(var(--gutter), 1fr) [full-end];
+}
+@container (min-width: 640px) {
+  .page-grid,
+  .page-sub { --gutter: 24px; }
+}
+.page-grid > *,
+.page-sub > * { grid-column: content; }
+.page-grid > .col-breakout,
+.page-sub > .col-breakout { grid-column: breakout; }
+.page-grid > .col-full,
+.page-sub > .col-full { grid-column: full; }
+.page-sub { grid-template-columns: subgrid; grid-column: full; }
+.pad-content {
+  --edge: calc((100% - min(600px, 100% - 2 * var(--gutter))) / 2);
+  padding-inline: var(--edge);
+  scroll-padding-inline: var(--edge);
+}
+.scrollbar-none { scrollbar-width: none; }
+.scrollbar-none::-webkit-scrollbar { display: none; }
+
+.article-text a {
+  text-decoration-line: underline;
+  text-decoration-color: #0a0a0a4d;
+  text-underline-offset: 4px;
+  text-decoration-thickness: from-font;
+  transition: text-decoration-color 0.15s var(--ease-out);
+}
+.article-text a:hover { text-decoration-color: currentColor; }
+.article-text a:active { opacity: 0.7; }
+
+.toc-link[aria-current="true"] { color: var(--color-fg); }
+
+/* Kind words: semua slide di satu sel grid, cross-fade tanpa pergeseran */
+.kw-slide { visibility: hidden; transition: visibility 0s 0.14s; }
+.kw-slide > * {
+  opacity: 0;
+  filter: blur(3px);
+  transition: opacity 0.14s, filter 0.14s var(--ease-out);
+}
+.kw-slide[data-active] { visibility: visible; transition: visibility 0s; }
+.kw-slide[data-active] > * {
+  opacity: 1;
+  filter: none;
+  transition: opacity 0.32s, filter 0.32s var(--ease-out) var(--enter-delay, 60ms);
+}
+.kw-slide[data-active] figcaption { --enter-delay: 0.12s; }
+@media (prefers-reduced-motion: reduce) {
+  .kw-slide, .kw-slide > * { transition: none !important; filter: none !important; }
+}
+
+/* ------------------------------------------------------------------ Transisi halaman */
+/* Lintas-dokumen: pengganti Swup. Crossfade 1 dtk + blur 5px hanya saat tujuannya halaman gaya Faiz. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.35s;
+  animation-timing-function: ease-out;
+}
+::view-transition-group(nav-pill) {
+  animation-duration: 0.5s;
+  animation-timing-function: var(--ease-rapi);
+}
+@keyframes vt-out { to { opacity: 0; filter: blur(5px); } }
+@keyframes vt-in { from { opacity: 0; filter: blur(5px); } }
+html.faiz-doc::view-transition-old(root) {
+  animation: vt-out 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+html.faiz-doc::view-transition-new(root) {
+  animation: vt-in 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 }

@@ -1,0 +1,27 @@
+---
+import RapiPage from '../layouts/RapiPage.astro';
+import Hero from './rapi/Hero.astro';
+import AboutSection from './rapi/AboutSection.astro';
+import CtaBand from './rapi/CtaBand.astro';
+import SelectedWork from './faiz/SelectedWork.astro';
+import KindWords from './faiz/KindWords.astro';
+import { routes } from '../data/content';
+import type { Lang } from '../data/content';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+---
+
+<RapiPage lang={lang} paths={routes.home} current="home" contained={false} initialTheme="dark">
+  <Hero lang={lang} />
+  <SelectedWork lang={lang} />
+  <div data-zone="auto" class="mx-auto max-w-[1180px] px-3.5 py-10 sm:px-7">
+    <AboutSection lang={lang} />
+  </div>
+  <KindWords lang={lang} />
+  <div data-zone="auto" class="mx-auto max-w-[1180px] px-3.5 pt-3">
+    <CtaBand lang={lang} />
+  </div>
+</RapiPage>

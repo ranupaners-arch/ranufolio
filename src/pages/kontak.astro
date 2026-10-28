@@ -1,0 +1,16 @@
+---
+import RapiPage from '../layouts/RapiPage.astro';
+import ContactPage from '../components/rapi/ContactPage.astro';
+import { copy, routes } from '../data/content';
+
+const lang = 'id';
+---
+
+<RapiPage
+  lang={lang}
+  current="contact"
+  paths={routes.pair((l) => routes.page(l, 'contact'))}
+  title={`${copy[lang].contactPage.title} | Ranupane Rimba Argana`}
+>
+  <ContactPage lang={lang} />
+</RapiPage>

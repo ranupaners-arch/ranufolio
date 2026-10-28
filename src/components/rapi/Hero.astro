@@ -1,0 +1,83 @@
+---
+import { copy, routes } from '../../data/content';
+import type { Lang } from '../../data/content';
+import Icon from '../Icon.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const h = copy[lang].hero;
+
+const tileBase =
+  'settle group flex h-full min-h-[140px] flex-col justify-between rounded-[28px] p-5 transition-transform duration-300 hover:scale-[0.985] active:scale-[0.97] active:duration-100 sm:p-6';
+---
+
+<!-- Zona gelap: token tema gelap Rapi, bingkai penuh lebar di belakang header sticky -->
+<div class="zone-hero theme-dark" data-zone="dark">
+  <div class="grid-bg grid-bg--zone" aria-hidden="true"></div>
+  <div class="mx-auto max-w-[1180px] px-3.5 pb-8 sm:px-7 sm:pb-12">
+    <div class="grid gap-3 lg:grid-cols-12 lg:grid-rows-[minmax(170px,auto)_minmax(170px,auto)]">
+      <section
+        style="--i:0"
+        class="settle glass grid grid-cols-[84px_1fr] items-center gap-4 rounded-[28px] p-5 sm:grid-cols-[104px_1fr] sm:p-6 lg:col-span-7 lg:col-start-1 lg:row-span-2 lg:row-start-1 lg:grid-cols-1 lg:content-between lg:gap-8 lg:p-8"
+      >
+        <img
+          src="/ranupane.jpg"
+          alt={h.photoAlt}
+          width="240"
+          height="240"
+          fetchpriority="high"
+          decoding="async"
+          class="h-[84px] w-[84px] rounded-[22px] object-cover object-[50%_25%] sm:h-[104px] sm:w-[104px] lg:h-[120px] lg:w-[120px] lg:rounded-[28px]"
+        />
+        <div class="contents lg:block">
+          <h1 class="font-display text-[1.5rem] font-extrabold leading-[1.08] tracking-[-0.025em] sm:text-[2.3rem] lg:text-[3.1rem]">
+            {h.title}
+          </h1>
+          <p class="col-span-2 max-w-[46ch] text-[17px] text-muted lg:mt-4">{h.bio}</p>
+          <p class="col-span-2 mt-1 inline-flex w-fit items-center gap-2 rounded-full bg-soft px-3 py-1.5 text-sm font-semibold lg:mt-5">
+            <span class="relative flex h-2 w-2">
+              <span class="ping-dot absolute inset-0 rounded-full bg-ink opacity-40"></span>
+              <span class="relative h-2 w-2 rounded-full bg-ink"></span>
+            </span>
+            {h.badge}
+          </p>
+        </div>
+      </section>
+
+      <div class="lg:col-span-5 lg:col-start-8 lg:row-start-1">
+        <a href={routes.page(lang, 'contact')} style="--i:1" class:list={[tileBase, 'bg-inv text-invink']}>
+          <span class="flex items-start justify-between gap-2">
+            <span class="pt-1 text-sm font-semibold opacity-80">{h.ownerQ}</span>
+            <span class="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-invink/15 transition-transform duration-300 group-hover:translate-x-1">
+              <Icon name="arrow-right" />
+            </span>
+          </span>
+          <span class="font-display text-[1.3rem] font-bold leading-tight sm:text-[1.7rem]">{h.ownerA}</span>
+        </a>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 lg:col-span-5 lg:col-start-8 lg:row-start-2">
+        <a href={routes.page(lang, 'resume')} style="--i:2" class:list={[tileBase, 'glass']}>
+          <span class="flex items-start justify-between gap-2">
+            <span class="pt-1 text-sm font-semibold text-muted">{h.recruiterQ}</span>
+            <span class="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-soft transition-transform duration-300 group-hover:translate-x-1">
+              <Icon name="arrow-right" />
+            </span>
+          </span>
+          <span class="font-display text-[1.3rem] font-bold leading-tight sm:text-[1.7rem]">{h.recruiterA}</span>
+        </a>
+        <a href={routes.page(lang, 'learn')} style="--i:3" class:list={[tileBase, 'glass']}>
+          <span class="flex items-start justify-between gap-2">
+            <span class="pt-1 text-sm font-semibold text-muted">{h.learnQ}</span>
+            <span class="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-soft transition-transform duration-300 group-hover:translate-x-1">
+              <Icon name="arrow-right" />
+            </span>
+          </span>
+          <span class="font-display text-[1.3rem] font-bold leading-tight sm:text-[1.7rem]">{h.learnA}</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

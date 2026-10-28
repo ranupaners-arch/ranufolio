@@ -1,0 +1,42 @@
+---
+// Ikon garis gaya Ionicons (viewBox 512, stroke 32) seperti referensi Rapi.
+interface Props {
+  name: 'arrow-right' | 'arrow-left' | 'arrow-up-right' | 'chevron-down' | 'chevron-left' | 'chevron-right' | 'check' | 'theme' | 'mail' | 'close' | 'play';
+  size?: number;
+  class?: string;
+  stroke?: number;
+}
+const { name, size = 20, class: cls, stroke = 48 } = Astro.props;
+const d: Record<string, string> = {
+  'arrow-right': 'm268 112 144 144-144 144m124-144H100',
+  'arrow-left': 'M244 400 100 256l144-144M120 256h292',
+  'arrow-up-right': 'M384 224v184a40 40 0 0 1-40 40H104a40 40 0 0 1-40-40V168a40 40 0 0 1 40-40h167.48M336 64h112v112M224 288 440 72',
+  'chevron-down': 'M112 184l144 144 144-144',
+  'chevron-left': 'M328 112 184 256l144 144',
+  'chevron-right': 'M184 112l144 144-144 144',
+  check: 'M416 128 192 384l-96-96',
+  mail: 'M80 96h352a32 32 0 0 1 32 32v256a32 32 0 0 1-32 32H80a32 32 0 0 1-32-32V128a32 32 0 0 1 32-32zm-24 36 200 152 200-152',
+  close: 'M368 368 144 144m224 0L144 368',
+  play: 'M112 111v290c0 17.44 17 28.52 31 20.16l247.9-148.37c12.12-7.25 12.12-26.33 0-33.58L143 90.84c-14-8.36-31 2.72-31 20.16z',
+};
+---
+
+{
+  name === 'theme' ? (
+    <svg viewBox="0 0 512 512" width={size} height={size} fill="currentColor" aria-hidden="true" class={cls}>
+      <circle cx="256" cy="256" r="208" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32" />
+      <path d="M256 464c-114.88 0-208-93.12-208-208S141.12 48 256 48z" />
+    </svg>
+  ) : (
+    <svg viewBox="0 0 512 512" width={size} height={size} fill="none" aria-hidden="true" class={cls}>
+      <path
+        d={d[name]}
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width={stroke}
+        fill={name === 'play' ? 'currentColor' : 'none'}
+      />
+    </svg>
+  )
+}

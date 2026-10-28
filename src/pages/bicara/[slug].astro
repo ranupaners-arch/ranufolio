@@ -1,0 +1,21 @@
+---
+import FaizLayout from '../../layouts/FaizLayout.astro';
+import TalkDetail from '../../components/faiz/TalkDetail.astro';
+import { routes, talks } from '../../data/content';
+
+export function getStaticPaths() {
+  return talks.map((t) => ({ params: { slug: t.slug } }));
+}
+
+const { slug } = Astro.params;
+const talk = talks.find((x) => x.slug === slug)!;
+---
+
+<FaizLayout
+  lang="id"
+  title={`${talk.title.id} | Ranupane Rimba Argana`}
+  description={talk.tagline.id}
+  paths={routes.pair((l) => routes.talk(l, talk.slug))}
+>
+  <TalkDetail lang="id" slug={talk.slug} />
+</FaizLayout>

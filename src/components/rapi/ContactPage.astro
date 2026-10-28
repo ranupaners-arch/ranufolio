@@ -1,0 +1,167 @@
+---
+import { contact, copy } from '../../data/content';
+import type { Lang } from '../../data/content';
+import { getIcon } from '../../lib/icons';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = copy[lang];
+const f = t.contact.form;
+const p = t.contactPage;
+const waHref = `https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(t.contact.waText)}`;
+const wa = getIcon(['siWhatsapp']);
+const mail = getIcon(['siGmail']);
+const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT as string | undefined;
+const accessKey = import.meta.env.PUBLIC_FORM_ACCESS_KEY as string | undefined;
+const card = 'glass group rounded-[28px] p-6 transition-transform hover:-translate-y-0.5 sm:p-8';
+---
+
+<div class="grid gap-3">
+  <section class="settle rounded-[28px] bg-inv p-6 text-invink sm:p-10" style="--i:0">
+    <h1 class="font-display text-[2.3rem] font-extrabold leading-none tracking-[-0.03em] sm:text-[3.4rem]">{p.title}</h1>
+    <p class="mt-4 max-w-[54ch] text-lg leading-relaxed opacity-90">{p.lead}</p>
+  </section>
+
+  <div class="grid gap-3 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
+    <section class="glass rounded-[28px] p-6 sm:p-8">
+      <form
+        data-contact-form
+        data-endpoint={endpoint}
+        data-email={contact.email}
+        data-subject={f.subject}
+        data-sending={f.sending}
+        data-sent={f.sent}
+        data-error={f.error}
+        data-fallback={f.fallback}
+        class="flex flex-col gap-5"
+        novalidate
+      >
+        {accessKey && <input type="hidden" name="access_key" value={accessKey} />}
+        <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" class="hidden" />
+        <div class="grid gap-5 sm:grid-cols-2">
+          <label class="flex flex-col gap-2">
+            <span class="text-sm font-semibold">{f.name}</span>
+            <input class="field" type="text" name="name" autocomplete="name" placeholder={p.namePlaceholder} required />
+          </label>
+          <label class="flex flex-col gap-2">
+            <span class="text-sm font-semibold">{f.email}</span>
+            <input class="field" type="email" name="email" autocomplete="email" placeholder={p.emailPlaceholder} required />
+          </label>
+        </div>
+        <fieldset>
+          <legend class="text-sm font-semibold">{p.need}</legend>
+          <div class="mt-2 flex flex-wrap gap-2">
+            {
+              p.needs.map((n, i) => (
+                <label class="cursor-pointer">
+                  <input type="radio" class="peer sr-only" name="need" value={n} checked={i === 0} />
+                  <span class="block rounded-full bg-soft px-4 py-2 text-sm font-semibold transition-colors hover:bg-line peer-checked:bg-inv peer-checked:text-invink peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-[var(--ink)]">
+                    {n}
+                  </span>
+                </label>
+              ))
+            }
+          </div>
+        </fieldset>
+        <label class="flex flex-col gap-2">
+          <span class="text-sm font-semibold">{f.message}</span>
+          <textarea class="field resize-none" name="message" rows="5" placeholder={p.messagePlaceholder} required></textarea>
+        </label>
+        <div>
+          <button
+            type="submit"
+            disabled
+            class="rounded-full bg-inv px-7 py-3.5 font-semibold text-invink transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0"
+          >
+            {f.send}
+          </button>
+        </div>
+        <p role="status" aria-live="polite" data-status class="min-h-6 text-[15px] text-muted empty:hidden"></p>
+      </form>
+
+      <div data-sent-card hidden class="flex flex-col items-start gap-3">
+        <h2 class="font-display text-xl font-bold sm:text-2xl">{p.sentTitle}</h2>
+        <p class="text-[17px] text-muted">{f.sent}</p>
+        <button type="button" data-again class="rounded-full bg-soft px-5 py-2.5 text-sm font-semibold hover:bg-line">{p.sendAnother}</button>
+      </div>
+    </section>
+
+    <aside class="flex flex-col gap-3">
+      <a href={waHref} target="_blank" rel="noopener noreferrer" class={card}>
+        {wa && (
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" aria-hidden="true" class="transition-colors group-hover:text-[#25D366]">
+            <path d={wa.path} />
+          </svg>
+        )}
+        <p class="mt-4 font-display text-xl font-bold">{p.whatsappTitle}</p>
+        <p class="mt-1 text-muted">{p.whatsappText}</p>
+        <p class="mt-4 font-semibold">{contact.whatsappLabel}</p>
+      </a>
+      <a href={`mailto:${contact.email}`} class={card}>
+        {mail && (
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" aria-hidden="true" class="transition-colors group-hover:text-[#EA4335]">
+            <path d={mail.path} />
+          </svg>
+        )}
+        <p class="mt-4 font-display text-xl font-bold">{p.emailTitle}</p>
+        <p class="mt-1 break-all text-muted">{contact.email}</p>
+      </a>
+    </aside>
+  </div>
+</div>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
+  if (form) {
+    const status = form.querySelector<HTMLElement>('[data-status]')!;
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    const sentCard = document.querySelector<HTMLElement>('[data-sent-card]')!;
+    const sync = () => (button.disabled = !form.checkValidity());
+    form.addEventListener('input', sync);
+    form.addEventListener('change', sync);
+    sync();
+
+    document.querySelector('[data-again]')?.addEventListener('click', () => {
+      sentCard.hidden = true;
+      form.hidden = false;
+      status.textContent = '';
+      sync();
+    });
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (!form.reportValidity()) return;
+      const data = new FormData(form);
+      if (data.get('_gotcha')) return; // jebakan bot
+
+      const need = data.get('need');
+      const message = `[${need}]\n${data.get('message')}`;
+      const endpoint = form.dataset.endpoint;
+      if (endpoint) {
+        data.set('message', message);
+        button.disabled = true;
+        status.textContent = form.dataset.sending ?? '';
+        try {
+          const res = await fetch(endpoint, { method: 'POST', body: data, headers: { Accept: 'application/json' } });
+          if (!res.ok) throw new Error(String(res.status));
+          form.reset();
+          status.textContent = '';
+          form.hidden = true;
+          sentCard.hidden = false;
+        } catch {
+          status.textContent = form.dataset.error ?? '';
+          sync();
+        }
+        return;
+      }
+
+      // Tanpa endpoint: buka aplikasi email dengan pesan yang sudah terisi.
+      const subject = encodeURIComponent(form.dataset.subject ?? '');
+      const body = encodeURIComponent(`${message}\n\n${data.get('name')}\n${data.get('email')}`);
+      status.textContent = form.dataset.fallback ?? '';
+      window.location.href = `mailto:${form.dataset.email}?subject=${subject}&body=${body}`;
+    });
+  }
+</script>
