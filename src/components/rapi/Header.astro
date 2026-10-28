@@ -30,7 +30,7 @@ const themes = [
 ---
 
 <header data-rapi-header data-theme={initialTheme} class="sticky top-0 z-40 text-ink">
-  <div class="relative mx-auto flex max-w-[1180px] items-center gap-2 px-3.5 py-3.5 sm:px-7 sm:py-5">
+  <div data-header-row class="relative mx-auto flex max-w-[1180px] items-center gap-2 px-3.5 py-3.5 sm:px-7 sm:py-5">
     <a
       href={routes.home[lang]}
       aria-label={t.nav.homeAria}
@@ -64,7 +64,7 @@ const themes = [
       </ul>
     </nav>
 
-    <div class="ml-auto flex items-center gap-2">
+    <div data-tools class="ml-auto flex items-center gap-2">
       <a
         href={paths[other]}
         hreflang={other}
@@ -146,6 +146,8 @@ const themes = [
 </header>
 
 <div data-float-nav class="sm:hidden">
+  <div data-float-body>
+  <div data-float-tools></div>
   <nav data-float-panel aria-label={t.nav.aria} class="glass">
     <ul data-float-list>
       {
@@ -172,6 +174,7 @@ const themes = [
       }
     </ul>
   </nav>
+  </div>
   <button type="button" data-float-bubble aria-label={t.nav.menuOpen} tabindex="-1" class="glass">
     <span data-bubble-icon="left"><Icon name="chevron-left" size={18} /></span>
     <span data-bubble-icon="right"><Icon name="chevron-right" size={18} /></span>
@@ -179,45 +182,53 @@ const themes = [
 </div>
 
 <style is:global>
+  @property --hh { syntax: '<length>'; inherits: true; initial-value: 73px; }
   @media (max-width: 639.98px) {
-    /* Ruang untuk menu samping agar tidak menutupi konten/form. */
-    body { transition: padding 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
-    html[data-nav-pos='right'] body { padding-right: 56px; }
-    html[data-nav-pos='left'] body { padding-left: 56px; }
-    [data-float-nav] { position: fixed; top: 50%; right: 0; z-index: 40; transform: translateY(-50%); touch-action: none; }
-    [data-float-panel] {
-      border-radius: 1.5rem 0 0 1.5rem; padding: 0.3rem;
+    [data-float-nav] { position: fixed; top: 50%; right: 0.5rem; z-index: 40; transform: translateY(-50%); touch-action: none; }
+    [data-float-panel] { border-radius: 9999px; padding: 0.3rem; }
+    [data-float-body] {
+      display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem;
       transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease;
     }
+    [data-float-tools]:empty { display: none; }
+    html[data-nav-pos='left'] [data-float-body] { align-items: flex-start; }
+    html[data-nav-pos='left'] [data-float-tools] [data-settings-pop] { right: auto; left: 0; }
+    /* Header kosong saat menu di samping: konten naik halus. */
+    html { transition: --hh 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
+    [data-header-row] { height: var(--hh); padding-block: 0; overflow: visible; }
+    html[data-nav-pos='right'], html[data-nav-pos='left'] { --hh: 0px; }
     [data-float-list] { display: flex; flex-direction: column; gap: 0.25rem; }
     [data-float-list] a { width: 2.75rem; height: 2.75rem; }
     [data-float-label] { display: none; }
     [data-float-bubble] {
-      position: absolute; top: 50%; right: 0; display: grid; place-items: center;
+      position: absolute; top: 50%; right: -0.5rem; display: grid; place-items: center;
       width: 1.75rem; height: 3.5rem; border-radius: 9999px 0 0 9999px; padding-left: 0.2rem;
       opacity: 0; pointer-events: none; transform: translate(100%, -50%);
       transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease;
     }
-    [data-float-nav][data-min] [data-float-panel] { transform: translateX(110%); opacity: 0; pointer-events: none; }
+    [data-float-nav][data-min] [data-float-body] { transform: translateX(calc(100% + 1rem)); opacity: 0; pointer-events: none; }
     [data-float-nav][data-min] [data-float-bubble] { opacity: 1; pointer-events: auto; transform: translate(0, -50%); }
     [data-bubble-icon='right'] { display: none; }
-    [data-float-nav][data-dragging] [data-float-panel] { transition: none; }
+    [data-float-nav][data-dragging] [data-float-body] { transition: none; }
 
-    html[data-nav-pos='left'] [data-float-nav] { right: auto; left: 0; }
-    html[data-nav-pos='left'] [data-float-panel] { border-radius: 0 1.5rem 1.5rem 0; }
-    html[data-nav-pos='left'] [data-float-bubble] { right: auto; left: 0; border-radius: 0 9999px 9999px 0; padding: 0 0.2rem 0 0; transform: translate(-100%, -50%); }
-    html[data-nav-pos='left'] [data-float-nav][data-min] [data-float-panel] { transform: translateX(-110%); }
+    html[data-nav-pos='left'] [data-float-nav] { right: auto; left: 0.5rem; }
+        html[data-nav-pos='left'] [data-float-bubble] { right: auto; left: -0.5rem; border-radius: 0 9999px 9999px 0; padding: 0 0.2rem 0 0; transform: translate(-100%, -50%); }
+    html[data-nav-pos='left'] [data-float-nav][data-min] [data-float-body] { transform: translateX(calc(-100% - 1rem)); }
     html[data-nav-pos='left'] [data-float-nav][data-min] [data-float-bubble] { transform: translate(0, -50%); }
     html[data-nav-pos='left'] [data-bubble-icon='left'] { display: none; }
     html[data-nav-pos='left'] [data-bubble-icon='right'] { display: block; }
 
-    html[data-nav-pos='top'] [data-float-nav] { position: sticky; top: var(--hh); right: auto; transform: none; padding: 0 0.875rem 0.5rem; }
-    html[data-nav-pos='top'] [data-float-panel] { border-radius: 9999px; padding: 0.25rem; transform: none !important; opacity: 1 !important; pointer-events: auto !important; }
+    html[data-nav-pos='top'] [data-float-nav] { position: fixed; top: 0.875rem; left: 0.875rem; right: calc(0.875rem + 2.75rem + 0.5rem); transform: none; }
+    html[data-nav-pos='top'] [data-float-panel] { padding: 0.25rem; }
+    html[data-nav-pos='top'] [data-float-body] { display: block; transform: none !important; opacity: 1 !important; pointer-events: auto !important; }
     html[data-nav-pos='top'] [data-float-list] { flex-direction: row; justify-content: space-between; gap: 0; }
     html[data-nav-pos='top'] [data-float-list] a { width: auto; height: auto; padding: 0.5rem 0.75rem; font-size: 13.5px; }
     html[data-nav-pos='top'] [data-float-icon] { display: none; }
     html[data-nav-pos='top'] [data-float-label] { display: inline; }
     html[data-nav-pos='top'] [data-float-bubble] { display: none; }
+  }
+  @media (min-width: 430px) and (max-width: 639.98px) {
+    html[data-nav-pos='top'] [data-float-nav] { right: calc(0.875rem + 5.5rem + 1rem); }
   }
 </style>
 
@@ -296,8 +307,21 @@ const themes = [
     if (float) {
       const panel = float.querySelector<HTMLElement>('[data-float-panel]')!;
       const bubble = float.querySelector<HTMLButtonElement>('[data-float-bubble]')!;
+      const body = float.querySelector<HTMLElement>('[data-float-body]')!;
+      const tools = header.querySelector<HTMLElement>('[data-tools]')!;
+      const toolsHome = tools.parentElement!;
+      const toolsSlot = float.querySelector<HTMLElement>('[data-float-tools]')!;
+      const mobile = matchMedia('(max-width: 639.98px)');
+      /* Di samping (mobile): tombol tema ikut menu sebagai gelembung sendiri. */
+      const placeTools = () => {
+        const side = mobile.matches && root.dataset.navPos !== 'top';
+        const target = side ? toolsSlot : toolsHome;
+        if (tools.parentElement !== target) target.appendChild(tools);
+      };
       const valid = (v: string | null) => (v === 'top' || v === 'left' ? v : 'right');
       root.dataset.navPos = valid(localStorage.getItem('nav-pos'));
+      placeTools();
+      mobile.addEventListener('change', placeTools);
       const setMin = (min: boolean) => {
         if (min && root.dataset.navPos !== 'top') float.setAttribute('data-min', '');
         else float.removeAttribute('data-min');
@@ -318,7 +342,7 @@ const themes = [
 
       let start: { x: number; y: number; id: number } | null = null;
       let dragged = false;
-      panel.addEventListener('pointerdown', (e) => {
+      body.addEventListener('pointerdown', (e) => {
         if (e.button !== 0) return;
         start = { x: e.clientX, y: e.clientY, id: e.pointerId };
         dragged = false;
@@ -332,7 +356,7 @@ const themes = [
           dragged = true;
           float.setAttribute('data-dragging', '');
         }
-        panel.style.translate = `${dx}px ${dy}px`;
+        body.style.translate = `${dx}px ${dy}px`;
       });
       const end = (e: PointerEvent) => {
         if (!start) return;
@@ -340,15 +364,16 @@ const themes = [
         if (!dragged) return;
         const pos = e.clientY < innerHeight * 0.25 ? 'top' : e.clientX < innerWidth / 2 ? 'left' : 'right';
         // FLIP: animasikan dari posisi/ukuran saat dilepas ke posisi snap (morph bar atas <-> menu samping).
-        const from = panel.getBoundingClientRect();
-        panel.style.translate = '';
+        const from = body.getBoundingClientRect();
+        body.style.translate = '';
         root.dataset.navPos = pos;
+        placeTools();
         localStorage.setItem('nav-pos', pos);
         setMin(false);
-        const to = panel.getBoundingClientRect();
+        const to = body.getBoundingClientRect();
         float.removeAttribute('data-dragging');
         if (!matchMedia('(prefers-reduced-motion: reduce)').matches && to.width && to.height) {
-          panel.animate(
+          body.animate(
             [
               {
                 transformOrigin: '0 0',
@@ -363,7 +388,7 @@ const themes = [
       };
       addEventListener('pointerup', end);
       addEventListener('pointercancel', end);
-      panel.addEventListener(
+      body.addEventListener(
         'click',
         (e) => {
           if (dragged) {
