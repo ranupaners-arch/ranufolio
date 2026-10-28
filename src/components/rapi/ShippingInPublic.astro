@@ -1,0 +1,149 @@
+---
+import { copy } from '../../data/content';
+import type { Lang } from '../../data/content';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = copy[lang].shipping;
+const USER = 'ranupaners-arch';
+
+type Day = { date: string; count: number; level: number };
+let days: Day[] = [];
+try {
+  // Diambil saat build (API publik, tanpa token). Data hanya diperbarui tiap deploy.
+  const res = await fetch(`https://github-contributions-api.jogruber.de/v4/${USER}?y=last`);
+  if (res.ok) {
+    const json = await res.json();
+    if (Array.isArray(json?.contributions)) days = json.contributions;
+  }
+} catch {
+  days = [];
+}
+
+// Susun per minggu (kolom), mulai Minggu; potong minggu kosong sebelum aktivitas pertama.
+const weeks: (Day | null)[][] = [];
+if (days.length) {
+  const firstDow = new Date(days[0].date + 'T00:00:00Z').getUTCDay();
+  const padded: (Day | null)[] = [...Array(firstDow).fill(null), ...days];
+  for (let i = 0; i < padded.length; i += 7) weeks.push(padded.slice(i, i + 7));
+  const firstActive = weeks.findIndex((w) => w.some((d) => d && d.count > 0));
+  if (firstActive > 0) weeks.splice(0, firstActive);
+}
+const shown = weeks.flat().filter((d): d is Day => !!d);
+const total = shown.reduce((a, d) => a + d.count, 0);
+let months = 0;
+if (shown.length) {
+  const a = new Date(shown[0].date + 'T00:00:00Z');
+  const b = new Date(shown[shown.length - 1].date + 'T00:00:00Z');
+  months = Math.max(1, Math.round((b.getTime() - a.getTime()) / (30.44 * 864e5)));
+}
+const summary = t.summary.replace('{x}', total.toLocaleString(lang === 'id' ? 'id-ID' : 'en-US')).replace('{n}', String(months));
+const lvl = ['bg-soft', 'bg-accent/25', 'bg-accent/50', 'bg-accent/75', 'bg-accent'];
+---
+
+<section aria-labelledby="ship-h" class="glass rounded-[28px] p-6 sm:p-8">
+  <div class="flex items-baseline justify-between gap-4">
+    <h2 id="ship-h" class="text-sm font-semibold text-muted">{t.title}</h2>
+    <a href={`https://github.com/${USER}`} target="_blank" rel="noopener" class="text-sm font-semibold hover:underline">@{USER}</a>
+  </div>
+  {
+    weeks.length ? (
+      <>
+        <div class="mt-4 overflow-x-auto pb-1">
+          <div
+            role="img"
+            aria-label={summary}
+            data-contrib
+            data-lang={lang}
+            data-one={t.one}
+            data-many={t.many}
+            data-on={t.on}
+            class="flex w-max gap-[3px]"
+          >
+            {weeks.map((w) => (
+              <div class="flex flex-col gap-[3px]">
+                {w.map((d) =>
+                  d ? (
+                    <span
+                      data-day
+                      data-date={d.date}
+                      data-c={d.count}
+                      class={`block size-3 rounded-[3px] ${lvl[Math.min(4, Math.max(0, d.level))]}`}
+                    />
+                  ) : (
+                    <span class="block size-3" />
+                  ),
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+        <p class="mt-3 text-sm text-muted">{summary}</p>
+        <div
+          data-contrib-tip
+          hidden
+          class="pointer-events-none fixed z-[100] whitespace-nowrap rounded-lg bg-[#0a0a0a] px-2.5 py-1.5 text-xs text-white shadow-lg"
+        />
+      </>
+    ) : (
+      <p class="mt-4 text-sm text-muted">{t.unavailable}</p>
+    )
+  }
+</section>
+
+<script>
+  const grid = document.querySelector<HTMLElement>('[data-contrib]');
+  const tip = document.querySelector<HTMLElement>('[data-contrib-tip]');
+  if (grid && tip) {
+    const lang = grid.dataset.lang === 'id' ? 'id-ID' : 'en-US';
+    const fmt = new Intl.DateTimeFormat(lang, { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+    let active: HTMLElement | null = null;
+    const hide = () => {
+      tip.hidden = true;
+      active?.classList.remove('outline', 'outline-1', 'outline-offset-1', 'outline-[var(--ink)]');
+      active = null;
+    };
+    const show = (sq: HTMLElement) => {
+      if (active === sq && !tip.hidden) return;
+      hide();
+      active = sq;
+      sq.classList.add('outline', 'outline-1', 'outline-offset-1', 'outline-[var(--ink)]');
+      const c = Number(sq.dataset.c);
+      const word = c === 1 ? grid.dataset.one : grid.dataset.many;
+      const b = document.createElement('b');
+      b.className = 'font-semibold';
+      b.textContent = `${c.toLocaleString(lang)} ${word}`;
+      const s = document.createElement('span');
+      s.className = 'text-white/60';
+      s.textContent = ` ${grid.dataset.on} ${fmt.format(new Date(sq.dataset.date + 'T00:00:00Z'))}`;
+      tip.replaceChildren(b, s);
+      tip.hidden = false;
+      const r = sq.getBoundingClientRect();
+      const tw = tip.offsetWidth;
+      const th = tip.offsetHeight;
+      const left = Math.min(Math.max(8, r.left + r.width / 2 - tw / 2), window.innerWidth - tw - 8);
+      let top = r.top - th - 8;
+      if (top < 8) top = r.bottom + 8;
+      tip.style.left = `${left}px`;
+      tip.style.top = `${top}px`;
+    };
+    const sqOf = (e: Event) => (e.target as HTMLElement).closest<HTMLElement>('[data-day]');
+    grid.addEventListener('pointerover', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      const sq = sqOf(e);
+      if (sq) show(sq);
+    });
+    grid.addEventListener('pointerleave', (e) => {
+      if (e.pointerType === 'mouse') hide();
+    });
+    document.addEventListener('click', (e) => {
+      const sq = grid.contains(e.target as Node) ? sqOf(e) : null;
+      if (sq) show(sq);
+      else hide();
+    });
+    window.addEventListener('scroll', hide, { passive: true });
+    grid.parentElement?.addEventListener('scroll', hide, { passive: true });
+  }
+</script>

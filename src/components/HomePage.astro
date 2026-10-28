@@ -2,6 +2,7 @@
 import RapiPage from '../layouts/RapiPage.astro';
 import Hero from './rapi/Hero.astro';
 import AboutSection from './rapi/AboutSection.astro';
+import ShippingInPublic from './rapi/ShippingInPublic.astro';
 import CtaBand from './rapi/CtaBand.astro';
 import SelectedWork from './faiz/SelectedWork.astro';
 import KindWords from './faiz/KindWords.astro';
@@ -19,6 +20,7 @@ const { lang } = Astro.props;
   <SelectedWork lang={lang} />
   <div data-zone="auto" class="mx-auto max-w-[1180px] px-3.5 py-10 sm:px-7">
     <AboutSection lang={lang} />
+    <div class="mt-3"><ShippingInPublic lang={lang} /></div>
   </div>
   <KindWords lang={lang} />
   <div data-zone="auto" class="mx-auto max-w-[1180px] px-3.5 pt-3">
