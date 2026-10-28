@@ -374,6 +374,7 @@ const themes = [
       let dragged = false;
       body.addEventListener('pointerdown', (e) => {
         if (e.button !== 0) return;
+        if ((e.target as Element).closest('[data-settings-pop], [data-settings-btn], input, select, textarea, button:not([data-float-bubble])')) return;
         start = { x: e.clientX, y: e.clientY, id: e.pointerId };
         dragged = false;
       });
