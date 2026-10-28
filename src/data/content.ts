@@ -219,7 +219,6 @@ export const copy = {
       switchAria: 'Read in English',
       homeAria: 'Ke beranda',
       menuOpen: 'Buka menu',
-      pos: { label: 'Posisi menu', top: 'Atas', right: 'Kanan', left: 'Kiri' },
       settings: 'Tema, kaca, dan bahasa',
     },
     menu: {
@@ -391,7 +390,6 @@ export const copy = {
       switchAria: 'Baca dalam Bahasa Indonesia',
       homeAria: 'Go to home',
       menuOpen: 'Open menu',
-      pos: { label: 'Menu position', top: 'Top', right: 'Right', left: 'Left' },
       settings: 'Theme, glass and language',
     },
     menu: {

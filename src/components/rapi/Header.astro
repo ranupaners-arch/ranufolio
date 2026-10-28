@@ -21,6 +21,7 @@ const items = [
   { key: 'contact', label: t.nav.contact, href: routes.page(lang, 'contact') },
 ] as const;
 const m = t.menu;
+const icons = { home: 'home', learn: 'book', resume: 'document', contact: 'mail' } as const;
 const themes = [
   ['light', m.light],
   ['dark', m.dark],
@@ -154,36 +155,24 @@ const themes = [
             <li>
               <a
                 href={i.href}
+                aria-label={i.label}
                 aria-current={active ? 'page' : undefined}
+                draggable="false"
                 class:list={[
-                  'block rounded-full px-3.5 py-2.5 text-center text-[13.5px] font-semibold transition-colors duration-300',
+                  'flex items-center justify-center rounded-full font-semibold transition-colors duration-300',
                   active ? 'bg-inv text-invink' : 'hover:bg-soft',
                 ]}
               >
-                {i.label}
+                <span data-float-icon><Icon name={icons[i.key]} size={20} stroke={36} /></span>
+                <span data-float-label>{i.label}</span>
               </a>
             </li>
           );
         })
       }
     </ul>
-    <div data-nav-pos-group role="radiogroup" aria-label={t.nav.pos.label} class="grid grid-cols-3 gap-0.5 rounded-full bg-soft p-0.5">
-      {
-        (['top', 'right', 'left'] as const).map((v) => (
-          <button
-            type="button"
-            role="radio"
-            aria-checked="false"
-            data-nav-pos-opt={v}
-            class="rounded-full px-1.5 py-1 text-[10.5px] font-semibold text-muted transition-colors aria-checked:bg-panel aria-checked:text-ink aria-checked:shadow-[0_1px_2px_rgb(0_0_0/0.12)]"
-          >
-            {t.nav.pos[v]}
-          </button>
-        ))
-      }
-    </div>
   </nav>
-  <button type="button" data-float-bubble hidden aria-label={t.nav.menuOpen} class="glass">
+  <button type="button" data-float-bubble aria-label={t.nav.menuOpen} tabindex="-1" class="glass">
     <span data-bubble-icon="left"><Icon name="chevron-left" size={18} /></span>
     <span data-bubble-icon="right"><Icon name="chevron-right" size={18} /></span>
   </button>
@@ -191,86 +180,44 @@ const themes = [
 
 <style is:global>
   @media (max-width: 639.98px) {
-    [data-float-nav] {
-      position: fixed;
-      top: 50%;
-      right: 0;
-      transform: translateY(-50%);
-      z-index: 40;
-    }
+    /* Ruang untuk menu samping agar tidak menutupi konten/form. */
+    body { transition: padding 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
+    html[data-nav-pos='right'] body { padding-right: 56px; }
+    html[data-nav-pos='left'] body { padding-left: 56px; }
+    [data-float-nav] { position: fixed; top: 50%; right: 0; z-index: 40; transform: translateY(-50%); touch-action: none; }
     [data-float-panel] {
-      border-radius: 1.5rem 0 0 1.5rem;
-      padding: 0.375rem;
+      border-radius: 1.5rem 0 0 1.5rem; padding: 0.3rem;
+      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease;
     }
-    [data-float-list] {
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-      margin-bottom: 0.375rem;
-    }
+    [data-float-list] { display: flex; flex-direction: column; gap: 0.25rem; }
+    [data-float-list] a { width: 2.75rem; height: 2.75rem; }
+    [data-float-label] { display: none; }
     [data-float-bubble] {
-      display: grid;
-      place-items: center;
-      width: 2rem;
-      height: 3.5rem;
-      border-radius: 9999px 0 0 9999px;
-      padding-left: 0.25rem;
+      position: absolute; top: 50%; right: 0; display: grid; place-items: center;
+      width: 1.75rem; height: 3.5rem; border-radius: 9999px 0 0 9999px; padding-left: 0.2rem;
+      opacity: 0; pointer-events: none; transform: translate(100%, -50%);
+      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease;
     }
-    [data-float-panel][hidden],
-    [data-float-bubble][hidden] {
-      display: none;
-    }
-    [data-bubble-icon='right'] {
-      display: none;
-    }
+    [data-float-nav][data-min] [data-float-panel] { transform: translateX(110%); opacity: 0; pointer-events: none; }
+    [data-float-nav][data-min] [data-float-bubble] { opacity: 1; pointer-events: auto; transform: translate(0, -50%); }
+    [data-bubble-icon='right'] { display: none; }
+    [data-float-nav][data-dragging] [data-float-panel] { transition: none; }
 
-    html[data-nav-pos='left'] [data-float-nav] {
-      right: auto;
-      left: 0;
-    }
-    html[data-nav-pos='left'] [data-float-panel] {
-      border-radius: 0 1.5rem 1.5rem 0;
-    }
-    html[data-nav-pos='left'] [data-float-bubble] {
-      border-radius: 0 9999px 9999px 0;
-      padding-left: 0;
-      padding-right: 0.25rem;
-    }
-    html[data-nav-pos='left'] [data-bubble-icon='left'] {
-      display: none;
-    }
-    html[data-nav-pos='left'] [data-bubble-icon='right'] {
-      display: block;
-    }
+    html[data-nav-pos='left'] [data-float-nav] { right: auto; left: 0; }
+    html[data-nav-pos='left'] [data-float-panel] { border-radius: 0 1.5rem 1.5rem 0; }
+    html[data-nav-pos='left'] [data-float-bubble] { right: auto; left: 0; border-radius: 0 9999px 9999px 0; padding: 0 0.2rem 0 0; transform: translate(-100%, -50%); }
+    html[data-nav-pos='left'] [data-float-nav][data-min] [data-float-panel] { transform: translateX(-110%); }
+    html[data-nav-pos='left'] [data-float-nav][data-min] [data-float-bubble] { transform: translate(0, -50%); }
+    html[data-nav-pos='left'] [data-bubble-icon='left'] { display: none; }
+    html[data-nav-pos='left'] [data-bubble-icon='right'] { display: block; }
 
-    html[data-nav-pos='top'] [data-float-nav] {
-      position: sticky;
-      top: var(--hh);
-      right: auto;
-      transform: none;
-      padding: 0 0.875rem 0.5rem;
-    }
-    html[data-nav-pos='top'] [data-float-panel] {
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-      border-radius: 9999px;
-      padding: 0.25rem;
-    }
-    html[data-nav-pos='top'] [data-float-list] {
-      flex-direction: row;
-      flex: 1;
-      justify-content: space-between;
-      gap: 0;
-      margin-bottom: 0;
-    }
-    html[data-nav-pos='top'] [data-float-list] a {
-      padding: 0.5rem 0.55rem;
-      font-size: 12.5px;
-    }
-    html[data-nav-pos='top'] [data-float-bubble] {
-      display: none;
-    }
+    html[data-nav-pos='top'] [data-float-nav] { position: sticky; top: var(--hh); right: auto; transform: none; padding: 0 0.875rem 0.5rem; }
+    html[data-nav-pos='top'] [data-float-panel] { border-radius: 9999px; padding: 0.25rem; transform: none !important; opacity: 1 !important; pointer-events: auto !important; }
+    html[data-nav-pos='top'] [data-float-list] { flex-direction: row; justify-content: space-between; gap: 0; }
+    html[data-nav-pos='top'] [data-float-list] a { width: auto; height: auto; padding: 0.5rem 0.75rem; font-size: 13.5px; }
+    html[data-nav-pos='top'] [data-float-icon] { display: none; }
+    html[data-nav-pos='top'] [data-float-label] { display: inline; }
+    html[data-nav-pos='top'] [data-float-bubble] { display: none; }
   }
 </style>
 
@@ -344,29 +291,17 @@ const themes = [
       }),
     );
 
-    /* Menu mobile: posisi top | right | left (tersimpan); right/left mengecil ke tepi saat scroll. */
+    /* Menu mobile: seret ke atas / tepi kanan / tepi kiri (snap, tersimpan, default kanan); samping mengecil saat scroll. */
     const float = document.querySelector<HTMLElement>('[data-float-nav]');
     if (float) {
       const panel = float.querySelector<HTMLElement>('[data-float-panel]')!;
       const bubble = float.querySelector<HTMLButtonElement>('[data-float-bubble]')!;
-      const posOpts = [...float.querySelectorAll<HTMLElement>('[data-nav-pos-opt]')];
-      const posNow = () => (root.dataset.navPos === 'top' || root.dataset.navPos === 'left' ? root.dataset.navPos : 'right');
+      const valid = (v: string | null) => (v === 'top' || v === 'left' ? v : 'right');
+      root.dataset.navPos = valid(localStorage.getItem('nav-pos'));
       const setMin = (min: boolean) => {
-        const m = min && posNow() !== 'top';
-        panel.hidden = m;
-        bubble.hidden = !m;
+        if (min && root.dataset.navPos !== 'top') float.setAttribute('data-min', '');
+        else float.removeAttribute('data-min');
       };
-      const paintPos = () => posOpts.forEach((o) => o.setAttribute('aria-checked', String(o.dataset.navPosOpt === posNow())));
-      paintPos();
-      posOpts.forEach((o) =>
-        o.addEventListener('click', () => {
-          const v = o.dataset.navPosOpt!;
-          root.dataset.navPos = v;
-          localStorage.setItem('nav-pos', v);
-          setMin(false);
-          paintPos();
-        }),
-      );
       let lastY = scrollY;
       addEventListener(
         'scroll',
@@ -380,6 +315,65 @@ const themes = [
         lastY = scrollY;
         setMin(false);
       });
+
+      let start: { x: number; y: number; id: number } | null = null;
+      let dragged = false;
+      panel.addEventListener('pointerdown', (e) => {
+        if (e.button !== 0) return;
+        start = { x: e.clientX, y: e.clientY, id: e.pointerId };
+        dragged = false;
+      });
+      addEventListener('pointermove', (e) => {
+        if (!start || e.pointerId !== start.id) return;
+        const dx = e.clientX - start.x;
+        const dy = e.clientY - start.y;
+        if (!dragged && Math.hypot(dx, dy) < 10) return;
+        if (!dragged) {
+          dragged = true;
+          float.setAttribute('data-dragging', '');
+        }
+        panel.style.translate = `${dx}px ${dy}px`;
+      });
+      const end = (e: PointerEvent) => {
+        if (!start) return;
+        start = null;
+        if (!dragged) return;
+        const pos = e.clientY < innerHeight * 0.25 ? 'top' : e.clientX < innerWidth / 2 ? 'left' : 'right';
+        // FLIP: animasikan dari posisi/ukuran saat dilepas ke posisi snap (morph bar atas <-> menu samping).
+        const from = panel.getBoundingClientRect();
+        panel.style.translate = '';
+        root.dataset.navPos = pos;
+        localStorage.setItem('nav-pos', pos);
+        setMin(false);
+        const to = panel.getBoundingClientRect();
+        float.removeAttribute('data-dragging');
+        if (!matchMedia('(prefers-reduced-motion: reduce)').matches && to.width && to.height) {
+          panel.animate(
+            [
+              {
+                transformOrigin: '0 0',
+                transform: `translate(${from.left - to.left}px, ${from.top - to.top}px) scale(${from.width / to.width}, ${from.height / to.height})`,
+                opacity: 0.6,
+              },
+              { transformOrigin: '0 0', transform: 'none', opacity: 1 },
+            ],
+            { duration: 420, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' },
+          );
+        }
+      };
+      addEventListener('pointerup', end);
+      addEventListener('pointercancel', end);
+      panel.addEventListener(
+        'click',
+        (e) => {
+          if (dragged) {
+            e.preventDefault();
+            e.stopPropagation();
+            dragged = false;
+          }
+        },
+        true,
+      );
     }
 
     /* Kaca: 0 sampai 100 -> --g */
