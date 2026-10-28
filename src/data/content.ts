@@ -32,7 +32,7 @@ export const contact = {
   email: 'ranupaners@gmail.com',
   socials: [
     { label: 'GitHub', handle: 'ranupaners-arch', url: 'https://github.com/ranupaners-arch', icon: ['siGithub'], glyph: 'GH' },
-    { label: 'LinkedIn', handle: 'ranupane-rimba-argana', url: 'https://www.linkedin.com/in/ranupane-rimba-argana', icon: ['siLinkedin'], glyph: 'in' },
+    { label: 'LinkedIn', handle: 'ranupane-rimba-argana', url: 'https://www.linkedin.com/in/ranupane-rimba-argana-680ab240a', icon: ['siLinkedin'], glyph: 'in' },
     { label: 'Instagram', handle: '@_mberimbe', url: 'https://instagram.com/_mberimbe', icon: ['siInstagram'], glyph: 'IG' },
     { label: 'X', handle: '@rnpainvest_', url: 'https://x.com/rnpainvest_', icon: ['siX'], glyph: 'X' },
   ],
@@ -202,9 +202,9 @@ export const techGroups: { label: Bilingual; items: TechItem[] }[] = [
 export const copy = {
   id: {
     htmlLang: 'id',
-    title: 'Ranupane Rimba Argana | Founder KukerjainAja',
+    title: 'Ranupane Rimba Argana | Konsultan dan Founder KukerjainAja',
     description:
-      'Ranupane Rimba Argana, founder KukerjainAja di Wonogiri. Membangun website dan aplikasi untuk membantu UMKM tampil profesional di dunia digital.',
+      'Ranupane Rimba Argana di Wonogiri, founder KukerjainAja. Konsultasi dan jasa untuk website dan aplikasi, bahasa Arab, penulisan, serta administrasi dan koordinasi program organisasi.',
     skip: 'Lewati ke konten',
     nav: {
       home: 'Beranda',
@@ -228,9 +228,11 @@ export const copy = {
       language: 'Bahasa',
     },
     hero: {
-      role: 'Founder KukerjainAja',
-      title: 'Saya bikin website dan aplikasi untuk UMKM.',
-      bio: 'Founder KukerjainAja yang membangun website dan aplikasi untuk membantu UMKM tampil profesional di dunia digital.',
+      role: 'Konsultan dan Founder KukerjainAja',
+      title: 'Konsultan untuk web dan aplikasi, bahasa Arab, tulisan, dan organisasi.',
+      bio: 'Founder KukerjainAja, mahasiswa Pendidikan Bahasa Arab, dan penulis. Membantu membangun website dan aplikasi, mengajar dan menyunting bahasa Arab, menulis, serta mengurus administrasi dan koordinasi program.',
+      consultA: 'Konsultasi',
+      consultText: 'Halo Ranupane, saya ingin berkonsultasi tentang: ',
       badge: 'Berbasis di Wonogiri, Jawa Tengah',
       ownerQ: 'Pemilik usaha?',
       ownerA: 'Mulai proyek',
@@ -276,13 +278,14 @@ export const copy = {
       title: 'Tentang',
       body: [
         'Saya Ranupane Rimba Argana, founder KukerjainAja di Wonogiri.',
-        'Saya membangun website dan aplikasi supaya usaha kecil terlihat profesional dan mudah ditemukan di dunia digital. Mulai dari tampilan, kode, sampai server tempat website berjalan.',
+        'Saya kuliah Pendidikan Bahasa Arab di Institut Muslim Cendekia, Sukabumi, dan membangun website serta aplikasi lewat KukerjainAja. Saya juga menulis, mengajar dan menyunting bahasa Arab, serta terbiasa mengurus administrasi dan koordinasi program organisasi.',
       ],
       doTitle: 'Yang saya kerjakan',
       does: [
-        { title: 'Website untuk UMKM', text: 'Company profile, katalog produk, dan toko online yang cepat dan rapi di layar HP.' },
-        { title: 'Aplikasi mobile', text: 'Aplikasi Android dan iOS dengan Flutter untuk kebutuhan operasional usaha.' },
-        { title: 'Server dan perawatan', text: 'Hosting di VPS, Nginx, Cloudflare, dan deploy otomatis dengan GitHub Actions.' },
+        { title: 'Website dan aplikasi', text: 'Lewat KukerjainAja: website, aplikasi web, dan aplikasi mobile dengan Next.js dan Flutter, dari konsultasi dan desain sampai rilis, untuk UMKM dan organisasi.' },
+        { title: 'Bahasa Arab', text: 'Mengajar dan les privat, penyuntingan, penerjemahan dan konten bahasa Arab, serta analisis teks Arab klasik.' },
+        { title: 'Menulis', text: 'Penulisan kreatif dan konten. Penulis buku terbit, Bisikan Asa di Sudut Jiwa Vol. 5.' },
+        { title: 'Organisasi dan administrasi', text: 'Administrasi, persuratan dan notulen, serta koordinasi program kerja organisasi dan kegiatan.' },
       ],
     },
     stack: { title: 'Tech stack' },
@@ -313,10 +316,13 @@ export const copy = {
     footer: { socials: 'Sosial media', made: 'Dibuat di Wonogiri.' },
     resume: {
       title: 'Resume',
-      lead: 'Ringkasan pengalaman, pendidikan, dan teknologi yang saya pakai.',
+      lead: 'Ringkasan pengalaman, pendidikan, penghargaan, dan keahlian saya.',
       experience: 'Pengalaman',
       education: 'Pendidikan',
-      stack: 'Stack',
+      awards: 'Penghargaan',
+      certifications: 'Sertifikasi',
+      languages: 'Bahasa',
+      skills: 'Keahlian',
       current: 'Saat ini',
       showMore: (n: number) => `Tampilkan ${n} lagi`,
       showLess: 'Sembunyikan',
@@ -368,9 +374,9 @@ export const copy = {
   },
   en: {
     htmlLang: 'en',
-    title: 'Ranupane Rimba Argana | Founder of KukerjainAja',
+    title: 'Ranupane Rimba Argana | Consultant and Founder of KukerjainAja',
     description:
-      'Ranupane Rimba Argana, founder of KukerjainAja in Wonogiri, Indonesia. Building websites and apps that help small businesses look professional online.',
+      'Ranupane Rimba Argana in Wonogiri, Indonesia, founder of KukerjainAja. Consultation and services for websites and apps, Arabic language, writing, and organizational administration and program coordination.',
     skip: 'Skip to content',
     nav: {
       home: 'Home',
@@ -394,9 +400,11 @@ export const copy = {
       language: 'Language',
     },
     hero: {
-      role: 'Founder of KukerjainAja',
-      title: 'I build websites and apps for small businesses.',
-      bio: 'Founder of KukerjainAja, building websites and apps that help small businesses look professional online.',
+      role: 'Consultant and Founder of KukerjainAja',
+      title: 'Consultant for web and apps, Arabic, writing, and organizations.',
+      bio: 'Founder of KukerjainAja, Arabic Language Education student, and author. I help build websites and apps, teach and proofread Arabic, write, and handle administration and program coordination.',
+      consultA: 'Consultation',
+      consultText: 'Hi Ranupane, I would like a consultation about: ',
       badge: 'Based in Wonogiri, Central Java',
       ownerQ: 'Business owner?',
       ownerA: 'Start a project',
@@ -442,13 +450,14 @@ export const copy = {
       title: 'About',
       body: [
         "I'm Ranupane Rimba Argana, founder of KukerjainAja in Wonogiri.",
-        'I build websites and apps so small businesses look professional and are easy to find online. That covers the design, the code, and the server the site runs on.',
+        'I study Arabic Language Education at Institut Muslim Cendekia in Sukabumi, and I build websites and apps through KukerjainAja. I also write, teach and proofread Arabic, and I am used to handling administration and program coordination for organizations.',
       ],
       doTitle: 'What I do',
       does: [
-        { title: 'Websites for small businesses', text: 'Company profiles, product catalogs, and online stores that load fast and read well on a phone.' },
-        { title: 'Mobile apps', text: 'Android and iOS apps built with Flutter for the day-to-day needs of a business.' },
-        { title: 'Servers and upkeep', text: 'Hosting on a VPS with Nginx and Cloudflare, plus automatic deploys with GitHub Actions.' },
+        { title: 'Web and app development', text: 'Through KukerjainAja: websites, web apps, and mobile apps with Next.js and Flutter, from consultation and design to release, for small businesses and organizations.' },
+        { title: 'Arabic language', text: 'Teaching and tutoring, proofreading, Arabic translation and content, and classical Arabic text analysis.' },
+        { title: 'Writing', text: 'Creative and content writing. Published author of Bisikan Asa di Sudut Jiwa Vol. 5.' },
+        { title: 'Organization and administration', text: 'Administration, correspondence and meeting minutes, and coordination of organizational programs and events.' },
       ],
     },
     stack: { title: 'Tech stack' },
@@ -479,10 +488,13 @@ export const copy = {
     footer: { socials: 'Social media', made: 'Made in Wonogiri.' },
     resume: {
       title: 'Resume',
-      lead: 'A summary of my experience, education, and the tools I work with.',
+      lead: 'A summary of my experience, education, awards, and skills.',
       experience: 'Experience',
       education: 'Education',
-      stack: 'Stack',
+      awards: 'Awards',
+      certifications: 'Certifications',
+      languages: 'Languages',
+      skills: 'Skills',
       current: 'Current',
       showMore: (n: number) => `Show ${n} more`,
       showLess: 'Show less',
@@ -541,55 +553,243 @@ const L1 = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
 const L2 = 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
 const L3 = 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.';
 
+const same = (text: string): Bilingual => ({ id: text, en: text });
+
 export type ResumeEntry = {
-  title: string;
-  place: string;
+  title: Bilingual;
+  place: Bilingual;
   role: Bilingual;
   period: Bilingual;
   current?: boolean;
   bullets: Bilingual[];
 };
 
-export const resume: { experience: ResumeEntry[]; education: ResumeEntry[] } = {
+export type ChipGroup = { label: Bilingual; items: Bilingual[] };
+
+const IMC = same('Institut Muslim Cendekia, Sukabumi');
+
+export const resume: {
+  experience: ResumeEntry[];
+  education: ResumeEntry[];
+  awards: ResumeEntry[];
+  certifications: ResumeEntry[];
+  languages: Bilingual[];
+  skills: ChipGroup[];
+} = {
   experience: [
     {
-      title: person.brand,
-      place: person.city,
-      role: { id: 'Founder', en: 'Founder' },
-      period: { id: '20XX — Sekarang', en: '20XX — Present' },
+      title: same(person.brand),
+      place: same(person.city),
+      role: { id: 'Founder, pengembang web dan aplikasi', en: 'Founder, web and app developer' },
+      period: { id: 'Sep 2026 – Sekarang', en: 'Sep 2026 – Present' },
       current: true,
-      bullets: [lorem(L1), lorem(L2), lorem(L3), lorem('Duis aute irure dolor in reprehenderit in voluptate velit esse.')],
+      bullets: [
+        {
+          id: 'Menjalankan studio pembuatan website dan aplikasi secara mandiri, dari konsultasi, desain, pengembangan, sampai rilis.',
+          en: 'Run a website and app studio on my own, from consultation and design to development and release.',
+        },
+        {
+          id: 'Merancang antarmuka di Figma/Pencil dan membangunnya dengan Next.js (web) serta Flutter (aplikasi), dengan Postgres sebagai database.',
+          en: 'Design interfaces in Figma/Pencil and build them with Next.js (web) and Flutter (apps), with Postgres as the database.',
+        },
+        {
+          id: 'Menyusun paket layanan Starter, Business, dan Custom untuk UMKM dan organisasi.',
+          en: 'Put together Starter, Business, and Custom service packages for small businesses and organizations.',
+        },
+        {
+          id: 'Membangun dan merawat website Kukerjain sendiri, termasuk SEO dasar dan blog.',
+          en: "Built and maintain Kukerjain's own website, including basic SEO and a blog.",
+        },
+      ],
     },
     {
-      title: 'Lorem Ipsum Studio',
-      place: 'Dolor sit',
-      role: { id: 'Web Developer', en: 'Web Developer' },
-      period: { id: '20XX — 20XX', en: '20XX — 20XX' },
-      bullets: [lorem(L1), lorem(L2), lorem(L3)],
+      title: { id: 'Dewan Eksekutif Mahasiswa (DEMA)', en: 'Student Executive Council (DEMA)' },
+      place: IMC,
+      role: { id: 'Sekretaris II', en: 'Secretary II' },
+      period: { id: 'Jul 2026 – Sekarang', en: 'Jul 2026 – Present' },
+      current: true,
+      bullets: [
+        { id: 'Mengelola administrasi organisasi dan pengarsipan dokumen secara sistematis.', en: 'Managed organizational administration and systematic document archiving.' },
+        { id: 'Menyusun notulen rapat dan dokumen resmi untuk tindak lanjut.', en: 'Prepared meeting minutes and official documentation for follow-up actions.' },
+        { id: 'Mengoordinasikan komunikasi internal dan jadwal rapat.', en: 'Coordinated internal communication and meeting schedules.' },
+        { id: 'Membantu merencanakan, melaksanakan, dan mengevaluasi program organisasi.', en: 'Assisted in planning, implementing, and evaluating organizational programs.' },
+        { id: 'Merapikan arsip administrasi agar operasional lebih efisien.', en: 'Organized administrative records to improve operational efficiency.' },
+        { id: 'Memakai Microsoft Office dan Google Workspace untuk tugas administrasi harian.', en: 'Used Microsoft Office and Google Workspace for daily administrative tasks.' },
+      ],
     },
     {
-      title: 'Consectetur Adipiscing',
-      place: 'Amet elit',
-      role: { id: 'Magang', en: 'Intern' },
-      period: { id: '20XX', en: '20XX' },
-      bullets: [lorem(L1), lorem(L2)],
+      title: {
+        id: 'Himpunan Mahasiswa Pendidikan Bahasa Arab (HIMA PBA)',
+        en: 'Arabic Language Education Student Association (HIMA PBA)',
+      },
+      place: IMC,
+      role: { id: 'Wakil Ketua', en: 'Vice Chairman' },
+      period: { id: 'Agu 2025 – Jul 2026', en: 'Aug 2025 – Jul 2026' },
+      bullets: [
+        { id: 'Mendampingi ketua merencanakan dan melaksanakan program organisasi.', en: 'Assisted the chairman in planning and implementing organizational programs.' },
+        { id: 'Mengoordinasikan kegiatan dengan dosen, mahasiswa, dan pihak eksternal.', en: 'Coordinated activities with lecturers, students, and external stakeholders.' },
+        { id: 'Mengawasi kinerja panitia dan memastikan proyek selesai.', en: 'Supervised committee performance and ensured project completion.' },
+        { id: 'Ikut dalam perencanaan organisasi dan pengambilan keputusan strategis.', en: 'Participated in organizational planning and strategic decision-making.' },
+        { id: 'Mengelola dokumen administrasi dan alat kolaborasi digital.', en: 'Managed administrative documents and digital collaboration tools.' },
+      ],
+    },
+    {
+      title: { id: 'Departemen Kesehatan', en: 'Health Department' },
+      place: IMC,
+      role: { id: 'Sekretaris', en: 'Secretary' },
+      period: { id: 'Agu 2025 – Jun 2026', en: 'Aug 2025 – Jun 2026' },
+      bullets: [
+        {
+          id: 'Mengelola administrasi dan dokumentasi kegiatan departemen kesehatan kampus.',
+          en: "Managed the administration and documentation of the campus health department's activities.",
+        },
+      ],
+    },
+    {
+      title: { id: "OSIS MA Tahfidzul Qur'an Qoryatul Qur'an", en: "Student Council (OSIS), MA Tahfidzul Qur'an Qoryatul Qur'an" },
+      place: same('Sukoharjo, Jawa Tengah'),
+      role: { id: 'Ketua Departemen Bahasa', en: 'Head of Language Department' },
+      period: { id: 'Agu 2021 – Jun 2022', en: 'Aug 2021 – Jun 2022' },
+      bullets: [
+        { id: 'Memimpin Departemen Bahasa dan mengoordinasikan kegiatan kebahasaan.', en: 'Led the Language Department and coordinated language-related activities.' },
+        { id: 'Menyelenggarakan lomba bahasa Arab dan program pengembangan bahasa.', en: 'Organized Arabic competitions and language development programs.' },
+        { id: 'Mendorong minat belajar bahasa Arab di kalangan siswa.', en: 'Promoted Arabic language learning among students.' },
+        { id: 'Berkoordinasi dengan pihak sekolah agar program berjalan lancar.', en: 'Coordinated with school administration to ensure successful program implementation.' },
+      ],
     },
   ],
   education: [
     {
-      title: 'Lorem Ipsum University',
-      place: 'Dolor sit',
-      role: { id: 'Sarjana Lorem Ipsum', en: 'Bachelor of Lorem Ipsum' },
-      period: { id: '20XX — Sekarang', en: '20XX — Present' },
+      title: same('Institut Muslim Cendekia'),
+      place: same('Sukabumi, Jawa Barat'),
+      role: { id: 'Sarjana Pendidikan Bahasa Arab', en: 'Bachelor of Arabic Language Education' },
+      period: { id: 'Agu 2024 – Sekarang', en: 'Aug 2024 – Present' },
       current: true,
-      bullets: [lorem(L1), lorem(L2)],
+      bullets: [
+        { id: 'IPK: 4.0 / 4.0', en: 'GPA: 4.0 / 4.0' },
+        { id: 'Lingkungan imersi bahasa Arab 24 jam.', en: '24-hour Arabic immersion environment.' },
+        {
+          id: 'Mempelajari pedagogi dan linguistik bahasa Arab, teks Islam klasik, tafsir, hadis, fikih, dan akidah.',
+          en: 'Studied Arabic pedagogy, linguistics, classical Islamic texts, tafsir, hadith, fiqh, and aqidah.',
+        },
+        {
+          id: 'Mengembangkan kemampuan komunikasi, analisis, dan bahasa lintas budaya.',
+          en: 'Developed strong communication, analytical, and cross-cultural language skills.',
+        },
+      ],
     },
     {
-      title: 'Dolor Sit Amet High School',
-      place: 'Consectetur',
-      role: { id: 'Jurusan Lorem', en: 'Lorem major' },
+      title: same("MA Tahfidzul Qur'an Qoryatul Qur'an"),
+      place: same('Sukoharjo, Jawa Tengah'),
+      role: { id: 'Madrasah Aliyah', en: 'Madrasah Aliyah (Islamic senior high school)' },
       period: { id: '20XX — 20XX', en: '20XX — 20XX' },
-      bullets: [lorem(L1), lorem(L2)],
+      bullets: [{ id: 'Peringkat 1 di kelas 11.', en: 'Rank 1 in Grade 11.' }],
+    },
+  ],
+  awards: [
+    {
+      title: same('Mahirnulis Media Group'),
+      place: { id: 'Tingkat nasional', en: 'National level' },
+      role: { id: 'Penulis Terpilih Nasional (Best Award)', en: 'National Selected Writer (Best Award)' },
+      period: same('2025'),
+      bullets: [],
+    },
+    {
+      title: same('Bisikan Asa di Sudut Jiwa Vol. 5'),
+      place: same(''),
+      role: { id: 'Penulis buku terbit', en: 'Published author' },
+      period: same('2025'),
+      bullets: [],
+    },
+    {
+      title: { id: 'Olimpiade Islam Nasional II (Bahasa Arab)', en: 'National Islamic Olympiad II (Arabic)' },
+      place: { id: 'Tingkat nasional', en: 'National level' },
+      role: { id: 'Medali Emas', en: 'Gold Medal' },
+      period: same('2023'),
+      bullets: [],
+    },
+    {
+      title: { id: 'Siswa Terbaik', en: 'Best Student' },
+      place: { id: 'Kategori Akademik', en: 'Academic Category' },
+      role: { id: 'Peringkat 1, kelas 11', en: 'Rank 1, Grade 11' },
+      period: same('2023'),
+      bullets: [],
+    },
+    {
+      title: { id: 'Olimpiade Madrasah Indonesia (Bahasa Arab)', en: 'Madrasah Indonesia Olympiad (Arabic)' },
+      place: { id: 'Tingkat nasional', en: 'National level' },
+      role: { id: 'Medali Emas', en: 'Gold Medal' },
+      period: same('2022'),
+      bullets: [],
+    },
+    {
+      title: { id: 'Olimpiade Astronomi Nasional', en: 'National Astronomy Olympiad' },
+      place: { id: 'Tingkat nasional', en: 'National level' },
+      role: { id: 'Medali Perunggu', en: 'Bronze Medal' },
+      period: same('2021'),
+      bullets: [],
+    },
+  ],
+  certifications: [
+    {
+      title: { id: 'Sertifikasi Dialek Mesir (Dauroh Al-Lahjah Al-Mishriyah)', en: 'Egyptian Dialect Certification (Dauroh Al-Lahjah Al-Mishriyah)' },
+      place: same('Lorem ipsum'),
+      role: { id: 'Dialek Arab Mesir', en: 'Egyptian Arabic dialect' },
+      period: same('20XX'),
+      bullets: [],
+    },
+    {
+      title: same('Al Azhar Arabic & English'),
+      place: same('Lorem ipsum'),
+      role: { id: 'Program intensif bahasa Arab', en: 'Intensive Arabic program' },
+      period: same('20XX'),
+      bullets: [{ id: 'Nilai: Jayyid Jiddan', en: 'Grade: Jayyid Jiddan' }],
+    },
+  ],
+  languages: [
+    { id: 'Arab (Fusha / Modern Standard Arabic) – Mahir', en: 'Arabic (Modern Standard Arabic / Fusha) – Advanced' },
+    { id: 'Arab (dialek Mesir) – Menengah', en: 'Arabic (Egyptian dialect) – Intermediate' },
+    { id: 'Indonesia – Bahasa ibu', en: 'Indonesian – Native' },
+    { id: 'Inggris – Dasar', en: 'English – Basic' },
+  ],
+  skills: [
+    {
+      label: { id: 'Bahasa dan tulisan', en: 'Language and writing' },
+      items: [
+        { id: 'Penyuntingan bahasa Arab', en: 'Arabic proofreading' },
+        { id: 'Analisis teks Arab klasik', en: 'Classical Arabic text analysis' },
+        { id: 'Kepekaan budaya dan linguistik', en: 'Cultural and linguistic awareness' },
+        { id: 'Penulisan kreatif', en: 'Creative writing' },
+        { id: 'Riset dan dokumentasi', en: 'Research and documentation' },
+        { id: 'Mengajar', en: 'Teaching' },
+        { id: 'Les privat', en: 'Tutoring' },
+      ],
+    },
+    {
+      label: { id: 'Organisasi dan kolaborasi', en: 'Organization and collaboration' },
+      items: [
+        { id: 'Kepemimpinan', en: 'Leadership' },
+        { id: 'Komunikasi', en: 'Communication' },
+        { id: 'Manajemen waktu', en: 'Time management' },
+        { id: 'Koordinasi tim', en: 'Team coordination' },
+        { id: 'Kerja sama tim', en: 'Teamwork' },
+        { id: 'Kolaborasi jarak jauh', en: 'Remote collaboration' },
+        { id: 'Microsoft Office', en: 'Microsoft Office' },
+        { id: 'Google Workspace', en: 'Google Workspace' },
+      ],
+    },
+    {
+      label: { id: 'Web dan aplikasi', en: 'Web and apps' },
+      items: [
+        { id: 'Pengembangan web', en: 'Web development' },
+        { id: 'Pengembangan full-stack', en: 'Full-stack development' },
+        { id: 'Pengembangan aplikasi mobile', en: 'Mobile app development' },
+        { id: 'Desain antarmuka (UI)', en: 'User interface design' },
+        { id: 'SEO', en: 'SEO' },
+        { id: 'Analisis data', en: 'Data analysis' },
+        { id: 'Dukungan teknis', en: 'Technical support' },
+        { id: 'Penyuntingan gambar dan video', en: 'Image and video editing' },
+      ],
     },
   ],
 };

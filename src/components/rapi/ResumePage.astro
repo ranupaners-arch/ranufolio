@@ -12,6 +12,8 @@ const r = t.resume;
 const lists = [
   { title: r.experience, entries: resume.experience },
   { title: r.education, entries: resume.education },
+  { title: r.awards, entries: resume.awards },
+  { title: r.certifications, entries: resume.certifications },
 ];
 const h2 = 'mt-5 px-1.5 font-display text-[1.5rem] font-extrabold tracking-[-0.02em] sm:text-[1.9rem]';
 const li = 'list-disc flex-col gap-1.5 pl-5 text-[15.5px] marker:text-muted';
@@ -39,13 +41,15 @@ const split = (e: ResumeEntry) => [e.bullets.slice(0, 2), e.bullets.slice(2)] as
                 </div>
                 <div>
                   <h3 class="font-display text-xl font-bold">
-                    {e.title}
-                    <span class="ml-2 font-sans text-sm font-medium text-muted">{e.place}</span>
+                    {e.title[lang]}
+                    {e.place[lang] && <span class="ml-2 font-sans text-sm font-medium text-muted">{e.place[lang]}</span>}
                   </h3>
-                  <p class="font-semibold">{e.role[lang]}</p>
-                  <ul class={`mt-3 flex max-w-[66ch] ${li}`}>
-                    {first.map((b) => <li>{b[lang]}</li>)}
-                  </ul>
+                  {e.role[lang] && <p class="font-semibold">{e.role[lang]}</p>}
+                  {first.length > 0 && (
+                    <ul class={`mt-3 flex max-w-[66ch] ${li}`}>
+                      {first.map((b) => <li>{b[lang]}</li>)}
+                    </ul>
+                  )}
                   {more.length > 0 && (
                     <details class="group mt-3 max-w-[66ch]">
                       <summary class="w-fit cursor-pointer list-none rounded-full bg-soft px-3.5 py-1.5 text-sm font-semibold hover:bg-line [&::-webkit-details-marker]:hidden">
@@ -65,6 +69,31 @@ const split = (e: ResumeEntry) => [e.bullets.slice(0, 2), e.bullets.slice(2)] as
       </>
     ))
   }
+
+  <h2 class={h2}>{r.languages}</h2>
+  <section class="glass rounded-[28px] p-6 sm:p-8">
+    <ul class="flex flex-wrap gap-1.5">
+      {resume.languages.map((l) => <li class="chip cursor-default !py-1.5 !text-[13px]">{l[lang]}</li>)}
+    </ul>
+  </section>
+
+  <h2 class={h2}>{r.skills}</h2>
+  <section class="glass rounded-[28px] p-6 sm:p-8">
+    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        resume.skills.map((g) => (
+          <div>
+            <p class="mb-2 text-sm font-semibold text-muted">{g.label[lang]}</p>
+            <ul class="flex flex-wrap gap-1.5">
+              {g.items.map((item) => (
+                <li class="chip cursor-default !py-1.5 !text-[13px]">{item[lang]}</li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </section>
 
   <h2 class={h2}>{r.stack}</h2>
   <section class="glass rounded-[28px] p-6 sm:p-8">

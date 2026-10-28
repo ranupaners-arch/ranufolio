@@ -1,6 +1,7 @@
 ---
-import { copy, routes } from '../../data/content';
+import { contact, copy, routes } from '../../data/content';
 import type { Lang } from '../../data/content';
+import { getIcon } from '../../lib/icons';
 import Icon from '../Icon.astro';
 
 interface Props {
@@ -8,6 +9,8 @@ interface Props {
 }
 const { lang } = Astro.props;
 const h = copy[lang].hero;
+const waHref = `https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(h.consultText)}`;
+const wa = getIcon(['siWhatsapp']);
 
 const tileBase =
   'settle group flex h-full min-h-[140px] flex-col justify-between rounded-[28px] p-5 transition-transform duration-300 hover:scale-[0.985] active:scale-[0.97] active:duration-100 sm:p-6';
@@ -43,6 +46,21 @@ const tileBase =
             </span>
             {h.badge}
           </p>
+          <a
+            href={waHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="col-span-2 mt-2 inline-flex w-fit items-center gap-2 rounded-full bg-inv px-5 py-2.5 font-semibold text-invink transition-transform hover:-translate-y-0.5 lg:mt-3"
+          >
+            {
+              wa && (
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+                  <path d={wa.path} />
+                </svg>
+              )
+            }
+            {h.consultA}
+          </a>
         </div>
       </section>
 
