@@ -199,7 +199,8 @@ const themes = [
     html[data-nav-pos='right'], html[data-nav-pos='left'] { --hh: 16px; }
     [data-float-list] { display: flex; flex-direction: column; gap: 0.25rem; }
     [data-float-list] a { width: 2.75rem; height: 2.75rem; }
-    html[data-nav-pos='right'] [data-float-panel], html[data-nav-pos='left'] [data-float-panel] { padding: 0; }
+    html[data-nav-pos='right'] [data-float-panel], html[data-nav-pos='left'] [data-float-panel] { padding: 4px; }
+    html[data-nav-pos='right'] [data-float-list] a, html[data-nav-pos='left'] [data-float-list] a { width: 36px; height: 36px; }
     [data-float-label] { display: none; }
     [data-float-bubble] {
       position: absolute; top: 50%; right: -0.5rem; display: grid; place-items: center;
