@@ -154,7 +154,11 @@ const sp = summaryParts(t.summary, lang, total, months);
       const g = grid.getBoundingClientRect();
       const r = sq.getBoundingClientRect();
       if (!wasOpen) tip.setAttribute('data-instant', '');
-      tip.style.setProperty('--x', `${r.left - g.left + r.width / 2}px`);
+      // Jaga bubble tetap di dalam wrapper (overflow-x clip) agar teks panjang tidak terpotong.
+      const wr = grid.parentElement!.getBoundingClientRect();
+      const half = tip.offsetWidth / 2;
+      const cx = Math.min(Math.max(r.left + r.width / 2, wr.left + half), wr.right - half);
+      tip.style.setProperty('--x', `${cx - g.left}px`);
       tip.style.setProperty('--y', `${r.top - g.top}px`);
       if (!wasOpen) {
         void tip.offsetWidth;
