@@ -1,7 +1,7 @@
 ---
 import { copy } from '../../data/content';
 import type { Lang } from '../../data/content';
-import { CONTRIB_URL, CONTRIB_USER as USER, layout, levelBg, parse, summaryText } from '../../lib/contrib';
+import { CONTRIB_URL, CONTRIB_USER as USER, MOBILE_WEEKS, layout, levelBg, levelOf, parse, summaryParts, summaryText } from '../../lib/contrib';
 import type { Day } from '../../lib/contrib';
 
 interface Props {
@@ -20,15 +20,25 @@ try {
 }
 const { weeks, total, months } = layout(days);
 const summary = summaryText(t.summary, lang, total, months);
+const sp = summaryParts(t.summary, lang, total, months);
 ---
 
 <section aria-labelledby="ship-h" class="glass rounded-[28px] p-6 sm:p-8">
-  <div class="flex items-baseline justify-between gap-4">
-    <h2 id="ship-h" class="text-sm font-semibold text-muted">{t.title}</h2>
-    <a href={`https://github.com/${USER}`} target="_blank" rel="noopener" class="text-sm font-semibold hover:underline">@{USER}</a>
+  <div class="flex items-center justify-between">
+    <h2 id="ship-h" class="text-[14px] font-normal text-ink/65">{t.title}</h2>
+    <a
+      href={`https://github.com/${USER}`}
+      target="_blank"
+      rel="noopener"
+      class="relative text-[14px] text-ink/65 transition-colors duration-150 ease-out after:absolute after:-inset-x-2 after:-inset-y-3 hover:text-ink"
+      >@{USER}</a
+    >
   </div>
   <div data-contrib-wrap hidden={!weeks.length}>
-    <div data-contrib-scroll class="mt-4 overflow-x-auto pb-1">
+    <p class="mt-4 text-base leading-[1.6]">
+      <span data-contrib-pre class="text-ink/65">{sp.pre}</span><span data-contrib-num class="font-medium tabular-nums text-ink">{sp.num}</span><span data-contrib-post class="text-ink/65">{sp.post}</span>
+    </p>
+    <div class="mt-4 flex justify-end overflow-x-clip md:justify-start">
       <div
         role="img"
         aria-label={summary}
@@ -38,67 +48,118 @@ const summary = summaryText(t.summary, lang, total, months);
         data-many={t.many}
         data-on={t.on}
         data-tpl={t.summary}
-        class="flex w-max gap-[3px]"
+        class="relative flex gap-[3px]"
       >
-        {weeks.map((w) => (
-          <div class="flex flex-col gap-[3px]">
-            {w.map((d) =>
-              d ? (
-                <span data-day data-date={d.date} data-c={d.count} class="block size-3 rounded-[3px]" style={`background:${levelBg(d.level)}`} />
-              ) : (
-                <span class="block size-3" />
-              ),
-            )}
-          </div>
-        ))}
+        <div data-cols class="contents">
+          {weeks.map((w, i) => (
+            <div class:list={['flex flex-col gap-[3px]', i < weeks.length - MOBILE_WEEKS && 'max-md:hidden']}>
+              {w.map((d) =>
+                d ? (
+                  <span data-day data-date={d.date} data-c={d.count} class="ship-sq block size-3 rounded-[3px]" style={`background:${levelBg(levelOf(d.count))}`} />
+                ) : (
+                  <span class="block size-3" />
+                ),
+              )}
+            </div>
+          ))}
+        </div>
+        <div data-contrib-tip aria-hidden="true" class="ship-tip"><span class="font-medium tabular-nums" data-n></span><span class="text-[#ffffff99]" data-d></span></div>
       </div>
     </div>
-    <p data-contrib-summary class="mt-3 text-sm text-muted">{summary}</p>
   </div>
   <p data-contrib-empty hidden={!!weeks.length} class="mt-4 text-sm text-muted">{t.unavailable}</p>
-  <div
-    data-contrib-tip
-    hidden
-    class="pointer-events-none fixed z-[100] whitespace-nowrap rounded-lg bg-[#0a0a0a] px-2.5 py-1.5 text-xs text-white shadow-lg"
-  />
 </section>
 
+<style is:global>
+  .ship-tip {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    display: flex;
+    height: 1.75rem;
+    align-items: center;
+    gap: 0.25rem;
+    border-radius: 0.5rem;
+    background: #0a0a0a;
+    padding: 0 0.625rem;
+    font-size: 13px;
+    white-space: nowrap;
+    color: #fff;
+    pointer-events: none;
+    box-shadow: 0 0 1px #0000000f, 0 4px 12px #00000024;
+    --x: 0px;
+    --y: 0px;
+    --lift: 4px;
+    transform-origin: 50% 100%;
+    translate: calc(var(--x) - 50%) calc(var(--y) - 100% - 6px + var(--lift));
+    opacity: 0;
+    scale: 0.97;
+    transition: opacity 0.1s, scale 0.1s;
+  }
+  .ship-tip[data-open] {
+    --lift: 0px;
+    opacity: 1;
+    scale: 1;
+    transition:
+      opacity 0.15s,
+      scale 0.15s,
+      translate 0.14s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  .ship-tip[data-instant] {
+    transition: none;
+  }
+  .ship-sq[data-active] {
+    outline: 1px solid #0a0a0a40;
+    outline-offset: 1px;
+  }
+  [data-theme='dark'] .ship-sq[data-active],
+  .dark .ship-sq[data-active] {
+    outline-color: #ffffff59;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ship-tip,
+    .ship-tip[data-open] {
+      transition: none;
+    }
+  }
+</style>
+
 <script>
-  import { CONTRIB_URL, layout, levelBg, parse, summaryText } from '../../lib/contrib';
+  import { CONTRIB_URL, MOBILE_WEEKS, layout, levelBg, levelOf, parse, summaryParts, summaryText } from '../../lib/contrib';
   const grid = document.querySelector<HTMLElement>('[data-contrib]');
   const tip = document.querySelector<HTMLElement>('[data-contrib-tip]');
-  if (grid && tip) {
+  const cols = grid?.querySelector<HTMLElement>('[data-cols]');
+  if (grid && tip && cols) {
     const lang = grid.dataset.lang === 'id' ? 'id-ID' : 'en-US';
     const fmt = new Intl.DateTimeFormat(lang, { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+    const tn = tip.querySelector<HTMLElement>('[data-n]')!;
+    const td = tip.querySelector<HTMLElement>('[data-d]')!;
     let active: HTMLElement | null = null;
     const hide = () => {
-      tip.hidden = true;
-      active?.classList.remove('outline', 'outline-1', 'outline-offset-1', 'outline-[var(--ink)]');
+      tip.removeAttribute('data-open');
+      active?.removeAttribute('data-active');
       active = null;
     };
     const show = (sq: HTMLElement) => {
-      if (active === sq && !tip.hidden) return;
-      hide();
+      if (active === sq) return;
+      const wasOpen = tip.hasAttribute('data-open');
+      active?.removeAttribute('data-active');
       active = sq;
-      sq.classList.add('outline', 'outline-1', 'outline-offset-1', 'outline-[var(--ink)]');
+      sq.setAttribute('data-active', '');
       const c = Number(sq.dataset.c);
-      const word = c === 1 ? grid.dataset.one : grid.dataset.many;
-      const b = document.createElement('b');
-      b.className = 'font-semibold';
-      b.textContent = `${c.toLocaleString(lang)} ${word}`;
-      const s = document.createElement('span');
-      s.className = 'text-white/60';
-      s.textContent = ` ${grid.dataset.on} ${fmt.format(new Date(sq.dataset.date + 'T00:00:00Z'))}`;
-      tip.replaceChildren(b, s);
-      tip.hidden = false;
+      tn.textContent = `${c.toLocaleString(lang)} ${c === 1 ? grid.dataset.one : grid.dataset.many}`;
+      td.textContent = `${grid.dataset.on} ${fmt.format(new Date(sq.dataset.date + 'T00:00:00Z'))}`;
+      const g = grid.getBoundingClientRect();
       const r = sq.getBoundingClientRect();
-      const tw = tip.offsetWidth;
-      const th = tip.offsetHeight;
-      const left = Math.min(Math.max(8, r.left + r.width / 2 - tw / 2), window.innerWidth - tw - 8);
-      let top = r.top - th - 8;
-      if (top < 8) top = r.bottom + 8;
-      tip.style.left = `${left}px`;
-      tip.style.top = `${top}px`;
+      if (!wasOpen) tip.setAttribute('data-instant', '');
+      tip.style.setProperty('--x', `${r.left - g.left + r.width / 2}px`);
+      tip.style.setProperty('--y', `${r.top - g.top}px`);
+      if (!wasOpen) {
+        void tip.offsetWidth;
+        tip.removeAttribute('data-instant');
+      }
+      tip.setAttribute('data-open', '');
     };
     const sqOf = (e: Event) => (e.target as HTMLElement).closest<HTMLElement>('[data-day]');
     grid.addEventListener('pointerover', (e) => {
@@ -111,10 +172,11 @@ const summary = summaryText(t.summary, lang, total, months);
     });
     document.addEventListener('click', (e) => {
       const sq = grid.contains(e.target as Node) ? sqOf(e) : null;
-      if (sq) show(sq);
-      else hide();
+      if (sq) {
+        e.preventDefault();
+        show(sq);
+      } else hide();
     });
-    window.addEventListener('scroll', hide, { passive: true });
     // Segarkan data di klien; cache localStorage ~6 jam. Gagal = tetap pakai data build.
     const KEY = 'contrib:v1';
     const TTL = 6 * 36e5;
@@ -123,29 +185,33 @@ const summary = summaryText(t.summary, lang, total, months);
       if (!weeks.length) return;
       hide();
       const frag = document.createDocumentFragment();
-      for (const w of weeks) {
+      weeks.forEach((w, i) => {
         const col = document.createElement('div');
-        col.className = 'flex flex-col gap-[3px]';
+        col.className = 'flex flex-col gap-[3px]' + (i < weeks.length - MOBILE_WEEKS ? ' max-md:hidden' : '');
         for (const d of w) {
           const sq = document.createElement('span');
-          sq.className = 'block size-3' + (d ? ' rounded-[3px]' : '');
+          sq.className = 'block size-3' + (d ? ' ship-sq rounded-[3px]' : '');
           if (d) {
             sq.dataset.day = '';
             sq.dataset.date = d.date;
             sq.dataset.c = String(d.count);
-            sq.style.background = levelBg(d.level);
+            sq.style.background = levelBg(levelOf(d.count));
           }
           col.append(sq);
         }
         frag.append(col);
-      }
-      grid.replaceChildren(frag);
-      const text = summaryText(grid.dataset.tpl ?? '', grid.dataset.lang ?? 'en', total, months);
-      grid.setAttribute('aria-label', text);
-      const sum = document.querySelector<HTMLElement>('[data-contrib-summary]');
-      if (sum) sum.textContent = text;
-      document.querySelector<HTMLElement>('[data-contrib-wrap]')!.hidden = false;
-      document.querySelector<HTMLElement>('[data-contrib-empty]')!.hidden = true;
+      });
+      cols.replaceChildren(frag);
+      const l = grid.dataset.lang ?? 'en';
+      const tpl = grid.dataset.tpl ?? '';
+      grid.setAttribute('aria-label', summaryText(tpl, l, total, months));
+      const sp = summaryParts(tpl, l, total, months);
+      const q = (s: string) => document.querySelector<HTMLElement>(s);
+      q('[data-contrib-pre]')!.textContent = sp.pre;
+      q('[data-contrib-num]')!.textContent = sp.num;
+      q('[data-contrib-post]')!.textContent = sp.post;
+      q('[data-contrib-wrap]')!.hidden = false;
+      q('[data-contrib-empty]')!.hidden = true;
       grid.dataset.fresh = '1';
     };
     let cached: { t: number; d: unknown } | null = null;
@@ -167,6 +233,5 @@ const summary = summaryText(t.summary, lang, total, months);
         })
         .catch(() => {});
     }
-    grid.parentElement?.addEventListener('scroll', hide, { passive: true });
   }
 </script>
