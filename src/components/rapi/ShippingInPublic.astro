@@ -1,46 +1,25 @@
 ---
 import { copy } from '../../data/content';
 import type { Lang } from '../../data/content';
+import { CONTRIB_URL, CONTRIB_USER as USER, layout, levelBg, parse, summaryText } from '../../lib/contrib';
+import type { Day } from '../../lib/contrib';
 
 interface Props {
   lang: Lang;
 }
 const { lang } = Astro.props;
 const t = copy[lang].shipping;
-const USER = 'ranupaners-arch';
 
-type Day = { date: string; count: number; level: number };
 let days: Day[] = [];
 try {
-  // Diambil saat build (API publik, tanpa token). Data hanya diperbarui tiap deploy.
-  const res = await fetch(`https://github-contributions-api.jogruber.de/v4/${USER}?y=last`);
-  if (res.ok) {
-    const json = await res.json();
-    if (Array.isArray(json?.contributions)) days = json.contributions;
-  }
+  // Render awal/fallback diambil saat build (API publik, tanpa token); klien menyegarkan data.
+  const res = await fetch(CONTRIB_URL);
+  if (res.ok) days = parse(await res.json()) ?? [];
 } catch {
   days = [];
 }
-
-// Susun per minggu (kolom), mulai Minggu; potong minggu kosong sebelum aktivitas pertama.
-const weeks: (Day | null)[][] = [];
-if (days.length) {
-  const firstDow = new Date(days[0].date + 'T00:00:00Z').getUTCDay();
-  const padded: (Day | null)[] = [...Array(firstDow).fill(null), ...days];
-  for (let i = 0; i < padded.length; i += 7) weeks.push(padded.slice(i, i + 7));
-  const firstActive = weeks.findIndex((w) => w.some((d) => d && d.count > 0));
-  if (firstActive > 0) weeks.splice(0, firstActive);
-}
-const shown = weeks.flat().filter((d): d is Day => !!d);
-const total = shown.reduce((a, d) => a + d.count, 0);
-let months = 0;
-if (shown.length) {
-  const a = new Date(shown[0].date + 'T00:00:00Z');
-  const b = new Date(shown[shown.length - 1].date + 'T00:00:00Z');
-  months = Math.max(1, Math.round((b.getTime() - a.getTime()) / (30.44 * 864e5)));
-}
-const summary = t.summary.replace('{x}', total.toLocaleString(lang === 'id' ? 'id-ID' : 'en-US')).replace('{n}', String(months));
-const lvl = ['bg-soft', 'bg-accent/25', 'bg-accent/50', 'bg-accent/75', 'bg-accent'];
+const { weeks, total, months } = layout(days);
+const summary = summaryText(t.summary, lang, total, months);
 ---
 
 <section aria-labelledby="ship-h" class="glass rounded-[28px] p-6 sm:p-8">
@@ -48,52 +27,44 @@ const lvl = ['bg-soft', 'bg-accent/25', 'bg-accent/50', 'bg-accent/75', 'bg-acce
     <h2 id="ship-h" class="text-sm font-semibold text-muted">{t.title}</h2>
     <a href={`https://github.com/${USER}`} target="_blank" rel="noopener" class="text-sm font-semibold hover:underline">@{USER}</a>
   </div>
-  {
-    weeks.length ? (
-      <>
-        <div class="mt-4 overflow-x-auto pb-1">
-          <div
-            role="img"
-            aria-label={summary}
-            data-contrib
-            data-lang={lang}
-            data-one={t.one}
-            data-many={t.many}
-            data-on={t.on}
-            class="flex w-max gap-[3px]"
-          >
-            {weeks.map((w) => (
-              <div class="flex flex-col gap-[3px]">
-                {w.map((d) =>
-                  d ? (
-                    <span
-                      data-day
-                      data-date={d.date}
-                      data-c={d.count}
-                      class={`block size-3 rounded-[3px] ${lvl[Math.min(4, Math.max(0, d.level))]}`}
-                    />
-                  ) : (
-                    <span class="block size-3" />
-                  ),
-                )}
-              </div>
-            ))}
+  <div data-contrib-wrap hidden={!weeks.length}>
+    <div data-contrib-scroll class="mt-4 overflow-x-auto pb-1">
+      <div
+        role="img"
+        aria-label={summary}
+        data-contrib
+        data-lang={lang}
+        data-one={t.one}
+        data-many={t.many}
+        data-on={t.on}
+        data-tpl={t.summary}
+        class="flex w-max gap-[3px]"
+      >
+        {weeks.map((w) => (
+          <div class="flex flex-col gap-[3px]">
+            {w.map((d) =>
+              d ? (
+                <span data-day data-date={d.date} data-c={d.count} class="block size-3 rounded-[3px]" style={`background:${levelBg(d.level)}`} />
+              ) : (
+                <span class="block size-3" />
+              ),
+            )}
           </div>
-        </div>
-        <p class="mt-3 text-sm text-muted">{summary}</p>
-        <div
-          data-contrib-tip
-          hidden
-          class="pointer-events-none fixed z-[100] whitespace-nowrap rounded-lg bg-[#0a0a0a] px-2.5 py-1.5 text-xs text-white shadow-lg"
-        />
-      </>
-    ) : (
-      <p class="mt-4 text-sm text-muted">{t.unavailable}</p>
-    )
-  }
+        ))}
+      </div>
+    </div>
+    <p data-contrib-summary class="mt-3 text-sm text-muted">{summary}</p>
+  </div>
+  <p data-contrib-empty hidden={!!weeks.length} class="mt-4 text-sm text-muted">{t.unavailable}</p>
+  <div
+    data-contrib-tip
+    hidden
+    class="pointer-events-none fixed z-[100] whitespace-nowrap rounded-lg bg-[#0a0a0a] px-2.5 py-1.5 text-xs text-white shadow-lg"
+  />
 </section>
 
 <script>
+  import { CONTRIB_URL, layout, levelBg, parse, summaryText } from '../../lib/contrib';
   const grid = document.querySelector<HTMLElement>('[data-contrib]');
   const tip = document.querySelector<HTMLElement>('[data-contrib-tip]');
   if (grid && tip) {
@@ -144,6 +115,58 @@ const lvl = ['bg-soft', 'bg-accent/25', 'bg-accent/50', 'bg-accent/75', 'bg-acce
       else hide();
     });
     window.addEventListener('scroll', hide, { passive: true });
+    // Segarkan data di klien; cache localStorage ~6 jam. Gagal = tetap pakai data build.
+    const KEY = 'contrib:v1';
+    const TTL = 6 * 36e5;
+    const render = (days: import('../../lib/contrib').Day[]) => {
+      const { weeks, total, months } = layout(days);
+      if (!weeks.length) return;
+      hide();
+      const frag = document.createDocumentFragment();
+      for (const w of weeks) {
+        const col = document.createElement('div');
+        col.className = 'flex flex-col gap-[3px]';
+        for (const d of w) {
+          const sq = document.createElement('span');
+          sq.className = 'block size-3' + (d ? ' rounded-[3px]' : '');
+          if (d) {
+            sq.dataset.day = '';
+            sq.dataset.date = d.date;
+            sq.dataset.c = String(d.count);
+            sq.style.background = levelBg(d.level);
+          }
+          col.append(sq);
+        }
+        frag.append(col);
+      }
+      grid.replaceChildren(frag);
+      const text = summaryText(grid.dataset.tpl ?? '', grid.dataset.lang ?? 'en', total, months);
+      grid.setAttribute('aria-label', text);
+      const sum = document.querySelector<HTMLElement>('[data-contrib-summary]');
+      if (sum) sum.textContent = text;
+      document.querySelector<HTMLElement>('[data-contrib-wrap]')!.hidden = false;
+      document.querySelector<HTMLElement>('[data-contrib-empty]')!.hidden = true;
+      grid.dataset.fresh = '1';
+    };
+    let cached: { t: number; d: unknown } | null = null;
+    try {
+      cached = JSON.parse(localStorage.getItem(KEY) ?? 'null');
+    } catch {}
+    const cd = cached ? parse(cached.d) : null;
+    if (cd) render(cd);
+    if (!cached || !cd || Date.now() - cached.t > TTL) {
+      fetch(CONTRIB_URL)
+        .then((r) => (r.ok ? r.json() : null))
+        .then((j) => {
+          const d = parse(j);
+          if (!d) return;
+          try {
+            localStorage.setItem(KEY, JSON.stringify({ t: Date.now(), d: { contributions: d } }));
+          } catch {}
+          render(d);
+        })
+        .catch(() => {});
+    }
     grid.parentElement?.addEventListener('scroll', hide, { passive: true });
   }
 </script>
