@@ -3,7 +3,7 @@
 export type Lang = 'id' | 'en';
 export type Bilingual = { id: string; en: string };
 
-export const SITE = 'https://ranufolio.kukerjain.dev';
+export const SITE = 'https://ranupane.kukerjain.dev';
 
 export const person = {
   name: 'Ranupane Rimba Argana',

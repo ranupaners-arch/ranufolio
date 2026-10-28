@@ -1,7 +1,7 @@
 # Portofolio Ranupane Rimba Argana
 
 Astro 5 + Tailwind CSS v4. Dua bahasa: Indonesia di `/`, Inggris di `/en/`.
-Situs: https://ranufolio.kukerjain.dev (sudah diset di `astro.config.mjs`).
+Situs: https://ranupane.kukerjain.dev (sudah diset di `astro.config.mjs`).
 
 ## Menjalankan
 
