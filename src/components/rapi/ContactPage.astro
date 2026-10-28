@@ -1,7 +1,6 @@
 ---
 import { contact, copy } from '../../data/content';
 import type { Lang } from '../../data/content';
-import { getIcon } from '../../lib/icons';
 
 interface Props {
   lang: Lang;
@@ -10,12 +9,8 @@ const { lang } = Astro.props;
 const t = copy[lang];
 const f = t.contact.form;
 const p = t.contactPage;
-const waHref = `https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(t.contact.waText)}`;
-const wa = getIcon(['siWhatsapp']);
-const mail = getIcon(['siGmail']);
 const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT as string | undefined;
 const accessKey = import.meta.env.PUBLIC_FORM_ACCESS_KEY as string | undefined;
-const card = 'glass group rounded-[28px] p-6 transition-transform hover:-translate-y-0.5 sm:p-8';
 ---
 
 <div class="grid gap-3">
@@ -24,7 +19,7 @@ const card = 'glass group rounded-[28px] p-6 transition-transform hover:-transla
     <p class="mt-4 max-w-[54ch] text-lg leading-relaxed opacity-90">{p.lead}</p>
   </section>
 
-  <div class="grid gap-3 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
+  <div class="grid gap-3">
     <section class="glass rounded-[28px] p-6 sm:p-8">
       <form
         data-contact-form
@@ -88,27 +83,6 @@ const card = 'glass group rounded-[28px] p-6 transition-transform hover:-transla
       </div>
     </section>
 
-    <aside class="flex flex-col gap-3">
-      <a href={waHref} target="_blank" rel="noopener noreferrer" class={card}>
-        {wa && (
-          <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" aria-hidden="true" class="transition-colors group-hover:text-[#25D366]">
-            <path d={wa.path} />
-          </svg>
-        )}
-        <p class="mt-4 font-display text-xl font-bold">{p.whatsappTitle}</p>
-        <p class="mt-1 text-muted">{p.whatsappText}</p>
-        <p class="mt-4 font-semibold">{contact.whatsappLabel}</p>
-      </a>
-      <a href={`mailto:${contact.email}`} class={card}>
-        {mail && (
-          <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" aria-hidden="true" class="transition-colors group-hover:text-[#EA4335]">
-            <path d={mail.path} />
-          </svg>
-        )}
-        <p class="mt-4 font-display text-xl font-bold">{p.emailTitle}</p>
-        <p class="mt-1 break-all text-muted">{contact.email}</p>
-      </a>
-    </aside>
   </div>
 </div>
 

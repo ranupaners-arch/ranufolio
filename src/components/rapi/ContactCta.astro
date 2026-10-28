@@ -1,0 +1,45 @@
+---
+import { contact, copy } from '../../data/content';
+import type { Lang } from '../../data/content';
+import { getIcon } from '../../lib/icons';
+import { tileBase } from './tile';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = copy[lang];
+const links = [
+  { label: t.contactPage.emailTitle, url: `mailto:${contact.email}`, icon: getIcon(['siGmail']), brand: '#EA4335', external: false },
+  { label: t.contactPage.whatsappTitle, url: `https://wa.me/${contact.whatsapp}`, icon: getIcon(['siWhatsapp']), brand: '#25D366', external: true },
+];
+---
+
+<section class:list={[tileBase, 'glass mt-3 !h-auto']}>
+  <div class="flex items-start justify-between gap-2">
+    <p class="pt-1 text-sm font-semibold text-muted">{t.contactCta.q}</p>
+    <ul class="flex shrink-0 gap-2">
+      {
+        links.map((l) => (
+          <li>
+            <a
+              href={l.url}
+              target={l.external ? '_blank' : undefined}
+              rel={l.external ? 'noopener noreferrer' : undefined}
+              aria-label={l.label}
+              style={`--brand:${l.brand}`}
+              class="group/i grid h-11 w-11 place-items-center rounded-full bg-soft transition-transform hover:scale-105"
+            >
+              {l.icon && (
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true" class="transition-colors group-hover/i:text-[var(--brand)]">
+                  <path d={l.icon.path} />
+                </svg>
+              )}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+  <p class="font-display text-[1.3rem] font-bold leading-tight sm:text-[1.7rem]">{t.contactCta.a}</p>
+</section>

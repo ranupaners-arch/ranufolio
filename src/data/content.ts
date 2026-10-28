@@ -218,6 +218,8 @@ export const copy = {
       switchLabel: 'EN',
       switchAria: 'Read in English',
       homeAria: 'Ke beranda',
+      menuOpen: 'Buka menu',
+      pos: { label: 'Posisi menu', top: 'Atas', right: 'Kanan', left: 'Kiri' },
       settings: 'Tema, kaca, dan bahasa',
     },
     menu: {
@@ -315,6 +317,7 @@ export const copy = {
       },
     },
     footer: { socials: 'Sosial media', made: 'Dibuat di Wonogiri.' },
+    contactCta: { q: 'Tertarik dengan saya?', a: 'Hubungi' },
     resume: {
       title: 'Resume',
       lead: 'Ringkasan pengalaman, pendidikan, penghargaan, dan keahlian saya.',
@@ -387,6 +390,8 @@ export const copy = {
       switchLabel: 'ID',
       switchAria: 'Baca dalam Bahasa Indonesia',
       homeAria: 'Go to home',
+      menuOpen: 'Open menu',
+      pos: { label: 'Menu position', top: 'Top', right: 'Right', left: 'Left' },
       settings: 'Theme, glass and language',
     },
     menu: {
@@ -484,6 +489,7 @@ export const copy = {
       },
     },
     footer: { socials: 'Social media', made: 'Made in Wonogiri.' },
+    contactCta: { q: 'Interested in me?', a: 'Contact' },
     resume: {
       title: 'Resume',
       lead: 'A summary of my experience, education, awards, and skills.',

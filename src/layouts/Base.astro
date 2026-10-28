@@ -52,7 +52,8 @@ const abs = (p: string) => new URL(p, SITE).href;
 if(v!==null)d.style.setProperty("--g",String(Math.min(100,Math.max(0,+v))/100));
 var t=localStorage.getItem("theme")||"light";
 var dark=t==="dark"||(t==="auto"&&matchMedia("(prefers-color-scheme: dark)").matches);
-d.dataset.theme=dark?"dark":"light"}catch(e){}`}
+d.dataset.theme=dark?"dark":"light";
+var n=localStorage.getItem("nav-pos");d.dataset.navPos=n==="top"||n==="left"?n:"right"}catch(e){}`}
         </script>
       ) : (
         <script is:inline>

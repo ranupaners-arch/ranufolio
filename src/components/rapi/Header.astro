@@ -29,7 +29,7 @@ const themes = [
 ---
 
 <header data-rapi-header data-theme={initialTheme} class="sticky top-0 z-40 text-ink">
-  <div class="mx-auto flex max-w-[1180px] items-center justify-between gap-2 px-3.5 py-3.5 sm:px-7 sm:py-5">
+  <div class="mx-auto flex max-w-[1180px] items-center gap-2 px-3.5 py-3.5 sm:px-7 sm:py-5">
     <a
       href={routes.home[lang]}
       aria-label={t.nav.homeAria}
@@ -38,39 +38,39 @@ const themes = [
       {person.short}
     </a>
 
-    <div class="flex flex-1 items-center justify-end gap-2 sm:flex-none">
-      <nav aria-label={t.nav.aria} class="glass flex-1 rounded-full p-1 sm:flex-none">
-        <ul class="relative flex justify-between sm:justify-start">
-          {
-            items.map((i) => {
-              const active = i.key === current;
-              return (
-                <li class="relative">
-                  <a
-                    href={i.href}
-                    aria-current={active ? 'page' : undefined}
-                    style={active ? 'view-transition-name:nav-pill' : undefined}
-                    class:list={[
-                      'block rounded-full px-3 py-2 text-[13.5px] font-semibold transition-colors duration-300 sm:px-4 sm:text-sm',
-                      active ? 'bg-inv text-invink' : 'hover:bg-soft',
-                    ]}
-                  >
-                    {i.label}
-                  </a>
-                </li>
-              );
-            })
-          }
-        </ul>
-      </nav>
+    <nav aria-label={t.nav.aria} class="glass ml-1 hidden rounded-full p-1 sm:block">
+      <ul class="relative flex">
+        {
+          items.map((i) => {
+            const active = i.key === current;
+            return (
+              <li class="relative">
+                <a
+                  href={i.href}
+                  aria-current={active ? 'page' : undefined}
+                  style={active ? 'view-transition-name:nav-pill' : undefined}
+                  class:list={[
+                    'block rounded-full px-4 py-2 text-sm font-semibold transition-colors duration-300',
+                    active ? 'bg-inv text-invink' : 'hover:bg-soft',
+                  ]}
+                >
+                  {i.label}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </nav>
 
+    <div class="ml-auto flex items-center gap-2">
       <a
         href={paths[other]}
         hreflang={other}
         lang={other}
         aria-label={t.nav.switchAria}
         title={t.nav.switchAria}
-        class="glass hidden h-11 w-11 shrink-0 place-items-center rounded-full text-[13px] font-bold uppercase transition-transform duration-300 hover:scale-105 active:scale-95 min-[430px]:grid"
+        class="glass hidden h-11 w-11 shrink-0 place-items-center rounded-full text-[13px] font-bold uppercase transition-transform duration-300 hover:scale-105 active:scale-95 min-[430px]:grid sm:grid"
       >
         {other}
       </a>
@@ -144,6 +144,136 @@ const themes = [
   </div>
 </header>
 
+<div data-float-nav class="sm:hidden">
+  <nav data-float-panel aria-label={t.nav.aria} class="glass">
+    <ul data-float-list>
+      {
+        items.map((i) => {
+          const active = i.key === current;
+          return (
+            <li>
+              <a
+                href={i.href}
+                aria-current={active ? 'page' : undefined}
+                class:list={[
+                  'block rounded-full px-3.5 py-2.5 text-center text-[13.5px] font-semibold transition-colors duration-300',
+                  active ? 'bg-inv text-invink' : 'hover:bg-soft',
+                ]}
+              >
+                {i.label}
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+    <div data-nav-pos-group role="radiogroup" aria-label={t.nav.pos.label} class="grid grid-cols-3 gap-0.5 rounded-full bg-soft p-0.5">
+      {
+        (['top', 'right', 'left'] as const).map((v) => (
+          <button
+            type="button"
+            role="radio"
+            aria-checked="false"
+            data-nav-pos-opt={v}
+            class="rounded-full px-1.5 py-1 text-[10.5px] font-semibold text-muted transition-colors aria-checked:bg-panel aria-checked:text-ink aria-checked:shadow-[0_1px_2px_rgb(0_0_0/0.12)]"
+          >
+            {t.nav.pos[v]}
+          </button>
+        ))
+      }
+    </div>
+  </nav>
+  <button type="button" data-float-bubble hidden aria-label={t.nav.menuOpen} class="glass">
+    <span data-bubble-icon="left"><Icon name="chevron-left" size={18} /></span>
+    <span data-bubble-icon="right"><Icon name="chevron-right" size={18} /></span>
+  </button>
+</div>
+
+<style is:global>
+  @media (max-width: 639.98px) {
+    [data-float-nav] {
+      position: fixed;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+      z-index: 40;
+    }
+    [data-float-panel] {
+      border-radius: 1.5rem 0 0 1.5rem;
+      padding: 0.375rem;
+    }
+    [data-float-list] {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      margin-bottom: 0.375rem;
+    }
+    [data-float-bubble] {
+      display: grid;
+      place-items: center;
+      width: 2rem;
+      height: 3.5rem;
+      border-radius: 9999px 0 0 9999px;
+      padding-left: 0.25rem;
+    }
+    [data-float-panel][hidden],
+    [data-float-bubble][hidden] {
+      display: none;
+    }
+    [data-bubble-icon='right'] {
+      display: none;
+    }
+
+    html[data-nav-pos='left'] [data-float-nav] {
+      right: auto;
+      left: 0;
+    }
+    html[data-nav-pos='left'] [data-float-panel] {
+      border-radius: 0 1.5rem 1.5rem 0;
+    }
+    html[data-nav-pos='left'] [data-float-bubble] {
+      border-radius: 0 9999px 9999px 0;
+      padding-left: 0;
+      padding-right: 0.25rem;
+    }
+    html[data-nav-pos='left'] [data-bubble-icon='left'] {
+      display: none;
+    }
+    html[data-nav-pos='left'] [data-bubble-icon='right'] {
+      display: block;
+    }
+
+    html[data-nav-pos='top'] [data-float-nav] {
+      position: sticky;
+      top: var(--hh);
+      right: auto;
+      transform: none;
+      padding: 0 0.875rem 0.5rem;
+    }
+    html[data-nav-pos='top'] [data-float-panel] {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      border-radius: 9999px;
+      padding: 0.25rem;
+    }
+    html[data-nav-pos='top'] [data-float-list] {
+      flex-direction: row;
+      flex: 1;
+      justify-content: space-between;
+      gap: 0;
+      margin-bottom: 0;
+    }
+    html[data-nav-pos='top'] [data-float-list] a {
+      padding: 0.5rem 0.55rem;
+      font-size: 12.5px;
+    }
+    html[data-nav-pos='top'] [data-float-bubble] {
+      display: none;
+    }
+  }
+</style>
+
 <script>
   const header = document.querySelector<HTMLElement>('[data-rapi-header]');
   if (header) {
@@ -177,10 +307,15 @@ const themes = [
 
     /* Tema: light | dark | auto, default light. Peralihan lewat View Transitions API. */
     const mq = matchMedia('(prefers-color-scheme: dark)');
-    const stored = () => localStorage.getItem('theme') || 'light';
+    const stored = () => {
+      const v = localStorage.getItem('theme');
+      return v === 'dark' || v === 'auto' ? v : 'light';
+    };
     const apply = (mode: string) => {
       const dark = mode === 'dark' || (mode === 'auto' && mq.matches);
       root.dataset.theme = dark ? 'dark' : 'light';
+      // Popover berada di dalam header yang bisa bertema gelap; ikutkan tema situs.
+      pop.dataset.theme = root.dataset.theme;
     };
     const opts = [...header.querySelectorAll<HTMLElement>('[data-theme-opt]')];
     const paint = () => opts.forEach((o) => o.setAttribute('aria-checked', String(o.dataset.themeOpt === stored())));
@@ -189,8 +324,14 @@ const themes = [
       mq.removeEventListener('change', onMq);
       if (stored() === 'auto') mq.addEventListener('change', onMq);
     };
+    apply(stored());
     paint();
     syncListener();
+    addEventListener('pageshow', () => {
+      apply(stored());
+      paint();
+      syncListener();
+    });
     opts.forEach((o) =>
       o.addEventListener('click', () => {
         const mode = o.dataset.themeOpt!;
@@ -202,6 +343,44 @@ const themes = [
         else apply(mode);
       }),
     );
+
+    /* Menu mobile: posisi top | right | left (tersimpan); right/left mengecil ke tepi saat scroll. */
+    const float = document.querySelector<HTMLElement>('[data-float-nav]');
+    if (float) {
+      const panel = float.querySelector<HTMLElement>('[data-float-panel]')!;
+      const bubble = float.querySelector<HTMLButtonElement>('[data-float-bubble]')!;
+      const posOpts = [...float.querySelectorAll<HTMLElement>('[data-nav-pos-opt]')];
+      const posNow = () => (root.dataset.navPos === 'top' || root.dataset.navPos === 'left' ? root.dataset.navPos : 'right');
+      const setMin = (min: boolean) => {
+        const m = min && posNow() !== 'top';
+        panel.hidden = m;
+        bubble.hidden = !m;
+      };
+      const paintPos = () => posOpts.forEach((o) => o.setAttribute('aria-checked', String(o.dataset.navPosOpt === posNow())));
+      paintPos();
+      posOpts.forEach((o) =>
+        o.addEventListener('click', () => {
+          const v = o.dataset.navPosOpt!;
+          root.dataset.navPos = v;
+          localStorage.setItem('nav-pos', v);
+          setMin(false);
+          paintPos();
+        }),
+      );
+      let lastY = scrollY;
+      addEventListener(
+        'scroll',
+        () => {
+          if (Math.abs(scrollY - lastY) > 6) setMin(true);
+          lastY = scrollY;
+        },
+        { passive: true },
+      );
+      bubble.addEventListener('click', () => {
+        lastY = scrollY;
+        setMin(false);
+      });
+    }
 
     /* Kaca: 0 sampai 100 -> --g */
     const range = header.querySelector<HTMLInputElement>('[data-glass-range]')!;
