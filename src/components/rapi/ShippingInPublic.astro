@@ -24,6 +24,8 @@ const sp = summaryParts(t.summary, lang, total, months);
 ---
 
 <section aria-labelledby="ship-h" class="glass rounded-[28px] p-6 sm:p-8">
+  <!-- Desktop: blok shrink-to-fit di tengah kartu, heading/count selebar grid. Mobile tetap. -->
+  <div class="md:mx-auto md:w-fit">
   <div class="flex items-center justify-between">
     <h2 id="ship-h" class="text-[14px] font-normal text-ink/65">{t.title}</h2>
     <a
@@ -69,6 +71,7 @@ const sp = summaryParts(t.summary, lang, total, months);
     </div>
   </div>
   <p data-contrib-empty hidden={!!weeks.length} class="mt-4 text-sm text-muted">{t.unavailable}</p>
+  </div>
 </section>
 
 <style is:global>
