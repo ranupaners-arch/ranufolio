@@ -28,7 +28,7 @@ const links = [
               rel={l.external ? 'noopener noreferrer' : undefined}
               aria-label={l.label}
               style={`--brand:${l.brand}`}
-              class="group/i grid h-11 w-11 place-items-center rounded-full bg-soft transition-transform hover:scale-105"
+              data-nav-avoid class="group/i grid h-11 w-11 place-items-center rounded-full bg-soft transition-transform hover:scale-105"
             >
               {l.icon && (
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true" class="transition-colors group-hover/i:text-[var(--brand)]">

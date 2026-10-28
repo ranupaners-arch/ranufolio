@@ -48,7 +48,7 @@ const h = copy[lang].hero;
         <a href={routes.page(lang, 'contact')} style="--i:1" class:list={[tileBase, 'bg-inv text-invink']}>
           <span class="flex items-start justify-between gap-2">
             <span class="pt-1 text-sm font-semibold opacity-80">{h.ownerQ}</span>
-            <span class="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-invink/15 transition-transform duration-300 group-hover:translate-x-1">
+            <span data-nav-avoid class="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-invink/15 transition-transform duration-300 group-hover:translate-x-1">
               <Icon name="arrow-right" />
             </span>
           </span>
@@ -60,7 +60,7 @@ const h = copy[lang].hero;
         <a href={routes.page(lang, 'learn')} style="--i:3" class:list={[tileBase, 'glass']}>
           <span class="flex items-start justify-between gap-2">
             <span class="pt-1 text-sm font-semibold text-muted">{h.learnQ}</span>
-            <span class="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-soft transition-transform duration-300 group-hover:translate-x-1">
+            <span data-nav-avoid class="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-soft transition-transform duration-300 group-hover:translate-x-1">
               <Icon name="arrow-right" />
             </span>
           </span>

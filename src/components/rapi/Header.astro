@@ -196,9 +196,10 @@ const themes = [
     /* Header kosong saat menu di samping: konten naik halus. */
     html { transition: --hh 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
     [data-header-row] { height: var(--hh); padding-block: 0; overflow: visible; }
-    html[data-nav-pos='right'], html[data-nav-pos='left'] { --hh: 0px; }
+    html[data-nav-pos='right'], html[data-nav-pos='left'] { --hh: 16px; }
     [data-float-list] { display: flex; flex-direction: column; gap: 0.25rem; }
     [data-float-list] a { width: 2.75rem; height: 2.75rem; }
+    html[data-nav-pos='right'] [data-float-panel], html[data-nav-pos='left'] [data-float-panel] { padding: 0; }
     [data-float-label] { display: none; }
     [data-float-bubble] {
       position: absolute; top: 50%; right: -0.5rem; display: grid; place-items: center;
@@ -335,6 +336,26 @@ const themes = [
         },
         { passive: true },
       );
+      /* Jangan menutupi tombol panah kartu: mengecil bila bertabrakan. */
+      const avoid = () => {
+        if (!mobile.matches || root.dataset.navPos === 'top') return;
+        const f = float.getBoundingClientRect();
+        const hit = [...document.querySelectorAll('[data-nav-avoid]')].some((el) => {
+          const r = el.getBoundingClientRect();
+          return r.width && r.left < f.right && r.right > f.left && r.top < f.bottom && r.bottom > f.top;
+        });
+        if (hit) setMin(true);
+      };
+      avoid();
+      addEventListener('resize', avoid);
+      /* Ketuk di luar menu samping: mengecil (tanpa menghalangi klik). */
+      document.addEventListener(
+        'pointerdown',
+        (e) => {
+          if (!float.contains(e.target as Node)) setMin(true);
+        },
+        { capture: true, passive: true },
+      );
       bubble.addEventListener('click', () => {
         lastY = scrollY;
         setMin(false);
@@ -368,6 +389,7 @@ const themes = [
         body.style.translate = '';
         root.dataset.navPos = pos;
         placeTools();
+        requestAnimationFrame(avoid);
         localStorage.setItem('nav-pos', pos);
         setMin(false);
         const to = body.getBoundingClientRect();
