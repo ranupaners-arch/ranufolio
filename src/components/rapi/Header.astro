@@ -328,11 +328,18 @@ const themes = [
         if (min && root.dataset.navPos !== 'top') float.setAttribute('data-min', '');
         else float.removeAttribute('data-min');
       };
+      /* Navigasi lewat menu: tetap terbuka di halaman baru. */
+      const kept = sessionStorage.getItem('nav-keep') === '1';
+      sessionStorage.removeItem('nav-keep');
+      const keepUntil = kept ? performance.now() + 1000 : 0;
+      float.querySelectorAll('[data-float-list] a').forEach((a) =>
+        a.addEventListener('click', () => sessionStorage.setItem('nav-keep', '1')),
+      );
       let lastY = scrollY;
       addEventListener(
         'scroll',
         () => {
-          if (Math.abs(scrollY - lastY) > 6) setMin(true);
+          if (performance.now() > keepUntil && Math.abs(scrollY - lastY) > 6) setMin(true);
           lastY = scrollY;
         },
         { passive: true },
@@ -347,7 +354,7 @@ const themes = [
         });
         if (hit) setMin(true);
       };
-      avoid();
+      if (!kept) avoid();
       addEventListener('resize', avoid);
       /* Ketuk di luar menu samping: mengecil (tanpa menghalangi klik). */
       document.addEventListener(
