@@ -30,7 +30,7 @@ const themes = [
 ---
 
 <header data-rapi-header data-theme={initialTheme} class="sticky top-0 z-40 text-ink">
-  <div class="mx-auto flex max-w-[1180px] items-center gap-2 px-3.5 py-3.5 sm:px-7 sm:py-5">
+  <div class="relative mx-auto flex max-w-[1180px] items-center gap-2 px-3.5 py-3.5 sm:px-7 sm:py-5">
     <a
       href={routes.home[lang]}
       aria-label={t.nav.homeAria}
@@ -39,7 +39,7 @@ const themes = [
       {person.short}
     </a>
 
-    <nav aria-label={t.nav.aria} class="glass ml-1 hidden rounded-full p-1 sm:block">
+    <nav aria-label={t.nav.aria} class="glass hidden rounded-full p-1 sm:absolute sm:left-1/2 sm:block sm:-translate-x-1/2">
       <ul class="relative flex">
         {
           items.map((i) => {
