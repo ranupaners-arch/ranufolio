@@ -1,7 +1,6 @@
 ---
-import { contact, copy, learnCourse as c, routes, talks } from '../../data/content';
+import { copy, learnCourse as c, routes, talks } from '../../data/content';
 import type { Lang } from '../../data/content';
-import { getIcon } from '../../lib/icons';
 import Icon from '../Icon.astro';
 
 interface Props {
@@ -12,7 +11,6 @@ const t = copy[lang];
 const l = t.learn;
 const talk = talks[0];
 const host = new URL(c.url).host + new URL(c.url).pathname.replace(/\/$/, '');
-const socials = contact.socials.slice(0, 3).map((s) => ({ ...s, icon: getIcon(s.icon) }));
 ---
 
 <div class="grid gap-3">
@@ -164,28 +162,6 @@ const socials = contact.socials.slice(0, 3).map((s) => ({ ...s, icon: getIcon(s.
     </span>
   </a>
 
-  <section class="glass flex flex-col gap-5 rounded-[28px] p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
-    <h2 class="font-display text-xl font-bold">{t.footer.socials}</h2>
-    <div class="flex flex-wrap gap-3">
-      {
-        socials.map((s) => (
-          <a
-            href={s.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="group inline-flex items-center gap-2 rounded-full bg-soft px-5 py-3 font-semibold transition-transform hover:-translate-y-0.5"
-          >
-            {s.icon && (
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
-                <path d={s.icon.path} />
-              </svg>
-            )}
-            {l.community} {s.label}
-          </a>
-        ))
-      }
-    </div>
-  </section>
 </div>
 
 <script>

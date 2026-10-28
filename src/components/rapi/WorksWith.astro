@@ -1,54 +1,73 @@
 ---
-import { techGroups } from '../../data/content';
+import { copy, featuredStack, techGroups } from '../../data/content';
 import type { Lang } from '../../data/content';
 import { brandHover, getIcon } from '../../lib/icons';
+import TechChip from './TechChip.astro';
 
 interface Props {
   lang: Lang;
+  compact?: boolean;
 }
-const { lang } = Astro.props;
+const { lang, compact = false } = Astro.props;
 
-const groups = techGroups.map((g) => ({
-  label: g.label[lang],
-  items: g.items.map((i) => {
-    const icon = getIcon(i.icon);
-    return { name: i.name, icon, brand: brandHover(i.name, icon) };
-  }),
-}));
+const decorate = (i: { name: string; icon?: string[] }) => {
+  const icon = getIcon(i.icon);
+  return { name: i.name, icon, brand: brandHover(i.name, icon) };
+};
+
+const all = techGroups.flatMap((g) => g.items);
+const featured = featuredStack.map((name) => all.find((i) => i.name === name)!).map(decorate);
+
+const groups = techGroups
+  .map((g) => ({
+    label: g.label[lang],
+    items: g.items.filter((i) => !compact || !featuredStack.includes(i.name)).map(decorate),
+  }))
+  .filter((g) => g.items.length > 0);
 ---
 
-<div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-  {
-    groups.map((g) => (
-      <div>
-        <p class="mb-2 text-sm font-semibold text-muted">{g.label}</p>
-        <ul class="flex flex-wrap gap-1.5">
-          {g.items.map((item) => (
-            <li
-              class="group chip cursor-default !py-1.5 !pl-2.5 !text-[13px] transition-colors hover:bg-panel"
-              style={item.brand ? `--brand:${item.brand}` : undefined}
-            >
-              {item.icon ? (
-                <svg
-                  viewBox="0 0 24 24"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  aria-hidden="true"
-                  class="shrink-0 transition-colors group-hover:text-[var(--brand,currentColor)]"
-                >
-                  <path d={item.icon.path} />
-                </svg>
-              ) : (
-                <span aria-hidden="true" class="grid size-4 shrink-0 place-items-center rounded bg-ink/10 text-[10px] font-bold leading-none">
-                  {item.name.charAt(0)}
-                </span>
-              )}
-              {item.name}
-            </li>
-          ))}
-        </ul>
+{
+  compact && (
+    <ul class="flex flex-wrap gap-1.5">
+      {featured.map((item) => (
+        <TechChip {...item} />
+      ))}
+    </ul>
+  )
+}
+
+{
+  compact ? (
+    <details class="group/all mt-4">
+      <summary class="inline-flex w-fit cursor-pointer list-none items-center gap-1.5 rounded-full bg-soft px-3.5 py-1.5 text-sm font-semibold [&::-webkit-details-marker]:hidden">
+        <span class="group-open/all:hidden">{copy[lang].stack.all}</span>
+        <span class="hidden group-open/all:inline">{copy[lang].stack.less}</span>
+      </summary>
+      <div class="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {groups.map((g) => (
+          <div>
+            <p class="mb-2 text-sm font-semibold text-muted">{g.label}</p>
+            <ul class="flex flex-wrap gap-1.5">
+              {g.items.map((item) => (
+                <TechChip {...item} />
+              ))}
+            </ul>
+          </div>
+        ))}
       </div>
-    ))
-  }
-</div>
+    </details>
+  ) : (
+    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      {groups.map((g) => (
+        <div>
+          <p class="mb-2 text-sm font-semibold text-muted">{g.label}</p>
+          <ul class="flex flex-wrap gap-1.5">
+            {g.items.map((item) => (
+              <TechChip {...item} />
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  )
+}

@@ -197,6 +197,9 @@ export const techGroups: { label: Bilingual; items: TechItem[] }[] = [
   },
 ];
 
+/** Delapan chip yang tampil di beranda; sisanya di balik tombol "lihat semua". Nama harus sama dengan `techGroups`. */
+export const featuredStack = ['Next.js', 'Astro', 'Flutter', 'PHP', 'TypeScript', 'PostgreSQL', 'Git & GitHub', 'Figma'];
+
 /* ---------- Teks antarmuka ---------- */
 
 export const copy = {
@@ -229,8 +232,8 @@ export const copy = {
     },
     hero: {
       role: 'Founder KukerjainAja',
-      title: 'Pengembang web dan aplikasi, mahasiswa Pendidikan Bahasa Arab.',
-      bio: 'Founder KukerjainAja, pengembang web dan aplikasi, dan mahasiswa Pendidikan Bahasa Arab. Juga penulis buku terbit, berpengalaman mengajar dan menyunting bahasa Arab, serta mengurus administrasi dan koordinasi program organisasi.',
+      title: 'Saya bantu UMKM dan organisasi punya website dan aplikasi yang siap dipakai.',
+      bio: 'Founder KukerjainAja di Wonogiri. Mahasiswa Pendidikan Bahasa Arab.',
       consultA: 'Hubungi via WhatsApp',
       consultText: 'Halo Ranupane, saya ingin bertanya tentang: ',
       badge: 'Berbasis di Wonogiri, Jawa Tengah',
@@ -277,18 +280,16 @@ export const copy = {
     about: {
       title: 'Tentang',
       body: [
-        'Saya Ranupane Rimba Argana, founder KukerjainAja di Wonogiri.',
-        'Saya kuliah Pendidikan Bahasa Arab di Institut Muslim Cendekia, Sukabumi, dan membangun website serta aplikasi lewat KukerjainAja. Saya juga penulis buku terbit, berpengalaman mengajar dan menyunting bahasa Arab, serta mengurus administrasi dan koordinasi program organisasi.',
+        'Saya kuliah di Institut Muslim Cendekia, Sukabumi, dengan IPK 4.0 dan pernah meraih dua medali emas olimpiade bahasa Arab tingkat nasional.',
+        'Di luar kuliah dan KukerjainAja, saya aktif berorganisasi, saat ini sebagai Sekretaris II DEMA kampus.',
       ],
       doTitle: 'Yang saya kerjakan',
       does: [
-        { title: 'Website dan aplikasi', text: 'Lewat KukerjainAja: website, aplikasi web, dan aplikasi mobile dengan Next.js dan Flutter, dari perencanaan dan desain sampai rilis, untuk UMKM dan organisasi.' },
-        { title: 'Pengalaman bahasa Arab', text: 'Pengalaman mengajar dan les privat, penyuntingan, penerjemahan dan konten bahasa Arab, serta analisis teks Arab klasik.' },
-        { title: 'Pengalaman menulis', text: 'Penulisan kreatif dan konten. Penulis buku terbit, Bisikan Asa di Sudut Jiwa Vol. 5.' },
-        { title: 'Pengalaman organisasi', text: 'Administrasi, persuratan dan notulen, serta koordinasi program kerja organisasi dan kegiatan.' },
+        { title: 'Website dan aplikasi', text: 'Website, aplikasi web, dan aplikasi mobile untuk UMKM dan organisasi, dari desain sampai rilis.' },
+        { title: 'Bahasa Arab dan menulis', text: 'Saya mengajar dan menyunting bahasa Arab dan sudah menulis untuk buku terbit.' },
       ],
     },
-    stack: { title: 'Tech stack' },
+    stack: { title: 'Tech stack', all: 'Lihat semua', less: 'Sembunyikan' },
     testimonial: {
       title: 'Kata klien',
       prev: 'Testimoni sebelumnya',
@@ -346,7 +347,6 @@ export const copy = {
       newTab: 'Buka di tab baru',
       workshop: 'Workshop',
       workshopOpen: 'Lihat detail',
-      community: 'Ikuti',
     },
     contactPage: {
       title: 'Mulai proyek',
@@ -401,8 +401,8 @@ export const copy = {
     },
     hero: {
       role: 'Founder of KukerjainAja',
-      title: 'Web and app developer, Arabic Language Education student.',
-      bio: 'Founder of KukerjainAja, web and app developer, and Arabic Language Education student. Also a published author, experienced in teaching and proofreading Arabic, and in handling administration and program coordination for organizations.',
+      title: 'I help small businesses and organizations get websites and apps that are ready to use.',
+      bio: 'Founder of KukerjainAja in Wonogiri. Arabic Language Education student.',
       consultA: 'Chat on WhatsApp',
       consultText: 'Hi Ranupane, I would like to ask about: ',
       badge: 'Based in Wonogiri, Central Java',
@@ -449,18 +449,16 @@ export const copy = {
     about: {
       title: 'About',
       body: [
-        "I'm Ranupane Rimba Argana, founder of KukerjainAja in Wonogiri.",
-        'I study Arabic Language Education at Institut Muslim Cendekia in Sukabumi, and I build websites and apps through KukerjainAja. I am also a published author, experienced in teaching and proofreading Arabic, and in handling administration and program coordination for organizations.',
+        'I study at Institut Muslim Cendekia in Sukabumi with a 4.0 GPA, and I have won two national gold medals in Arabic olympiads.',
+        'Outside classes and KukerjainAja, I am active in student organizations, currently as Secretary II of the campus DEMA.',
       ],
       doTitle: 'What I do',
       does: [
-        { title: 'Web and app development', text: 'Through KukerjainAja: websites, web apps, and mobile apps with Next.js and Flutter, from planning and design to release, for small businesses and organizations.' },
-        { title: 'Arabic language experience', text: 'Experience in teaching and tutoring, proofreading, Arabic translation and content, and classical Arabic text analysis.' },
-        { title: 'Writing experience', text: 'Creative and content writing. Published author of Bisikan Asa di Sudut Jiwa Vol. 5.' },
-        { title: 'Organization experience', text: 'Administration, correspondence and meeting minutes, and coordination of organizational programs and events.' },
+        { title: 'Web and app development', text: 'Websites, web apps, and mobile apps for small businesses and organizations, from design to release.' },
+        { title: 'Arabic and writing', text: 'I teach and proofread Arabic and have written for a published book.' },
       ],
     },
-    stack: { title: 'Tech stack' },
+    stack: { title: 'Tech stack', all: 'See all', less: 'Show less' },
     testimonial: {
       title: 'Client words',
       prev: 'Previous testimonial',
@@ -518,7 +516,6 @@ export const copy = {
       newTab: 'Open in new tab',
       workshop: 'Workshop',
       workshopOpen: 'View details',
-      community: 'Follow',
     },
     contactPage: {
       title: 'Start a project',
