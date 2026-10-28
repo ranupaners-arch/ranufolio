@@ -1,5 +1,5 @@
 ---
-import { copy, resume } from '../../data/content';
+import { copy, person, resume } from '../../data/content';
 import type { Lang, ResumeEntry } from '../../data/content';
 import WorksWith from './WorksWith.astro';
 
@@ -41,7 +41,7 @@ const split = (e: ResumeEntry) => [e.bullets.slice(0, 2), e.bullets.slice(2)] as
                 </div>
                 <div>
                   <h3 class="font-display text-xl font-bold">
-                    {e.title[lang]}
+                    {e.title[lang] === person.brand ? <a href={person.brandUrl} target="_blank" rel="noopener noreferrer" class="underline decoration-1 underline-offset-4 hover:opacity-80">{e.title[lang]}</a> : e.title[lang]}
                     {e.place[lang] && <span class="ml-2 font-sans text-sm font-medium text-muted">{e.place[lang]}</span>}
                   </h3>
                   {e.role[lang] && <p class="font-semibold">{e.role[lang]}</p>}

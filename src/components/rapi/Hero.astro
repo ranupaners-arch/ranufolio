@@ -1,5 +1,5 @@
 ---
-import { copy, routes } from '../../data/content';
+import { copy, person, routes } from '../../data/content';
 import type { Lang } from '../../data/content';
 import Icon from '../Icon.astro';
 import { tileBase } from './tile';
@@ -9,6 +9,7 @@ interface Props {
 }
 const { lang } = Astro.props;
 const h = copy[lang].hero;
+const [bioA, ...bioB] = h.bio.split(person.brand);
 ---
 
 <!-- Zona gelap: token tema gelap Rapi, bingkai penuh lebar di belakang header sticky -->
@@ -33,7 +34,7 @@ const h = copy[lang].hero;
           <h1 class="font-display text-[1.5rem] font-extrabold leading-[1.08] tracking-[-0.025em] sm:text-[2.3rem] lg:text-[3.1rem]">
             {h.title}
           </h1>
-          <p class="col-span-2 max-w-[46ch] text-[17px] text-muted lg:mt-4">{h.bio}</p>
+          <p class="col-span-2 max-w-[46ch] text-[17px] text-muted lg:mt-4">{bioA}{bioB.length > 0 && <><a href={person.brandUrl} target="_blank" rel="noopener noreferrer" class="underline decoration-1 underline-offset-2 transition-colors hover:text-ink">{person.brand}</a>{bioB.join(person.brand)}</>}</p>
           <p class="col-span-2 mt-1 inline-flex w-fit items-center gap-2 rounded-full bg-soft px-3 py-1.5 text-sm font-semibold lg:mt-5">
             <span class="relative flex h-2 w-2">
               <span class="ping-dot absolute inset-0 rounded-full bg-ink opacity-40"></span>

@@ -2,6 +2,7 @@
 import { contact, copy, person } from '../../data/content';
 import type { Lang } from '../../data/content';
 import { getIcon } from '../../lib/icons';
+import Icon from '../Icon.astro';
 
 interface Props {
   lang: Lang;
@@ -55,5 +56,16 @@ const links = [
         </li>
       ))
     }
+    <li>
+      <a
+        href={person.brandUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={person.brand}
+        class="grid h-11 w-11 place-items-center rounded-full bg-soft transition-transform hover:scale-105"
+      >
+        <Icon name="globe" size={20} stroke={32} />
+      </a>
+    </li>
   </ul>
 </footer>

@@ -9,6 +9,7 @@ export const person = {
   name: 'Ranupane Rimba Argana',
   short: 'Ranupane',
   brand: 'KukerjainAja',
+  brandUrl: 'https://kukerjain.dev',
   city: 'Wonogiri',
 };
 
