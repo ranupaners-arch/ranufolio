@@ -202,9 +202,9 @@ export const techGroups: { label: Bilingual; items: TechItem[] }[] = [
 export const copy = {
   id: {
     htmlLang: 'id',
-    title: 'Ranupane Rimba Argana | Konsultan dan Founder KukerjainAja',
+    title: 'Ranupane Rimba Argana | Founder KukerjainAja',
     description:
-      'Ranupane Rimba Argana di Wonogiri, founder KukerjainAja. Konsultasi dan jasa untuk website dan aplikasi, bahasa Arab, penulisan, serta administrasi dan koordinasi program organisasi.',
+      'Ranupane Rimba Argana di Wonogiri, founder KukerjainAja, pengembang web dan aplikasi, serta mahasiswa Pendidikan Bahasa Arab.',
     skip: 'Lewati ke konten',
     nav: {
       home: 'Beranda',
@@ -228,11 +228,11 @@ export const copy = {
       language: 'Bahasa',
     },
     hero: {
-      role: 'Konsultan dan Founder KukerjainAja',
-      title: 'Konsultan untuk web dan aplikasi, bahasa Arab, tulisan, dan organisasi.',
-      bio: 'Founder KukerjainAja, mahasiswa Pendidikan Bahasa Arab, dan penulis. Membantu membangun website dan aplikasi, mengajar dan menyunting bahasa Arab, menulis, serta mengurus administrasi dan koordinasi program.',
-      consultA: 'Konsultasi',
-      consultText: 'Halo Ranupane, saya ingin berkonsultasi tentang: ',
+      role: 'Founder KukerjainAja',
+      title: 'Pengembang web dan aplikasi, mahasiswa Pendidikan Bahasa Arab.',
+      bio: 'Founder KukerjainAja, pengembang web dan aplikasi, dan mahasiswa Pendidikan Bahasa Arab. Juga penulis buku terbit, berpengalaman mengajar dan menyunting bahasa Arab, serta mengurus administrasi dan koordinasi program organisasi.',
+      consultA: 'Hubungi via WhatsApp',
+      consultText: 'Halo Ranupane, saya ingin bertanya tentang: ',
       badge: 'Berbasis di Wonogiri, Jawa Tengah',
       ownerQ: 'Pemilik usaha?',
       ownerA: 'Mulai proyek',
@@ -278,14 +278,14 @@ export const copy = {
       title: 'Tentang',
       body: [
         'Saya Ranupane Rimba Argana, founder KukerjainAja di Wonogiri.',
-        'Saya kuliah Pendidikan Bahasa Arab di Institut Muslim Cendekia, Sukabumi, dan membangun website serta aplikasi lewat KukerjainAja. Saya juga menulis, mengajar dan menyunting bahasa Arab, serta terbiasa mengurus administrasi dan koordinasi program organisasi.',
+        'Saya kuliah Pendidikan Bahasa Arab di Institut Muslim Cendekia, Sukabumi, dan membangun website serta aplikasi lewat KukerjainAja. Saya juga penulis buku terbit, berpengalaman mengajar dan menyunting bahasa Arab, serta mengurus administrasi dan koordinasi program organisasi.',
       ],
       doTitle: 'Yang saya kerjakan',
       does: [
-        { title: 'Website dan aplikasi', text: 'Lewat KukerjainAja: website, aplikasi web, dan aplikasi mobile dengan Next.js dan Flutter, dari konsultasi dan desain sampai rilis, untuk UMKM dan organisasi.' },
-        { title: 'Bahasa Arab', text: 'Mengajar dan les privat, penyuntingan, penerjemahan dan konten bahasa Arab, serta analisis teks Arab klasik.' },
-        { title: 'Menulis', text: 'Penulisan kreatif dan konten. Penulis buku terbit, Bisikan Asa di Sudut Jiwa Vol. 5.' },
-        { title: 'Organisasi dan administrasi', text: 'Administrasi, persuratan dan notulen, serta koordinasi program kerja organisasi dan kegiatan.' },
+        { title: 'Website dan aplikasi', text: 'Lewat KukerjainAja: website, aplikasi web, dan aplikasi mobile dengan Next.js dan Flutter, dari perencanaan dan desain sampai rilis, untuk UMKM dan organisasi.' },
+        { title: 'Pengalaman bahasa Arab', text: 'Pengalaman mengajar dan les privat, penyuntingan, penerjemahan dan konten bahasa Arab, serta analisis teks Arab klasik.' },
+        { title: 'Pengalaman menulis', text: 'Penulisan kreatif dan konten. Penulis buku terbit, Bisikan Asa di Sudut Jiwa Vol. 5.' },
+        { title: 'Pengalaman organisasi', text: 'Administrasi, persuratan dan notulen, serta koordinasi program kerja organisasi dan kegiatan.' },
       ],
     },
     stack: { title: 'Tech stack' },
@@ -374,9 +374,9 @@ export const copy = {
   },
   en: {
     htmlLang: 'en',
-    title: 'Ranupane Rimba Argana | Consultant and Founder of KukerjainAja',
+    title: 'Ranupane Rimba Argana | Founder of KukerjainAja',
     description:
-      'Ranupane Rimba Argana in Wonogiri, Indonesia, founder of KukerjainAja. Consultation and services for websites and apps, Arabic language, writing, and organizational administration and program coordination.',
+      'Ranupane Rimba Argana in Wonogiri, Indonesia, founder of KukerjainAja, web and app developer, and Arabic Language Education student.',
     skip: 'Skip to content',
     nav: {
       home: 'Home',
@@ -400,11 +400,11 @@ export const copy = {
       language: 'Language',
     },
     hero: {
-      role: 'Consultant and Founder of KukerjainAja',
-      title: 'Consultant for web and apps, Arabic, writing, and organizations.',
-      bio: 'Founder of KukerjainAja, Arabic Language Education student, and author. I help build websites and apps, teach and proofread Arabic, write, and handle administration and program coordination.',
-      consultA: 'Consultation',
-      consultText: 'Hi Ranupane, I would like a consultation about: ',
+      role: 'Founder of KukerjainAja',
+      title: 'Web and app developer, Arabic Language Education student.',
+      bio: 'Founder of KukerjainAja, web and app developer, and Arabic Language Education student. Also a published author, experienced in teaching and proofreading Arabic, and in handling administration and program coordination for organizations.',
+      consultA: 'Chat on WhatsApp',
+      consultText: 'Hi Ranupane, I would like to ask about: ',
       badge: 'Based in Wonogiri, Central Java',
       ownerQ: 'Business owner?',
       ownerA: 'Start a project',
@@ -450,14 +450,14 @@ export const copy = {
       title: 'About',
       body: [
         "I'm Ranupane Rimba Argana, founder of KukerjainAja in Wonogiri.",
-        'I study Arabic Language Education at Institut Muslim Cendekia in Sukabumi, and I build websites and apps through KukerjainAja. I also write, teach and proofread Arabic, and I am used to handling administration and program coordination for organizations.',
+        'I study Arabic Language Education at Institut Muslim Cendekia in Sukabumi, and I build websites and apps through KukerjainAja. I am also a published author, experienced in teaching and proofreading Arabic, and in handling administration and program coordination for organizations.',
       ],
       doTitle: 'What I do',
       does: [
-        { title: 'Web and app development', text: 'Through KukerjainAja: websites, web apps, and mobile apps with Next.js and Flutter, from consultation and design to release, for small businesses and organizations.' },
-        { title: 'Arabic language', text: 'Teaching and tutoring, proofreading, Arabic translation and content, and classical Arabic text analysis.' },
-        { title: 'Writing', text: 'Creative and content writing. Published author of Bisikan Asa di Sudut Jiwa Vol. 5.' },
-        { title: 'Organization and administration', text: 'Administration, correspondence and meeting minutes, and coordination of organizational programs and events.' },
+        { title: 'Web and app development', text: 'Through KukerjainAja: websites, web apps, and mobile apps with Next.js and Flutter, from planning and design to release, for small businesses and organizations.' },
+        { title: 'Arabic language experience', text: 'Experience in teaching and tutoring, proofreading, Arabic translation and content, and classical Arabic text analysis.' },
+        { title: 'Writing experience', text: 'Creative and content writing. Published author of Bisikan Asa di Sudut Jiwa Vol. 5.' },
+        { title: 'Organization experience', text: 'Administration, correspondence and meeting minutes, and coordination of organizational programs and events.' },
       ],
     },
     stack: { title: 'Tech stack' },
@@ -585,8 +585,8 @@ export const resume: {
       current: true,
       bullets: [
         {
-          id: 'Menjalankan studio pembuatan website dan aplikasi secara mandiri, dari konsultasi, desain, pengembangan, sampai rilis.',
-          en: 'Run a website and app studio on my own, from consultation and design to development and release.',
+          id: 'Menjalankan studio pembuatan website dan aplikasi secara mandiri, dari perencanaan, desain, pengembangan, sampai rilis.',
+          en: 'Run a website and app studio on my own, from planning and design to development and release.',
         },
         {
           id: 'Merancang antarmuka di Figma/Pencil dan membangunnya dengan Next.js (web) serta Flutter (aplikasi), dengan Postgres sebagai database.',
