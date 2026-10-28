@@ -434,8 +434,8 @@ const themes = [
     }
 
     /* Kaca: 0 sampai 100 -> --g */
-    const range = header.querySelector<HTMLInputElement>('[data-glass-range]')!;
-    const label = header.querySelector<HTMLElement>('[data-glass-label]')!;
+    const range = document.querySelector<HTMLInputElement>('[data-glass-range]')!;
+    const label = document.querySelector<HTMLElement>('[data-glass-label]')!;
     const saved = localStorage.getItem('glass-level');
     if (saved !== null) range.value = String(Math.min(100, Math.max(0, +saved)));
     label.textContent = `${range.value}%`;
