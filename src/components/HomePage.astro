@@ -15,7 +15,7 @@ interface Props {
 const { lang } = Astro.props;
 ---
 
-<RapiPage lang={lang} paths={routes.home} current="home" contained={false} initialTheme="dark">
+<RapiPage lang={lang} paths={routes.home} current="home" contained={false} contactCta={false} initialTheme="dark">
   <Hero lang={lang} />
   <SelectedWork lang={lang} />
   <div data-zone="auto" class="mx-auto max-w-[1180px] px-3.5 py-10 sm:px-7">
@@ -23,7 +23,7 @@ const { lang } = Astro.props;
     <div class="mt-3"><ShippingInPublic lang={lang} /></div>
   </div>
   <KindWords lang={lang} />
-  <div data-zone="auto" class="mx-auto max-w-[1180px] px-3.5 pt-3">
+  <div data-zone="auto" class="mx-auto max-w-[1180px] px-3.5 pt-3 sm:pt-5">
     <CtaBand lang={lang} />
   </div>
 </RapiPage>

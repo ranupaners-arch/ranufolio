@@ -9,17 +9,15 @@ interface Props {
 }
 const { lang } = Astro.props;
 const t = copy[lang];
-// Faiz memulai carousel dari tile ke-2 (tile pertama mengintip di kiri). Dengan sedikit proyek, mulai dari yang pertama.
-const start = projects.length > 3 ? 1 : 0;
 
 const arrow =
   'relative grid size-8 place-items-center rounded-full text-fg/65 transition-[background-color,color,opacity] duration-150 ease-out after:absolute after:-inset-1.5 hover:bg-bg-hover hover:text-fg disabled:pointer-events-none disabled:opacity-35 active:scale-[0.96]';
 ---
 
 <section id="work" data-zone="light" class="faiz @container scroll-mt-6" aria-labelledby="work-h">
-  <div class="page-grid pb-16 pt-20 @3xl:pb-24 @3xl:pt-[120px]">
-    <div class="page-sub group/carousel" data-carousel data-start={start}>
-      <div class="flex items-center justify-between">
+  <div class="pb-16 pt-20 @3xl:pb-[108px] @3xl:pt-[108px]">
+    <div class="group/carousel" data-carousel>
+      <div class="pad-wide flex items-center justify-between">
         <h2 id="work-h" class="text-[14px] text-fg/65">{t.projects.title}</h2>
         <div class="flex items-center gap-1 [@media(hover:none)]:hidden">
           <button type="button" data-prev aria-label={t.projects.prev} class={arrow}>
@@ -33,7 +31,7 @@ const arrow =
 
       <ul
         data-track
-        class="col-full pad-content scrollbar-none mt-3 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain py-1 @3xl:gap-6"
+        class="pad-wide scrollbar-none mt-3 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain py-1 @3xl:gap-6"
       >
         {
           projects.map((p, i) => (
@@ -73,9 +71,6 @@ const arrow =
       prev.disabled = track.scrollLeft <= 1;
       next.disabled = track.scrollLeft + track.clientWidth >= track.scrollWidth - 1;
     };
-
-    const start = Number(root.dataset.start || 0);
-    if (start > 0 && tiles[start]) track.scrollLeft = tiles[start].offsetLeft - tiles[0].offsetLeft;
 
     let raf = 0;
     track.addEventListener(

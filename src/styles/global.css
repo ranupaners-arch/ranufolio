@@ -386,6 +386,15 @@ body {
   padding-inline: var(--edge);
   scroll-padding-inline: var(--edge);
 }
+.pad-wide {
+  --gutter: 20px;
+  --edge: max(var(--gutter), calc((100% - 1180px) / 2));
+  padding-inline: var(--edge);
+  scroll-padding-inline: var(--edge);
+}
+@container (min-width: 640px) {
+  .pad-wide { --gutter: 24px; }
+}
 .scrollbar-none { scrollbar-width: none; }
 .scrollbar-none::-webkit-scrollbar { display: none; }
 

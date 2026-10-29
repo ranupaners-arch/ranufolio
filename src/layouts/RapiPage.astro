@@ -13,9 +13,11 @@ interface Props {
   description?: string;
   /** false = konten mengatur lebar sendiri (beranda dengan zona penuh lebar). */
   contained?: boolean;
+  /** false = sembunyikan blok "Hubungi" (beranda sudah punya CTA sendiri). */
+  contactCta?: boolean;
   initialTheme?: 'dark' | 'light';
 }
-const { lang, paths, current, title, description, contained = true, initialTheme } = Astro.props;
+const { lang, paths, current, title, description, contained = true, contactCta = true, initialTheme } = Astro.props;
 ---
 
 <Base lang={lang} paths={paths} title={title} description={description} variant="rapi">
@@ -24,8 +26,8 @@ const { lang, paths, current, title, description, contained = true, initialTheme
   <main id="konten">
     {contained ? <div class="mx-auto max-w-[1180px] px-3.5 sm:px-7"><slot /></div> : <slot />}
   </main>
-  <div class="mx-auto max-w-[1180px] px-3.5 pb-6 sm:px-7">
-    <ContactCta lang={lang} />
+  <div class:list={['mx-auto max-w-[1180px] px-3.5 pb-6', contactCta && 'sm:px-7']}>
+    {contactCta && <ContactCta lang={lang} />}
     <Footer lang={lang} />
   </div>
 </Base>
