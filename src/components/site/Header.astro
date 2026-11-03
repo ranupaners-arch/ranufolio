@@ -29,7 +29,7 @@ const themes = [
 ] as const;
 ---
 
-<header data-rapi-header data-theme={initialTheme} class="sticky top-0 z-40 text-ink">
+<header data-site-header data-theme={initialTheme} class="sticky top-0 z-40 text-ink">
   <div data-header-row class="relative mx-auto flex max-w-[1180px] items-center gap-2 px-3.5 py-3.5 sm:px-7 sm:py-5">
     <a
       href={routes.home[lang]}
@@ -236,7 +236,7 @@ const themes = [
 </style>
 
 <script>
-  const header = document.querySelector<HTMLElement>('[data-rapi-header]');
+  const header = document.querySelector<HTMLElement>('[data-site-header]');
   if (header) {
     const root = document.documentElement;
     const btn = header.querySelector<HTMLButtonElement>('[data-settings-btn]')!;

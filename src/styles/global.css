@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ------------------------------------------------------------------ fonts */
-/* Wix Madefor (Rapi), Geist + Caveat (Faiz) dimuat lewat @fontsource di Base.astro. Paper Mono self-host. */
+/* Wix Madefor (halaman bertema), Geist + Caveat (halaman putih) dimuat lewat @fontsource di Base.astro. Paper Mono self-host. */
 @font-face {
   font-family: "Paper Mono";
   font-style: normal;
@@ -52,7 +52,7 @@
   --font-mono: "Paper Mono", "Paper Mono Fallback", ui-monospace, monospace;
   --font-hand: "Caveat", cursive;
 
-  /* Faiz (tidak berubah per tema) */
+  /* Halaman putih (tidak berubah per tema) */
   --color-bg: #fff;
   --color-bg-subtle: #f9f8f6;
   --color-bg-muted: #f2f1ef;
@@ -73,7 +73,7 @@
   --color-paper: #f7f3ea;
   --color-ink-pen: #1f2a44;
 
-  --ease-out: cubic-bezier(0.23, 1, 0.32, 1); /* easing Faiz; Rapi memakai --ease-rapi */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1); /* easing halaman putih; halaman bertema memakai --ease-themed */
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
   --ease-lift: cubic-bezier(0.32, 0.72, 0, 1);
   --ease-back: cubic-bezier(0.34, 1.45, 0.64, 1);
@@ -87,7 +87,7 @@
   --shadow-dialog: 0 0 0.5px #0003, 0 18px 20px #0000001f;
 }
 
-/* Rapi: token berpindah mengikuti [data-theme] / .theme-dark */
+/* Halaman bertema: token berpindah mengikuti [data-theme] / .theme-dark */
 @theme inline {
   --color-frame: var(--frame);
   --color-panel: var(--panel);
@@ -134,8 +134,8 @@
 }
 :root {
   --g: 0.55;
-  --ease-rapi: cubic-bezier(0.16, 1, 0.3, 1);
-  --hh: 73px; /* tinggi header Rapi */
+  --ease-themed: cubic-bezier(0.16, 1, 0.3, 1);
+  --hh: 73px; /* tinggi header */
 }
 @media (min-width: 640px) {
   :root {
@@ -163,7 +163,7 @@ body {
   outline-offset: 3px;
 }
 
-/* ------------------------------------------------------------------ Rapi: komponen */
+/* ------------------------------------------------------------------ Halaman bertema: komponen */
 .glass {
   background: rgb(var(--glass-rgb) / calc(0.12 + var(--g) * 0.72));
   -webkit-backdrop-filter: blur(calc(4px + var(--g) * 30px)) saturate(160%);
@@ -277,7 +277,7 @@ body {
   background: var(--frame);
 }
 
-/* ------------------------------------------------------------------ Rapi: animasi */
+/* ------------------------------------------------------------------ Halaman bertema: animasi */
 @keyframes settle {
   0% { transform: translateY(14px) scale(0.96); filter: blur(6px); }
   to { transform: none; filter: none; }
@@ -306,9 +306,9 @@ body {
   animation: fade 0.16s ease-out both;
 }
 @media (prefers-reduced-motion: no-preference) {
-  .settle { animation: settle 0.8s var(--ease-rapi) both; animation-delay: calc(min(var(--i, 0), 4) * 70ms); }
-  .deal { animation: deal 0.45s var(--ease-rapi) both; animation-delay: calc(min(var(--i, 0), 5) * 45ms); }
-  .pop { animation: pop 0.2s var(--ease-rapi) both; }
+  .settle { animation: settle 0.8s var(--ease-themed) both; animation-delay: calc(min(var(--i, 0), 4) * 70ms); }
+  .deal { animation: deal 0.45s var(--ease-themed) both; animation-delay: calc(min(var(--i, 0), 5) * 45ms); }
+  .pop { animation: pop 0.2s var(--ease-themed) both; }
   .grid-bg::before { animation: grid-drift 24s linear infinite; }
   .ping-dot { animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite; }
 }
@@ -316,7 +316,7 @@ body {
   html { scroll-behavior: auto; }
 }
 
-/* ------------------------------------------------------------------ Faiz: animasi */
+/* ------------------------------------------------------------------ Halaman putih: animasi */
 @keyframes rise-in {
   0% { opacity: 0; filter: blur(2px); translate: 0 8px; }
 }
@@ -344,18 +344,18 @@ body {
   }
 }
 
-/* ------------------------------------------------------------------ Faiz: grid halaman + teks artikel */
-.faiz {
+/* ------------------------------------------------------------------ Halaman putih: grid halaman + teks artikel */
+.plain-page {
   font-family: var(--font-geist);
   line-height: 1.5;
   color: var(--color-fg);
   background: var(--color-bg);
 }
-.faiz ::selection {
+.plain-page ::selection {
   background: var(--color-accent-subtle);
   color: inherit;
 }
-.faiz :focus-visible {
+.plain-page :focus-visible {
   outline: 2px solid var(--color-focus);
   outline-offset: 2px;
 }
@@ -429,7 +429,7 @@ body {
 }
 
 /* ------------------------------------------------------------------ Transisi halaman */
-/* Lintas-dokumen: pengganti Swup. Crossfade 1 dtk + blur 5px hanya saat tujuannya halaman gaya Faiz. */
+/* Lintas-dokumen: pengganti Swup. Crossfade 1 dtk + blur 5px hanya saat tujuannya halaman halaman putih. */
 @media (prefers-reduced-motion: no-preference) {
   @view-transition {
     navigation: auto;
@@ -442,13 +442,13 @@ body {
 }
 ::view-transition-group(nav-pill) {
   animation-duration: 0.5s;
-  animation-timing-function: var(--ease-rapi);
+  animation-timing-function: var(--ease-themed);
 }
 @keyframes vt-out { to { opacity: 0; filter: blur(5px); } }
 @keyframes vt-in { from { opacity: 0; filter: blur(5px); } }
-html.faiz-doc::view-transition-old(root) {
+html.plain-page-doc::view-transition-old(root) {
   animation: vt-out 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 }
-html.faiz-doc::view-transition-new(root) {
+html.plain-page-doc::view-transition-new(root) {
   animation: vt-in 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 }

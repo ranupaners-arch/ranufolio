@@ -1,6 +1,6 @@
 ---
 import Base from './Base.astro';
-import ContactCard from '../components/faiz/ContactCard.astro';
+import ContactCard from '../components/portfolio/ContactCard.astro';
 import type { Lang } from '../data/content';
 
 interface Props {
@@ -12,11 +12,11 @@ interface Props {
 const { lang, paths, title, description } = Astro.props;
 ---
 
-<Base lang={lang} paths={paths} title={title} description={description} variant="faiz">
-  <div id="konten" class="faiz @container min-h-screen">
+<Base lang={lang} paths={paths} title={title} description={description} variant="plain-page">
+  <div id="konten" class="plain-page @container min-h-screen">
     <slot />
   </div>
-  <div class="faiz fixed bottom-6 left-6 z-40 hidden bg-transparent sm:block" data-contact-dock>
+  <div class="plain-page fixed bottom-6 left-6 z-40 hidden bg-transparent sm:block" data-contact-dock>
     <ContactCard lang={lang} id="contact-card-dock" placement="side" />
   </div>
 </Base>

@@ -151,7 +151,6 @@ export const techGroups: { label: Bilingual; items: TechItem[] }[] = [
       { name: 'Laravel', icon: ['siLaravel'] },
       { name: 'Filament', icon: ['siFilament'] },
       { name: 'Node.js', icon: ['siNodedotjs'] },
-      { name: 'REST API' },
     ],
   },
   {
@@ -174,6 +173,8 @@ export const techGroups: { label: Bilingual; items: TechItem[] }[] = [
     label: { id: 'Database', en: 'Database' },
     items: [
       { name: 'MySQL', icon: ['siMysql'] },
+      { name: 'MariaDB', icon: ['siMariadb'] },
+      { name: 'Prisma', icon: ['siPrisma'] },
       { name: 'PostgreSQL', icon: ['siPostgresql'] },
       { name: 'Redis', icon: ['siRedis'] },
     ],
@@ -182,18 +183,16 @@ export const techGroups: { label: Bilingual; items: TechItem[] }[] = [
     label: { id: 'Tools', en: 'Tools' },
     items: [
       { name: 'Git & GitHub', icon: ['siGithub'] },
-      { name: 'GitHub Actions', icon: ['siGithubactions'] },
       { name: 'Linux VPS', icon: ['siLinux'] },
-      { name: 'Nginx', icon: ['siNginx'] },
       { name: 'Cloudflare', icon: ['siCloudflare'] },
       { name: 'Docker', icon: ['siDocker'] },
       { name: 'Figma', icon: ['siFigma'] },
-      { name: 'Pen.dev' },
+      { name: 'Pen.dev', icon: ['siPendev'] },
       { name: 'Cursor', icon: ['siCursor'] },
+      { name: 'Codex', icon: ['siOpenai'] },
+      { name: 'Grok', icon: ['siGrokbot'] },
       { name: 'Claude Code', icon: ['siClaude'] },
-      { name: 'Postman', icon: ['siPostman'] },
       { name: 'Android Studio', icon: ['siAndroidstudio'] },
-      { name: 'CapCut', icon: ['siCapcut'] },
     ],
   },
 ];
@@ -321,7 +320,7 @@ export const copy = {
       },
     },
     footer: { socials: 'Sosial media', made: 'Dibuat di Wonogiri.' },
-    contactCta: { q: 'Tertarik dengan saya?', a: 'Hubungi' },
+    contactCta: { q: 'Tertarik dengan saya?', a: 'Hubungi', placeholder: 'Tulis pesan…', send: 'Kirim' },
     shipping: { title: 'Shipping in public', summary: '{x} kontribusi dalam {n} bulan terakhir', one: 'kontribusi', many: 'kontribusi', on: 'pada', none: 'Tidak ada kontribusi', unavailable: 'Data kontribusi sedang tidak tersedia.' },
     resume: {
       title: 'Resume',
@@ -497,7 +496,7 @@ export const copy = {
       },
     },
     footer: { socials: 'Social media', made: 'Made in Wonogiri.' },
-    contactCta: { q: 'Interested in me?', a: 'Contact' },
+    contactCta: { q: 'Interested in me?', a: 'Contact', placeholder: 'Write a message…', send: 'Send' },
     shipping: { title: 'Shipping in public', summary: '{x} contributions in the last {n} months', one: 'contribution', many: 'contributions', on: 'on', none: 'No contributions', unavailable: 'Contribution data is unavailable right now.' },
     resume: {
       title: 'Resume',

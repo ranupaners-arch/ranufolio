@@ -1,8 +1,8 @@
 ---
 import Base from './Base.astro';
-import Header from '../components/rapi/Header.astro';
-import ContactCta from '../components/rapi/ContactCta.astro';
-import Footer from '../components/rapi/Footer.astro';
+import Header from '../components/site/Header.astro';
+import ContactCta from '../components/site/ContactCta.astro';
+import Footer from '../components/site/Footer.astro';
 import type { Lang } from '../data/content';
 
 interface Props {
@@ -20,14 +20,22 @@ interface Props {
 const { lang, paths, current, title, description, contained = true, contactCta = true, initialTheme } = Astro.props;
 ---
 
-<Base lang={lang} paths={paths} title={title} description={description} variant="rapi">
+<Base lang={lang} paths={paths} title={title} description={description} variant="themed">
   <div class="grid-bg" aria-hidden="true"></div>
   <Header lang={lang} paths={paths} current={current} initialTheme={initialTheme} />
   <main id="konten">
     {contained ? <div class="mx-auto max-w-[1180px] px-3.5 sm:px-7"><slot /></div> : <slot />}
   </main>
   <div class:list={['mx-auto max-w-[1180px] px-3.5 pb-6', contactCta && 'sm:px-7']}>
-    {contactCta && <ContactCta lang={lang} />}
-    <Footer lang={lang} />
+    {
+      contactCta ? (
+        <div class="glass mt-3 overflow-hidden rounded-[28px]">
+          <ContactCta lang={lang} />
+          <Footer lang={lang} embedded />
+        </div>
+      ) : (
+        <Footer lang={lang} />
+      )
+    }
   </div>
 </Base>

@@ -1,11 +1,11 @@
 ---
-import RapiPage from '../layouts/RapiPage.astro';
-import Hero from './rapi/Hero.astro';
-import AboutSection from './rapi/AboutSection.astro';
-import ShippingInPublic from './rapi/ShippingInPublic.astro';
-import CtaBand from './rapi/CtaBand.astro';
-import SelectedWork from './faiz/SelectedWork.astro';
-import KindWords from './faiz/KindWords.astro';
+import PageLayout from '../layouts/PageLayout.astro';
+import Hero from './site/Hero.astro';
+import AboutSection from './site/AboutSection.astro';
+import ShippingInPublic from './site/ShippingInPublic.astro';
+import CtaBand from './site/CtaBand.astro';
+import SelectedWork from './portfolio/SelectedWork.astro';
+import KindWords from './portfolio/KindWords.astro';
 import { routes } from '../data/content';
 import type { Lang } from '../data/content';
 
@@ -15,7 +15,7 @@ interface Props {
 const { lang } = Astro.props;
 ---
 
-<RapiPage lang={lang} paths={routes.home} current="home" contained={false} contactCta={false} initialTheme="dark">
+<PageLayout lang={lang} paths={routes.home} current="home" contained={false} contactCta={false} initialTheme="dark">
   <Hero lang={lang} />
   <SelectedWork lang={lang} />
   <div data-zone="auto" class="mx-auto max-w-[1180px] px-3.5 py-10 sm:px-7">
@@ -26,4 +26,4 @@ const { lang } = Astro.props;
   <div data-zone="auto" class="mx-auto max-w-[1180px] px-3.5 pt-3 sm:pt-5">
     <CtaBand lang={lang} />
   </div>
-</RapiPage>
+</PageLayout>

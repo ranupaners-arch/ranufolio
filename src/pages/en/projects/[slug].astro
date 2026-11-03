@@ -1,6 +1,6 @@
 ---
-import FaizLayout from '../../../layouts/FaizLayout.astro';
-import ProjectDetail from '../../../components/faiz/ProjectDetail.astro';
+import DetailLayout from '../../../layouts/DetailLayout.astro';
+import ProjectDetail from '../../../components/portfolio/ProjectDetail.astro';
 import { projects, routes } from '../../../data/content';
 
 export function getStaticPaths() {
@@ -11,11 +11,11 @@ const { slug } = Astro.params;
 const p = projects.find((x) => x.slug === slug)!;
 ---
 
-<FaizLayout
+<DetailLayout
   lang="en"
   title={`${p.name} | Ranupane Rimba Argana`}
   description={p.tagline.en}
   paths={routes.pair((l) => routes.project(l, p.slug))}
 >
   <ProjectDetail lang="en" slug={p.slug} />
-</FaizLayout>
+</DetailLayout>
