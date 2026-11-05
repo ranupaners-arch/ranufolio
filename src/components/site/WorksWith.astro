@@ -1,14 +1,16 @@
 ---
-import { copy, featuredStack, techGroups } from '../../data/content';
+import { copyFor, featuredStack, techGroups } from '../../data/content';
 import type { Lang } from '../../data/content';
 import { brandHover, getIcon } from '../../lib/icons';
 import TechChip from './TechChip.astro';
 
 interface Props {
   lang: Lang;
+  locale?: 'ar';
   compact?: boolean;
 }
-const { lang, compact = false } = Astro.props;
+const { lang, locale, compact = false } = Astro.props;
+const t = copyFor(lang, locale);
 
 const decorate = (i: { name: string; icon?: string[] }) => {
   const icon = getIcon(i.icon);
@@ -20,7 +22,7 @@ const featured = featuredStack.map((name) => all.find((i) => i.name === name)!).
 
 const groups = techGroups
   .map((g) => ({
-    label: g.label[lang],
+    label: locale === 'ar' ? ({ Backend: 'الواجهة الخلفية', 'Frontend and mobile': 'الواجهة الأمامية وتطبيقات الهواتف', Database: 'قواعد البيانات', Tools: 'الأدوات' }[g.label.en] ?? g.label.en) : g.label[lang],
     items: g.items.filter((i) => !compact || !featuredStack.includes(i.name)).map(decorate),
   }))
   .filter((g) => g.items.length > 0);
@@ -40,8 +42,8 @@ const groups = techGroups
   compact ? (
     <details class="group/all mt-4">
       <summary class="inline-flex w-fit cursor-pointer list-none items-center gap-1.5 rounded-full bg-soft px-3.5 py-1.5 text-sm font-semibold [&::-webkit-details-marker]:hidden">
-        <span class="group-open/all:hidden">{copy[lang].stack.all}</span>
-        <span class="hidden group-open/all:inline">{copy[lang].stack.less}</span>
+        <span class="group-open/all:hidden">{t.stack.all}</span>
+        <span class="hidden group-open/all:inline">{t.stack.less}</span>
       </summary>
       <div class="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {groups.map((g) => (

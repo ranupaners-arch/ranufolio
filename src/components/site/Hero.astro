@@ -1,12 +1,13 @@
 ---
-import { copy, person, routes } from '../../data/content';
+import { arabicRoutes, copyFor, person, routes } from '../../data/content';
 import type { Lang } from '../../data/content';
 
 interface Props {
   lang: Lang;
+  locale?: 'ar';
 }
-const { lang } = Astro.props;
-const h = copy[lang].hero;
+const { lang, locale } = Astro.props;
+const h = copyFor(lang, locale).hero;
 const [bioA, ...bioB] = h.bio.split(person.brand);
 ---
 
@@ -45,14 +46,14 @@ const [bioA, ...bioB] = h.bio.split(person.brand);
       <!-- Tombol aksi gaya profil Instagram: dua tombol sama lebar berdampingan -->
       <div class="col-span-2 mx-auto mt-1 grid w-full max-w-[460px] grid-cols-2 gap-3 lg:mt-2">
         <a
-          href={routes.page(lang, 'contact')}
+          href={locale === 'ar' ? arabicRoutes.page('contact') : routes.page(lang, 'contact')}
           aria-label={`${h.ownerQ} ${h.ownerA}`}
           class="flex h-11 items-center justify-center rounded-xl bg-inv px-4 text-[15px] font-semibold text-invink transition-[opacity,transform] duration-150 hover:opacity-90 active:scale-[0.97]"
         >
           {h.ownerA}
         </a>
         <a
-          href={routes.page(lang, 'learn')}
+          href={locale === 'ar' ? arabicRoutes.page('learn') : routes.page(lang, 'learn')}
           aria-label={`${h.learnQ} ${h.learnA}`}
           class="flex h-11 items-center justify-center rounded-xl bg-soft px-4 text-[15px] font-semibold transition-[opacity,transform] duration-150 hover:opacity-80 active:scale-[0.97]"
         >

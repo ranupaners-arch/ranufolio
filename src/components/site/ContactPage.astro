@@ -3,24 +3,44 @@ import { contact, copy } from '../../data/content';
 import type { Lang } from '../../data/content';
 
 interface Props {
-  lang: Lang;
+  lang: Lang | 'ar';
 }
 const { lang } = Astro.props;
-const t = copy[lang];
-const f = t.contact.form;
-const p = t.contactPage;
+const baseLang = lang === 'ar' ? 'en' : lang;
+const t = copy[baseLang];
+const f = lang === 'ar' ? {
+  ...copy.en.contact.form,
+  name: 'الاسم', email: 'البريد الإلكتروني', message: 'رسالتك',
+  messagePlaceholder: 'اكتب نبذة عن نشاطك وما تحتاج إليه', send: 'إرسال الرسالة', sending: 'جارٍ الإرسال…',
+  sent: 'تم إرسال رسالتك. سأرد عليك في أقرب وقت.',
+  error: 'تعذّر إرسال الرسالة. حاول مرة أخرى أو تواصل معي عبر واتساب.',
+  errName: 'يرجى إدخال الاسم.', errEmail: 'يرجى إدخال البريد الإلكتروني.',
+  errEmailInvalid: 'يرجى إدخال بريد إلكتروني صحيح.', errMessage: 'يرجى كتابة رسالتك.',
+  fallback: 'سيفتح تطبيق البريد لديك والرسالة جاهزة للإرسال.', subject: 'رسالة من الموقع',
+} : t.contact.form;
+const p = lang === 'ar' ? {
+  ...copy.en.contactPage,
+  title: 'ابدأ مشروعك',
+  lead: 'أخبرني عن نشاطك التجاري وما الذي تحتاج إلى مساعدة التطبيق فيه. سأرد عليك في أقرب وقت.',
+  need: 'ما الذي تحتاج إليه؟',
+  needs: ['تطبيق ويب', 'نظام إدارة أو نقاط بيع', 'تطبيق جوّال', 'لست متأكدًا بعد'],
+  namePlaceholder: 'الاسم الكامل', emailPlaceholder: 'name@example.com',
+  messagePlaceholder: 'ما طبيعة نشاطك التجاري، وكيف يمكن للتطبيق مساعدتك؟',
+  sendAnother: 'إرسال رسالة أخرى', sentTitle: 'شكرًا لك',
+  whatsappTitle: 'واتساب', whatsappText: 'الأسرع. يفتح محادثة برسالة جاهزة.', emailTitle: 'البريد الإلكتروني',
+} : t.contactPage;
 const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT as string | undefined;
 const accessKey = import.meta.env.PUBLIC_FORM_ACCESS_KEY as string | undefined;
 ---
 
-<div class="grid gap-3">
-  <section class="settle rounded-[28px] bg-inv p-6 text-invink sm:p-10" style="--i:0">
-    <h1 class="font-display text-[2.3rem] font-extrabold leading-none tracking-[-0.03em] sm:text-[3.4rem]">{p.title}</h1>
-    <p class="mt-4 max-w-[54ch] text-lg leading-relaxed opacity-90">{p.lead}</p>
-  </section>
+<div dir={lang === 'ar' ? 'rtl' : undefined}>
+  <section class="glass overflow-hidden rounded-[28px]">
+    <header class="contact-header settle p-6 text-invink sm:p-10" style="--i:0">
+      <h1 class="font-display text-[2.3rem] font-extrabold leading-none tracking-[-0.03em] sm:text-[3.4rem]">{p.title}</h1>
+      <p class="mt-4 max-w-[54ch] text-lg leading-relaxed opacity-90">{p.lead}</p>
+    </header>
 
-  <div class="grid gap-3">
-    <section class="glass rounded-[28px] p-6 sm:p-8">
+    <div class="p-6 sm:p-8">
       <form
         data-contact-form
         data-endpoint={endpoint}
@@ -47,7 +67,7 @@ const accessKey = import.meta.env.PUBLIC_FORM_ACCESS_KEY as string | undefined;
           </label>
           <label class="flex flex-col gap-2">
             <span class="text-sm font-semibold">{f.email}</span>
-            <input class="field" type="email" name="email" autocomplete="email" placeholder={p.emailPlaceholder} required aria-describedby="err-email" />
+            <input class="field" dir="ltr" type="email" name="email" autocomplete="email" placeholder={p.emailPlaceholder} required aria-describedby="err-email" />
             <span id="err-email" data-err="email" class="text-sm font-semibold text-red-600" hidden></span>
           </label>
         </div>
@@ -68,7 +88,7 @@ const accessKey = import.meta.env.PUBLIC_FORM_ACCESS_KEY as string | undefined;
         </fieldset>
         <label class="flex flex-col gap-2">
           <span class="text-sm font-semibold">{f.message}</span>
-          <textarea class="field resize-none" name="message" rows="5" placeholder={p.messagePlaceholder} required aria-describedby="err-message"></textarea>
+          <textarea class="field resize-none" name="message" dir="auto" rows="5" placeholder={p.messagePlaceholder} required aria-describedby="err-message"></textarea>
           <span id="err-message" data-err="message" class="text-sm font-semibold text-red-600" hidden></span>
         </label>
         <div>
@@ -87,10 +107,19 @@ const accessKey = import.meta.env.PUBLIC_FORM_ACCESS_KEY as string | undefined;
         <p class="text-[17px] text-muted">{f.sent}</p>
         <button type="button" data-again class="rounded-full bg-soft px-5 py-2.5 text-sm font-semibold hover:bg-line">{p.sendAnother}</button>
       </div>
-    </section>
-
-  </div>
+    </div>
+  </section>
 </div>
+
+<style>
+  .contact-header {
+    background: linear-gradient(
+      to bottom,
+      var(--inv) calc(100% - 1.5rem),
+      rgb(var(--glass-rgb) / calc(0.12 + var(--g) * 0.72)) 100%
+    );
+  }
+</style>
 
 <script>
   const form = document.querySelector<HTMLFormElement>('[data-contact-form]');

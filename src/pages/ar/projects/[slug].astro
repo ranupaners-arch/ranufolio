@@ -1,0 +1,16 @@
+---
+import DetailLayout from '../../../layouts/DetailLayout.astro';
+import ProjectDetail from '../../../components/portfolio/ProjectDetail.astro';
+import { arabicCopy, arabicRoutes, projects, translateArabic } from '../../../data/content';
+
+export function getStaticPaths() {
+  return projects.map((p) => ({ params: { slug: p.slug } }));
+}
+
+const { slug } = Astro.params;
+const p = projects.find((x) => x.slug === slug)!;
+---
+
+<DetailLayout lang="en" locale="ar" title={`${translateArabic(p.name)} | ${arabicCopy.title}`} description={translateArabic(p.tagline.en)} paths={{ id: `/proyek/${p.slug}/`, en: `/en/projects/${p.slug}/`, ar: arabicRoutes.project(p.slug) }}>
+  <ProjectDetail lang="en" locale="ar" slug={p.slug} />
+</DetailLayout>

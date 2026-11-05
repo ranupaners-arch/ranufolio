@@ -1,0 +1,17 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import ContactPage from '../../components/site/ContactPage.astro';
+
+const paths = { id: '/kontak/', en: '/en/contact/', ar: '/ar/contact/' };
+---
+
+<PageLayout
+  lang="en"
+  locale="ar"
+  current="contact"
+  paths={paths}
+  title="ابدأ مشروعك | رانوباني ريمبا أرغانا"
+  description="أخبرني عن نشاطك التجاري وما الذي تحتاج إلى مساعدة التطبيق فيه. سأرد عليك في أقرب وقت."
+>
+  <ContactPage lang="ar" />
+</PageLayout>

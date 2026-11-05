@@ -1,15 +1,16 @@
 ---
-import { contact, copy, person } from '../../data/content';
+import { contact, copyFor, person } from '../../data/content';
 import type { Lang } from '../../data/content';
 import { getIcon } from '../../lib/icons';
 import Icon from '../Icon.astro';
 
 interface Props {
   lang: Lang;
+  locale?: 'ar';
   embedded?: boolean;
 }
-const { lang, embedded = false } = Astro.props;
-const t = copy[lang];
+const { lang, locale, embedded = false } = Astro.props;
+const t = copyFor(lang, locale);
 
 const brand: Record<string, string> = {
   LinkedIn: '#0A66C2',

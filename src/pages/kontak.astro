@@ -9,7 +9,7 @@ const lang = 'id';
 <PageLayout
   lang={lang}
   current="contact"
-  paths={routes.pair((l) => routes.page(l, 'contact'))}
+  paths={{ ...routes.pair((l) => routes.page(l, 'contact')), ar: '/ar/contact/' }}
   title={`${copy[lang].contactPage.title} | Ranupane Rimba Argana`}
 >
   <ContactPage lang={lang} />

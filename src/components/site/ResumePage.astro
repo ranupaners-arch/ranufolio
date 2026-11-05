@@ -1,13 +1,14 @@
 ---
-import { copy, person, resume } from '../../data/content';
-import type { Lang, ResumeEntry } from '../../data/content';
+import { copyFor, person, resume, translateArabic } from '../../data/content';
+import type { Bilingual, Lang, ResumeEntry } from '../../data/content';
 import WorksWith from './WorksWith.astro';
 
 interface Props {
   lang: Lang;
+  locale?: 'ar';
 }
-const { lang } = Astro.props;
-const t = copy[lang];
+const { lang, locale } = Astro.props;
+const t = copyFor(lang, locale);
 const r = t.resume;
 const lists = [
   { title: r.experience, entries: resume.experience },
@@ -15,6 +16,74 @@ const lists = [
   { title: r.awards, entries: resume.awards },
   { title: r.certifications, entries: resume.certifications },
 ];
+const ar: Record<string, string> = {
+  'Founder, web and app developer': 'مؤسس ومطوّر مواقع وتطبيقات',
+  'Sep 2026 – Present': 'سبتمبر 2026 – الآن',
+  'Run a website and app studio on my own, from planning and design to development and release.': 'أدير استوديو للمواقع والتطبيقات بشكل مستقل، من التخطيط والتصميم إلى التطوير والإطلاق.',
+  'Design interfaces in Figma/Pencil and build them with Next.js (web) and Flutter (apps), with Postgres as the database.': 'أصمم الواجهات باستخدام Figma وPencil، وأطوّرها بـ Next.js للويب وFlutter للتطبيقات، مع Postgres لقاعدة البيانات.',
+  'Put together Starter, Business, and Custom service packages for small businesses and organizations.': 'أعددت باقات Starter وBusiness وCustom للمشروعات الصغيرة والمؤسسات.',
+  "Built and maintain Kukerjain's own website, including basic SEO and a blog.": 'أنشأت موقع كوكيرجاين وأديره، بما في ذلك تحسين محركات البحث الأساسي والمدونة.',
+  'Student Executive Council (DEMA)': 'مجلس الطلبة التنفيذي (DEMA)',
+  'Jul 2026 – Present': 'يوليو 2026 – الآن',
+  'Secretary II': 'أمين السر الثاني',
+  'Managed organizational administration and systematic document archiving.': 'أدرت الشؤون الإدارية للمؤسسة وأرشفة الوثائق بطريقة منهجية.',
+  'Prepared meeting minutes and official documentation for follow-up actions.': 'أعددت محاضر الاجتماعات والوثائق الرسمية لمتابعة القرارات.',
+  'Coordinated internal communication and meeting schedules.': 'نسّقت التواصل الداخلي ومواعيد الاجتماعات.',
+  'Assisted in planning, implementing, and evaluating organizational programs.': 'ساهمت في تخطيط برامج المؤسسة وتنفيذها وتقييمها.',
+  'Organized administrative records to improve operational efficiency.': 'نظّمت السجلات الإدارية لتحسين كفاءة العمل.',
+  'Used Microsoft Office and Google Workspace for daily administrative tasks.': 'استخدمت Microsoft Office وGoogle Workspace في الأعمال الإدارية اليومية.',
+  'Arabic Language Education Student Association (HIMA PBA)': 'رابطة طلاب تعليم اللغة العربية (HIMA PBA)',
+  'Aug 2025 – Jul 2026': 'أغسطس 2025 – يوليو 2026',
+  'Aug 2025 – Jun 2026': 'أغسطس 2025 – يونيو 2026',
+  'Aug 2021 – Jun 2022': 'أغسطس 2021 – يونيو 2022',
+  'Aug 2024 – Present': 'أغسطس 2024 – الآن',
+  'Vice Chairman': 'نائب الرئيس',
+  'Assisted the chairman in planning and implementing organizational programs.': 'ساعدت الرئيس في تخطيط برامج المؤسسة وتنفيذها.',
+  'Coordinated activities with lecturers, students, and external stakeholders.': 'نسّقت الأنشطة مع أعضاء هيئة التدريس والطلاب والجهات الخارجية.',
+  'Supervised committee performance and ensured project completion.': 'تابعت أداء اللجان وتأكدت من إنجاز المشروعات.',
+  'Participated in organizational planning and strategic decision-making.': 'شاركت في التخطيط المؤسسي واتخاذ القرارات الاستراتيجية.',
+  'Managed administrative documents and digital collaboration tools.': 'أدرت الوثائق الإدارية وأدوات التعاون الرقمي.',
+  'Health Department': 'قسم الصحة', Secretary: 'أمين السر',
+  "Managed the administration and documentation of the campus health department's activities.": 'أدرت الأعمال الإدارية ووثّقت أنشطة قسم الصحة في الحرم الجامعي.',
+  "Student Council (OSIS), MA Tahfidzul Qur'an Qoryatul Qur'an": 'مجلس الطلاب (OSIS)، مدرسة تحفيظ القرآن قريات القرآن',
+  'Head of Language Department': 'رئيس قسم اللغات',
+  'Led the Language Department and coordinated language-related activities.': 'قدت قسم اللغات ونسّقت الأنشطة اللغوية.',
+  'Organized Arabic competitions and language development programs.': 'نظّمت مسابقات اللغة العربية وبرامج تطوير اللغات.',
+  'Promoted interest in learning Arabic among students.': 'شجّعت الطلاب على تعلّم اللغة العربية.',
+  'Coordinated with school administration to ensure successful program implementation.': 'نسّقت مع إدارة المدرسة لضمان تنفيذ البرامج بنجاح.',
+  'Bachelor of Arabic Language Education': 'بكالوريوس تعليم اللغة العربية',
+  'Aug 2024 – Present': 'أغسطس 2024 – الآن',
+  'GPA: 4.0 / 4.0': 'المعدل التراكمي: 4.0 / 4.0',
+  '24-hour Arabic immersion environment.': 'بيئة انغماس في اللغة العربية على مدار 24 ساعة.',
+  'Studied Arabic pedagogy, linguistics, classical Islamic texts, tafsir, hadith, fiqh, and aqidah.': 'درست طرائق تعليم العربية واللسانيات والنصوص الإسلامية الكلاسيكية والتفسير والحديث والفقه والعقيدة.',
+  'Developed strong communication, analytical, and cross-cultural language skills.': 'طوّرت مهارات قوية في التواصل والتحليل واللغة عبر الثقافات.',
+  'Madrasah Aliyah (Islamic senior high school)': 'المرحلة الثانوية الإسلامية (مدرسة عليا)',
+  'Rank 1 in Grade 11.': 'المرتبة الأولى في الصف الحادي عشر.',
+  'National level': 'على المستوى الوطني', 'Published author': 'مؤلف منشور',
+  'National Selected Writer (Best Award)': 'كاتب وطني مختار (الجائزة الأفضل)',
+  'Gold Medal': 'ميدالية ذهبية', 'Bronze Medal': 'ميدالية برونزية',
+  'Best Student': 'الطالب الأفضل', 'Academic Category': 'الفئة الأكاديمية',
+  'Rank 1, Grade 11': 'المرتبة الأولى، الصف الحادي عشر',
+  'National Islamic Olympiad II (Arabic)': 'الأولمبياد الإسلامي الوطني الثاني (اللغة العربية)',
+  'Madrasah Indonesia Olympiad (Arabic)': 'أولمبياد المدارس الإسلامية الإندونيسية (اللغة العربية)',
+  'National Astronomy Olympiad': 'الأولمبياد الوطني لعلم الفلك',
+  'Egyptian Dialect Certification (Dauroh Al-Lahjah Al-Mishriyah)': 'شهادة اللهجة المصرية (دورة اللهجة المصرية)',
+  'Egyptian Arabic dialect': 'اللهجة العربية المصرية', 'Intensive Arabic program': 'برنامج مكثف للغة العربية',
+  'Grade: Jayyid Jiddan': 'التقدير: جيد جدًا',
+  'Arabic (Modern Standard Arabic / Fusha) – Advanced': 'العربية الفصحى – متقدم',
+  'Arabic (Egyptian dialect) – Intermediate': 'اللهجة المصرية – متوسط',
+  'Indonesian – Native': 'الإندونيسية – اللغة الأم', 'English – Basic': 'الإنجليزية – مبتدئ',
+  'Language and writing': 'اللغة والكتابة', 'Arabic proofreading': 'مراجعة النصوص العربية',
+  'Classical Arabic text analysis': 'تحليل النصوص العربية الكلاسيكية', 'Cultural and linguistic awareness': 'الوعي الثقافي واللغوي',
+  'Creative writing': 'الكتابة الإبداعية', 'Research and documentation': 'البحث والتوثيق', Teaching: 'التدريس', Tutoring: 'التدريس الخصوصي',
+  'Organization and collaboration': 'التنظيم والتعاون', Leadership: 'القيادة', Communication: 'التواصل',
+  'Time management': 'إدارة الوقت', 'Team coordination': 'تنسيق الفريق', Teamwork: 'العمل الجماعي',
+  'Remote collaboration': 'التعاون عن بُعد', 'Web and apps': 'الويب والتطبيقات', 'Web development': 'تطوير الويب',
+  'Full-stack development': 'تطوير متكامل للواجهة والخلفية', 'Mobile app development': 'تطوير تطبيقات الهواتف',
+  'User interface design': 'تصميم واجهات المستخدم', 'Data analysis': 'تحليل البيانات', 'Technical support': 'الدعم التقني',
+  'Image and video editing': 'تحرير الصور والفيديو',
+};
+const localize = (value: Bilingual) => locale === 'ar' ? (ar[value.en] ?? translateArabic(value.en)) : value[lang];
 const h2 = 'mt-5 px-1.5 font-display text-[1.5rem] font-extrabold tracking-[-0.02em] sm:text-[1.9rem]';
 const li = 'list-disc flex-col gap-1.5 pl-5 text-[15.5px] marker:text-muted';
 const split = (e: ResumeEntry) => [e.bullets.slice(0, 2), e.bullets.slice(2)] as const;
@@ -36,18 +105,18 @@ const split = (e: ResumeEntry) => [e.bullets.slice(0, 2), e.bullets.slice(2)] as
             return (
               <li class="grid gap-2 border-b border-line py-7 last:border-0 md:grid-cols-[13rem_1fr] md:gap-10">
                 <div class="flex flex-wrap items-start gap-2 md:flex-col">
-                  <span class="text-sm font-semibold tabular-nums text-muted">{e.period[lang]}</span>
+                  <span class="text-sm font-semibold tabular-nums text-muted">{localize(e.period)}</span>
                   {e.current && <span class="chip !bg-inv !text-invink">{r.current}</span>}
                 </div>
                 <div>
                   <h3 class="font-display text-xl font-bold">
-                    {e.title[lang] === person.brand ? <a href={person.brandUrl} target="_blank" rel="noopener noreferrer" class="underline decoration-1 underline-offset-4 hover:opacity-80">{e.title[lang]}</a> : e.title[lang]}
-                    {e.place[lang] && <span class="ml-2 font-sans text-sm font-medium text-muted">{e.place[lang]}</span>}
+                    {localize(e.title) === person.brand ? <a href={person.brandUrl} target="_blank" rel="noopener noreferrer" class="underline decoration-1 underline-offset-4 hover:opacity-80">{localize(e.title)}</a> : localize(e.title)}
+                    {localize(e.place) && <span class="ml-2 font-sans text-sm font-medium text-muted">{localize(e.place)}</span>}
                   </h3>
-                  {e.role[lang] && <p class="font-semibold">{e.role[lang]}</p>}
+                  {localize(e.role) && <p class="font-semibold">{localize(e.role)}</p>}
                   {first.length > 0 && (
                     <ul class={`mt-3 flex max-w-[66ch] ${li}`}>
-                      {first.map((b) => <li>{b[lang]}</li>)}
+                      {first.map((b) => <li>{localize(b)}</li>)}
                     </ul>
                   )}
                   {more.length > 0 && (
@@ -57,7 +126,7 @@ const split = (e: ResumeEntry) => [e.bullets.slice(0, 2), e.bullets.slice(2)] as
                         <span class="hidden group-open:inline">{r.showLess}</span>
                       </summary>
                       <ul class={`mt-3 flex ${li}`}>
-                        {more.map((b) => <li>{b[lang]}</li>)}
+                        {more.map((b) => <li>{localize(b)}</li>)}
                       </ul>
                     </details>
                   )}
@@ -73,7 +142,7 @@ const split = (e: ResumeEntry) => [e.bullets.slice(0, 2), e.bullets.slice(2)] as
   <h2 class={h2}>{r.languages}</h2>
   <section class="glass rounded-[28px] p-6 sm:p-8">
     <ul class="flex flex-wrap gap-1.5">
-      {resume.languages.map((l) => <li class="chip cursor-default !py-1.5 !text-[13px]">{l[lang]}</li>)}
+      {resume.languages.map((l) => <li class="chip cursor-default !py-1.5 !text-[13px]">{localize(l)}</li>)}
     </ul>
   </section>
 
@@ -83,10 +152,10 @@ const split = (e: ResumeEntry) => [e.bullets.slice(0, 2), e.bullets.slice(2)] as
       {
         resume.skills.map((g) => (
           <div>
-            <p class="mb-2 text-sm font-semibold text-muted">{g.label[lang]}</p>
+            <p class="mb-2 text-sm font-semibold text-muted">{localize(g.label)}</p>
             <ul class="flex flex-wrap gap-1.5">
               {g.items.map((item) => (
-                <li class="chip cursor-default !py-1.5 !text-[13px]">{item[lang]}</li>
+                <li class="chip cursor-default !py-1.5 !text-[13px]">{localize(item)}</li>
               ))}
             </ul>
           </div>
@@ -97,6 +166,6 @@ const split = (e: ResumeEntry) => [e.bullets.slice(0, 2), e.bullets.slice(2)] as
 
   <h2 class={h2}>{r.stack}</h2>
   <section class="glass rounded-[28px] p-6 sm:p-8">
-    <WorksWith lang={lang} />
+    <WorksWith lang={lang} locale={locale} />
   </section>
 </div>

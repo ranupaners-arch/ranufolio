@@ -4,27 +4,28 @@ import '@fontsource-variable/wix-madefor-text/wght.css';
 import '@fontsource-variable/geist/wght.css';
 import '@fontsource/caveat/400.css';
 import '../styles/global.css';
-import { SITE, copy } from '../data/content';
+import { SITE, copyFor } from '../data/content';
 import type { Lang } from '../data/content';
 
 interface Props {
   lang: Lang;
   /** Path halaman ini di tiap bahasa, mis. { id: '/', en: '/en/' }. */
-  paths: Record<Lang, string>;
+  paths: Record<Lang, string> & { ar?: string };
+  locale?: 'ar';
   title?: string;
   description?: string;
   /** 'plain-page' = halaman putih tanpa tema (crossfade 1 dtk saat masuk), 'themed' = bingkai bertema. */
   variant?: 'themed' | 'plain-page';
 }
-const { lang, paths, variant = 'themed' } = Astro.props;
-const t = copy[lang];
+const { lang, paths, locale, variant = 'themed' } = Astro.props;
+const t = copyFor(lang, locale);
 const title = Astro.props.title ?? t.title;
 const description = Astro.props.description ?? t.description;
 const abs = (p: string) => new URL(p, SITE).href;
 ---
 
 <!doctype html>
-<html lang={t.htmlLang} class={variant === 'plain-page' ? 'plain-page-doc' : undefined}>
+<html lang={locale ?? t.htmlLang} dir={locale === 'ar' ? 'rtl' : undefined} class={variant === 'plain-page' ? 'plain-page-doc' : undefined}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -32,16 +33,17 @@ const abs = (p: string) => new URL(p, SITE).href;
     <meta name="description" content={description} />
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)" />
-    <link rel="canonical" href={abs(paths[lang])} />
+    <link rel="canonical" href={abs(locale ? (paths[locale] ?? paths[lang]) : paths[lang])} />
     <link rel="alternate" hreflang="id" href={abs(paths.id)} />
     <link rel="alternate" hreflang="en" href={abs(paths.en)} />
+    {paths.ar && <link rel="alternate" hreflang="ar" href={abs(paths.ar)} />}
     <link rel="alternate" hreflang="x-default" href={abs(paths.id)} />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Ranupane Rimba Argana" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:url" content={abs(paths[lang])} />
-    <meta property="og:locale" content={lang === 'id' ? 'id_ID' : 'en_US'} />
+    <meta property="og:url" content={abs(locale ? (paths[locale] ?? paths[lang]) : paths[lang])} />
+    <meta property="og:locale" content={locale === 'ar' ? 'ar_AR' : lang === 'id' ? 'id_ID' : 'en_US'} />
     <meta property="og:image" content={abs('/profile.jpg')} />
     <meta name="twitter:card" content="summary" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -61,9 +63,9 @@ var n=localStorage.getItem("nav-pos");d.dataset.navPos=n==="top"||n==="left"?n:"
   <body>
     <a
       href="#konten"
-      class="fixed left-3 top-3 z-50 -translate-y-20 rounded-full bg-inv px-4 py-3 text-sm font-semibold text-invink focus:translate-y-0"
+      class:list={['fixed top-3 z-50 -translate-y-20 rounded-full bg-inv px-4 py-3 text-sm font-semibold text-invink focus:translate-y-0', locale === 'ar' ? 'right-3' : 'left-3']}
     >
-      {t.skip}
+      {locale === 'ar' ? 'انتقل إلى المحتوى' : t.skip}
     </a>
     <slot />
   </body>

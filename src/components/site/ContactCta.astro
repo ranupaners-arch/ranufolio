@@ -5,21 +5,22 @@ import { getIcon } from '../../lib/icons';
 import { tileBase } from './tile';
 
 interface Props {
-  lang: Lang;
+  lang: Lang | 'ar';
 }
 const { lang } = Astro.props;
-const t = copy[lang];
+const arabic = lang === 'ar';
+const t = copy[arabic ? 'en' : lang];
 const links = [
-  { label: t.contactPage.emailTitle, url: `mailto:${contact.email}`, kind: 'mail', icon: getIcon(['siGmail']), brand: '#EA4335', external: false },
-  { label: t.contactPage.whatsappTitle, url: `https://wa.me/${contact.whatsapp}`, kind: 'wa', icon: getIcon(['siWhatsapp']), brand: '#25D366', external: true },
+  { label: arabic ? 'البريد الإلكتروني' : t.contactPage.emailTitle, url: `mailto:${contact.email}`, kind: 'mail', icon: getIcon(['siGmail']), brand: '#EA4335', external: false },
+  { label: arabic ? 'واتساب' : t.contactPage.whatsappTitle, url: `https://wa.me/${contact.whatsapp}`, kind: 'wa', icon: getIcon(['siWhatsapp']), brand: '#25D366', external: true },
 ];
 ---
 
 <section class:list={[tileBase, '!h-auto !min-h-0 !rounded-none hover:!scale-100 active:!scale-100']}>
   <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-8">
   <div class="shrink-0">
-    <p class="pt-1 text-sm font-semibold text-muted">{t.contactCta.q}</p>
-    <p class="font-display text-[1.3rem] font-bold leading-tight sm:text-[1.7rem]">{t.contactCta.a}</p>
+    <p class="pt-1 text-sm font-semibold text-muted">{arabic ? 'هل ترغب في العمل معي؟' : t.contactCta.q}</p>
+    <p class="font-display text-[1.3rem] font-bold leading-tight sm:text-[1.7rem]">{arabic ? 'تواصل معي' : t.contactCta.a}</p>
   </div>
   <div class="flex w-full flex-col gap-3 sm:max-w-[460px]">
     {
@@ -44,13 +45,13 @@ const links = [
             name="message"
             required
             autocomplete="off"
-            aria-label={`${l.label}: ${t.contactCta.placeholder}`}
-            placeholder={t.contactCta.placeholder}
+            aria-label={`${l.label}: ${arabic ? 'اكتب رسالة' : t.contactCta.placeholder}`}
+            placeholder={arabic ? 'اكتب رسالة…' : t.contactCta.placeholder}
             class="h-11 min-w-0 flex-1 rounded-full bg-soft px-5 text-[15px] outline-none placeholder:text-muted focus-visible:ring-2 focus-visible:ring-[var(--brand)]"
           />
           <button
             type="submit"
-            aria-label={`${t.contactCta.send} ${l.label}`}
+            aria-label={`${arabic ? 'إرسال' : t.contactCta.send} ${l.label}`}
             class="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-inv text-invink transition-[opacity,transform] duration-150 hover:opacity-90 active:scale-[0.95]"
           >
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

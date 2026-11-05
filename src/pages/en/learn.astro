@@ -9,7 +9,7 @@ const lang = 'en';
 <PageLayout
   lang={lang}
   current="learn"
-  paths={routes.pair((l) => routes.page(l, 'learn'))}
+  paths={{ ...routes.pair((l) => routes.page(l, 'learn')), ar: '/ar/learn/' }}
   title={`${copy[lang].learn.title} | Ranupane Rimba Argana`}
 >
   <LearnPage lang={lang} />

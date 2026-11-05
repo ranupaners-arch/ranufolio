@@ -1,14 +1,15 @@
 ---
-import { copy } from '../../data/content';
+import { copyFor } from '../../data/content';
 import type { Lang } from '../../data/content';
 import { CONTRIB_URL, CONTRIB_USER as USER, MOBILE_WEEKS, layout, levelBg, levelOf, parse, summaryParts, summaryText } from '../../lib/contrib';
 import type { Day } from '../../lib/contrib';
 
 interface Props {
   lang: Lang;
+  locale?: 'ar';
 }
-const { lang } = Astro.props;
-const t = copy[lang].shipping;
+const { lang, locale } = Astro.props;
+const t = copyFor(lang, locale).shipping;
 
 let days: Day[] = [];
 try {
@@ -19,8 +20,8 @@ try {
   days = [];
 }
 const { weeks, total, months } = layout(days);
-const summary = summaryText(t.summary, lang, total, months);
-const sp = summaryParts(t.summary, lang, total, months);
+const summary = summaryText(t.summary, locale ?? lang, total, months);
+const sp = summaryParts(t.summary, locale ?? lang, total, months);
 ---
 
 <section aria-labelledby="ship-h" class="glass rounded-[28px] p-6 sm:p-8">
@@ -45,7 +46,8 @@ const sp = summaryParts(t.summary, lang, total, months);
         role="img"
         aria-label={summary}
         data-contrib
-        data-lang={lang}
+        dir="ltr"
+        data-lang={locale ?? lang}
         data-one={t.one}
         data-many={t.many}
         data-on={t.on}
@@ -135,7 +137,7 @@ const sp = summaryParts(t.summary, lang, total, months);
   const tip = document.querySelector<HTMLElement>('[data-contrib-tip]');
   const cols = grid?.querySelector<HTMLElement>('[data-cols]');
   if (grid && tip && cols) {
-    const lang = grid.dataset.lang === 'id' ? 'id-ID' : 'en-US';
+    const lang = grid.dataset.lang === 'id' ? 'id-ID' : grid.dataset.lang === 'ar' ? 'ar' : 'en-US';
     const fmt = new Intl.DateTimeFormat(lang, { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
     const tn = tip.querySelector<HTMLElement>('[data-n]')!;
     const td = tip.querySelector<HTMLElement>('[data-d]')!;

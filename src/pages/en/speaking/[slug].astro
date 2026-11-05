@@ -1,7 +1,7 @@
 ---
 import DetailLayout from '../../../layouts/DetailLayout.astro';
 import TalkDetail from '../../../components/portfolio/TalkDetail.astro';
-import { routes, talks } from '../../../data/content';
+import { arabicRoutes, routes, talks } from '../../../data/content';
 
 export function getStaticPaths() {
   return talks.map((t) => ({ params: { slug: t.slug } }));
@@ -15,7 +15,7 @@ const talk = talks.find((x) => x.slug === slug)!;
   lang="en"
   title={`${talk.title.en} | Ranupane Rimba Argana`}
   description={talk.tagline.en}
-  paths={routes.pair((l) => routes.talk(l, talk.slug))}
+  paths={{ ...routes.pair((l) => routes.talk(l, talk.slug)), ar: arabicRoutes.talk(talk.slug) }}
 >
   <TalkDetail lang="en" slug={talk.slug} />
 </DetailLayout>

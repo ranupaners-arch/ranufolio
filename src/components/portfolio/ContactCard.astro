@@ -1,17 +1,18 @@
 ---
 // Kartu kontak ala Halaman putih: avatar + kartu yang terbuka lewat clip-path. Aksi utama = WhatsApp (tanpa form).
-import { contact, copy, person } from '../../data/content';
+import { contact, copyFor, person } from '../../data/content';
 import type { Lang } from '../../data/content';
 import Icon from '../Icon.astro';
 import { getIcon } from '../../lib/icons';
 
 interface Props {
   lang: Lang;
+  locale?: 'ar';
   id: string;
   placement: 'side' | 'below';
 }
-const { lang, id, placement } = Astro.props;
-const t = copy[lang];
+const { lang, locale, id, placement } = Astro.props;
+const t = copyFor(lang, locale);
 const waHref = `https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(t.contact.waText)}`;
 const links = [
   { label: 'WhatsApp', href: waHref, icon: getIcon(['siWhatsapp']) },
