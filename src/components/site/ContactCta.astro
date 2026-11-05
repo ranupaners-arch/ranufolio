@@ -1,0 +1,83 @@
+---
+import { contact, copy, person } from '../../data/content';
+import type { Lang } from '../../data/content';
+import { getIcon } from '../../lib/icons';
+import { tileBase } from './tile';
+
+interface Props {
+  lang: Lang | 'ar';
+}
+const { lang } = Astro.props;
+const arabic = lang === 'ar';
+const t = copy[arabic ? 'en' : lang];
+const links = [
+  { label: arabic ? 'البريد الإلكتروني' : t.contactPage.emailTitle, url: `mailto:${contact.email}`, kind: 'mail', icon: getIcon(['siGmail']), brand: '#EA4335', external: false },
+  { label: arabic ? 'واتساب' : t.contactPage.whatsappTitle, url: `https://wa.me/${contact.whatsapp}`, kind: 'wa', icon: getIcon(['siWhatsapp']), brand: '#25D366', external: true },
+];
+---
+
+<section class:list={[tileBase, '!h-auto !min-h-0 !rounded-none hover:!scale-100 active:!scale-100']}>
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-8">
+  <div class="shrink-0">
+    <p class="pt-1 text-sm font-semibold text-muted">{arabic ? 'هل ترغب في العمل معي؟' : t.contactCta.q}</p>
+    <p class="font-display text-[1.3rem] font-bold leading-tight sm:text-[1.7rem]">{arabic ? 'تواصل معي' : t.contactCta.a}</p>
+  </div>
+  <div class="flex w-full flex-col gap-3 sm:max-w-[460px]">
+    {
+      links.map((l) => (
+        <form class="cta-form flex items-center gap-2" data-kind={l.kind} data-url={l.url} data-subject={person.name} style={`--brand:${l.brand}`}>
+          <a
+            href={l.url}
+            target={l.external ? '_blank' : undefined}
+            rel={l.external ? 'noopener noreferrer' : undefined}
+            aria-label={l.label}
+            data-nav-avoid
+            class="group/i grid h-11 w-11 shrink-0 place-items-center rounded-full bg-soft transition-transform hover:scale-105"
+          >
+            {l.icon && (
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true" class="transition-colors group-hover/i:text-[var(--brand)]">
+                <path d={l.icon.path} />
+              </svg>
+            )}
+          </a>
+          <input
+            type="text"
+            name="message"
+            required
+            autocomplete="off"
+            aria-label={`${l.label}: ${arabic ? 'اكتب رسالة' : t.contactCta.placeholder}`}
+            placeholder={arabic ? 'اكتب رسالة…' : t.contactCta.placeholder}
+            class="h-11 min-w-0 flex-1 rounded-full bg-soft px-5 text-[15px] outline-none placeholder:text-muted focus-visible:ring-2 focus-visible:ring-[var(--brand)]"
+          />
+          <button
+            type="submit"
+            aria-label={`${arabic ? 'إرسال' : t.contactCta.send} ${l.label}`}
+            class="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-inv text-invink transition-[opacity,transform] duration-150 hover:opacity-90 active:scale-[0.95]"
+          >
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M22 2 11 13" />
+              <path d="M22 2 15 22l-4-9-9-4 20-7Z" />
+            </svg>
+          </button>
+        </form>
+      ))
+    }
+  </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>('.cta-form').forEach((f) => {
+    f.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const text = (f.elements.namedItem('message') as HTMLInputElement).value.trim();
+      if (!text) return;
+      const base = f.dataset.url!;
+      if (f.dataset.kind === 'mail') {
+        window.location.href = `${base}?subject=${encodeURIComponent(f.dataset.subject ?? '')}&body=${encodeURIComponent(text)}`;
+      } else {
+        window.open(`${base}?text=${encodeURIComponent(text)}`, '_blank', 'noopener,noreferrer');
+      }
+    });
+  });
+</script>

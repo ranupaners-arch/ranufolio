@@ -1,26 +1,41 @@
 ---
-import { copy, person, routes } from '../../data/content';
+import { arabicRoutes, copy, person, routes } from '../../data/content';
 import type { Lang } from '../../data/content';
 import Icon from '../Icon.astro';
 
 interface Props {
   lang: Lang;
-  paths: Record<Lang, string>;
+  paths: Record<Lang, string> & { ar?: string };
+  locale?: 'ar';
   current?: 'home' | 'learn' | 'resume' | 'contact';
   /** Tema header di posisi awal (halaman yang dibuka dengan zona hero gelap memakai 'dark'). */
   initialTheme?: 'dark' | 'light';
 }
-const { lang, paths, current, initialTheme } = Astro.props;
+const { lang, paths, locale, current, initialTheme } = Astro.props;
 const t = copy[lang];
-const other: Lang = lang === 'id' ? 'en' : 'id';
+const arabic = locale === 'ar';
+const other: Lang = arabic ? 'en' : lang === 'id' ? 'en' : 'id';
+const switchAria = arabic ? 'اقرأ باللغة الإنجليزية' : t.nav.switchAria;
+const homeAria = arabic ? 'الذهاب إلى الصفحة الرئيسية' : t.nav.homeAria;
+const menuOpen = arabic ? 'فتح القائمة' : t.nav.menuOpen;
+const arabicCopy = {
+  home: 'الرئيسية', learn: 'التعلّم', resume: 'السيرة الذاتية', contact: 'اتصل بي',
+  nav: 'التنقّل الرئيسي', settings: 'المظهر واللغة', theme: 'المظهر', light: 'فاتح', dark: 'داكن',
+  auto: 'تلقائي', glass: 'الزجاج', clear: 'شفاف', frosted: 'ضبابي', language: 'اللغة',
+};
+const languages = [
+  { code: 'en', label: 'English', href: paths.en },
+  { code: 'id', label: 'Indonesia', href: paths.id },
+  ...(paths.ar ? [{ code: 'ar', label: 'العربية', href: paths.ar }] : []),
+];
 
 const items = [
-  { key: 'home', label: t.nav.home, href: routes.home[lang] },
-  { key: 'learn', label: t.nav.learn, href: routes.page(lang, 'learn') },
-  { key: 'resume', label: t.nav.resume, href: routes.page(lang, 'resume') },
-  { key: 'contact', label: t.nav.contact, href: routes.page(lang, 'contact') },
+  { key: 'home', label: arabic ? arabicCopy.home : t.nav.home, href: arabic ? arabicRoutes.home : routes.home[lang] },
+  { key: 'learn', label: arabic ? arabicCopy.learn : t.nav.learn, href: arabic ? arabicRoutes.page('learn') : routes.page(lang, 'learn') },
+  { key: 'resume', label: arabic ? arabicCopy.resume : t.nav.resume, href: arabic ? arabicRoutes.page('resume') : routes.page(lang, 'resume') },
+  { key: 'contact', label: arabic ? arabicCopy.contact : t.nav.contact, href: arabic ? arabicRoutes.page('contact') : routes.page(lang, 'contact') },
 ] as const;
-const m = t.menu;
+const m = arabic ? { theme: arabicCopy.theme, light: arabicCopy.light, dark: arabicCopy.dark, auto: arabicCopy.auto, glass: arabicCopy.glass, clear: arabicCopy.clear, frosted: arabicCopy.frosted, language: arabicCopy.language } : t.menu;
 const icons = { home: 'home', learn: 'book', resume: 'document', contact: 'mail' } as const;
 const themes = [
   ['light', m.light],
@@ -29,17 +44,17 @@ const themes = [
 ] as const;
 ---
 
-<header data-rapi-header data-theme={initialTheme} class="sticky top-0 z-40 text-ink">
-  <div data-header-row class="relative mx-auto flex max-w-[1180px] items-center gap-2 px-3.5 py-3.5 sm:px-7 sm:py-5">
+<header data-site-header data-theme={initialTheme} class="sticky top-0 z-40 text-ink">
+  <div data-header-row dir={arabic ? 'ltr' : undefined} class="relative mx-auto flex max-w-[1180px] items-center gap-2 px-3.5 py-3.5 sm:px-7 sm:py-5">
     <a
-      href={routes.home[lang]}
-      aria-label={t.nav.homeAria}
+      href={arabic ? arabicRoutes.home : routes.home[lang]}
+      aria-label={homeAria}
       class="hidden px-1.5 font-display text-lg font-extrabold tracking-[-0.02em] sm:block"
     >
       {person.short}
     </a>
 
-    <nav aria-label={t.nav.aria} class="glass hidden rounded-full p-1 sm:absolute sm:left-1/2 sm:block sm:-translate-x-1/2">
+    <nav dir={arabic ? 'rtl' : undefined} aria-label={arabic ? arabicCopy.nav : t.nav.aria} class="glass hidden rounded-full p-1 sm:absolute sm:left-1/2 sm:block sm:-translate-x-1/2">
       <ul class="relative flex">
         {
           items.map((i) => {
@@ -69,8 +84,8 @@ const themes = [
         href={paths[other]}
         hreflang={other}
         lang={other}
-        aria-label={t.nav.switchAria}
-        title={t.nav.switchAria}
+        aria-label={switchAria}
+        title={switchAria}
         class="glass hidden h-11 w-11 shrink-0 place-items-center rounded-full text-[13px] font-bold uppercase transition-transform duration-300 hover:scale-105 active:scale-95 min-[430px]:grid sm:grid"
       >
         {other}
@@ -82,7 +97,7 @@ const themes = [
           data-settings-btn
           aria-expanded="false"
           aria-controls="settings-pop"
-          aria-label={t.nav.settings}
+          aria-label={arabic ? arabicCopy.settings : t.nav.settings}
           class="glass grid h-11 w-11 place-items-center rounded-full transition-transform duration-300 hover:scale-105 active:scale-95"
         >
           <span data-theme-inner class="grid h-9 w-9 place-items-center rounded-full transition-colors duration-300"><Icon name="theme" size={19} /></span>
@@ -91,6 +106,7 @@ const themes = [
         <div
           id="settings-pop"
           data-settings-pop
+          dir={arabic ? 'rtl' : undefined}
           hidden
           class="glass glass-strong absolute right-0 top-[calc(100%+8px)] z-50 w-[260px] rounded-2xl p-4 shadow-[0_8px_20px_-10px_rgb(0_0_0/0.35)]"
         >
@@ -122,18 +138,18 @@ const themes = [
           </div>
 
           <p class="mt-4 text-[13px] font-semibold text-muted">{m.language}</p>
-          <ul class="mt-2 grid grid-cols-2 gap-1">
+          <ul class:list={['mt-2 grid gap-1', paths.ar ? 'grid-cols-3' : 'grid-cols-2']}>
             {
-              (['en', 'id'] as const).map((l) => (
+              languages.map((l) => (
                 <li>
                   <a
-                    href={paths[l]}
-                    hreflang={l}
-                    lang={l}
-                    aria-current={l === lang ? 'true' : undefined}
+                    href={l.href}
+                    hreflang={l.code}
+                    lang={l.code}
+                    aria-current={l.code === (locale ?? lang) ? 'true' : undefined}
                     class="block rounded-lg px-3 py-1.5 text-center text-[13px] font-semibold text-muted transition-colors hover:text-ink aria-[current=true]:bg-soft aria-[current=true]:text-ink"
                   >
-                    {l === 'en' ? 'English' : 'Indonesia'}
+                    {l.label}
                   </a>
                 </li>
               ))
@@ -148,7 +164,7 @@ const themes = [
 <div data-float-nav class="sm:hidden">
   <div data-float-body>
   <div data-float-tools></div>
-  <nav data-float-panel aria-label={t.nav.aria} class="glass">
+  <nav data-float-panel aria-label={arabic ? arabicCopy.nav : t.nav.aria} class="glass">
     <ul data-float-list>
       {
         items.map((i) => {
@@ -175,7 +191,7 @@ const themes = [
     </ul>
   </nav>
   </div>
-  <button type="button" data-float-bubble aria-label={t.nav.menuOpen} tabindex="-1" class="glass">
+  <button type="button" data-float-bubble aria-label={menuOpen} tabindex="-1" class="glass">
     <span data-bubble-icon="left"><Icon name="chevron-left" size={18} /></span>
     <span data-bubble-icon="right"><Icon name="chevron-right" size={18} /></span>
   </button>
@@ -236,7 +252,7 @@ const themes = [
 </style>
 
 <script>
-  const header = document.querySelector<HTMLElement>('[data-rapi-header]');
+  const header = document.querySelector<HTMLElement>('[data-site-header]');
   if (header) {
     const root = document.documentElement;
     const btn = header.querySelector<HTMLButtonElement>('[data-settings-btn]')!;

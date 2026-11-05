@@ -1,16 +1,16 @@
 ---
-import RapiPage from '../layouts/RapiPage.astro';
-import LearnPage from '../components/rapi/LearnPage.astro';
+import PageLayout from '../layouts/PageLayout.astro';
+import LearnPage from '../components/site/LearnPage.astro';
 import { copy, routes } from '../data/content';
 
 const lang = 'id';
 ---
 
-<RapiPage
+<PageLayout
   lang={lang}
   current="learn"
-  paths={routes.pair((l) => routes.page(l, 'learn'))}
+  paths={{ ...routes.pair((l) => routes.page(l, 'learn')), ar: '/ar/learn/' }}
   title={`${copy[lang].learn.title} | Ranupane Rimba Argana`}
 >
   <LearnPage lang={lang} />
-</RapiPage>
+</PageLayout>

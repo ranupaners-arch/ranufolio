@@ -1,24 +1,25 @@
 ---
-// Kartu kontak ala Faiz: avatar + kartu yang terbuka lewat clip-path. Aksi utama = WhatsApp (tanpa form).
-import { contact, copy, person } from '../../data/content';
+// Kartu kontak ala Halaman putih: avatar + kartu yang terbuka lewat clip-path. Aksi utama = WhatsApp (tanpa form).
+import { contact, copyFor, person } from '../../data/content';
 import type { Lang } from '../../data/content';
 import Icon from '../Icon.astro';
 import { getIcon } from '../../lib/icons';
 
 interface Props {
   lang: Lang;
+  locale?: 'ar';
   id: string;
   placement: 'side' | 'below';
 }
-const { lang, id, placement } = Astro.props;
-const t = copy[lang];
+const { lang, locale, id, placement } = Astro.props;
+const t = copyFor(lang, locale);
 const waHref = `https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(t.contact.waText)}`;
 const links = [
   { label: 'WhatsApp', href: waHref, icon: getIcon(['siWhatsapp']) },
   ...contact.socials.map((s) => ({ label: s.label, href: s.url, icon: getIcon(s.icon) })),
 ];
 const avatar =
-  'block size-10 rounded-xl bg-[url(/ranupane.jpg)] bg-cover bg-[position:50%_25%] outline-1 -outline-offset-[0.5px] outline-border';
+  'block size-10 rounded-xl bg-[url(/profile.jpg)] bg-cover bg-[position:50%_25%] outline-1 -outline-offset-[0.5px] outline-border';
 const item =
   'contact-item relative flex size-9 items-center justify-center rounded-full text-fg-secondary before:absolute before:inset-x-0 before:-inset-y-1 hover:bg-bg-muted hover:text-fg';
 ---
@@ -49,7 +50,7 @@ const item =
     >
       <div class="contact-grown flex flex-col gap-3.5 px-4 pt-4">
         <div class="contact-piece flex items-center gap-3" style="--i:0">
-          <span class="block size-11 shrink-0 rounded-[13px] bg-[url(/ranupane.jpg)] bg-cover bg-[position:50%_25%]"></span>
+          <span class="block size-11 shrink-0 rounded-[13px] bg-[url(/profile.jpg)] bg-cover bg-[position:50%_25%]"></span>
           <span class="flex flex-col gap-0.5">
             <span class="text-[16px] font-medium">{person.name}</span>
             <span class="text-[13px] text-fg/65">{t.hero.role} · {person.city}</span>

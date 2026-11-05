@@ -1,0 +1,9 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import LearnPage from '../../components/site/LearnPage.astro';
+import { arabicCopy, arabicRoutes } from '../../data/content';
+---
+
+<PageLayout lang="en" locale="ar" current="learn" paths={{ id: '/belajar/', en: '/en/learn/', ar: arabicRoutes.page('learn') }} title={`${arabicCopy.learn.title} | رانوباني ريمبا أرغانا`}>
+  <LearnPage lang="en" locale="ar" />
+</PageLayout>

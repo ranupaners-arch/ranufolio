@@ -1,29 +1,30 @@
 ---
-import RapiPage from '../layouts/RapiPage.astro';
-import Hero from './rapi/Hero.astro';
-import AboutSection from './rapi/AboutSection.astro';
-import ShippingInPublic from './rapi/ShippingInPublic.astro';
-import CtaBand from './rapi/CtaBand.astro';
-import SelectedWork from './faiz/SelectedWork.astro';
-import KindWords from './faiz/KindWords.astro';
-import { routes } from '../data/content';
+import PageLayout from '../layouts/PageLayout.astro';
+import Hero from './site/Hero.astro';
+import AboutSection from './site/AboutSection.astro';
+import ShippingInPublic from './site/ShippingInPublic.astro';
+import CtaBand from './site/CtaBand.astro';
+import SelectedWork from './portfolio/SelectedWork.astro';
+import KindWords from './portfolio/KindWords.astro';
+import { arabicRoutes, routes } from '../data/content';
 import type { Lang } from '../data/content';
 
 interface Props {
   lang: Lang;
+  locale?: 'ar';
 }
-const { lang } = Astro.props;
+const { lang, locale } = Astro.props;
 ---
 
-<RapiPage lang={lang} paths={routes.home} current="home" contained={false} contactCta={false} initialTheme="dark">
-  <Hero lang={lang} />
-  <SelectedWork lang={lang} />
+<PageLayout lang={lang} locale={locale} paths={{ ...routes.home, ar: arabicRoutes.home }} current="home" contained={false} contactCta={false} initialTheme="dark">
+  <Hero lang={lang} locale={locale} />
+  <SelectedWork lang={lang} locale={locale} />
   <div data-zone="auto" class="mx-auto max-w-[1180px] px-3.5 py-10 sm:px-7">
-    <AboutSection lang={lang} />
-    <div class="mt-3"><ShippingInPublic lang={lang} /></div>
+    <AboutSection lang={lang} locale={locale} />
+    <div class="mt-3"><ShippingInPublic lang={lang} locale={locale} /></div>
   </div>
-  <KindWords lang={lang} />
+  <KindWords lang={lang} locale={locale} />
   <div data-zone="auto" class="mx-auto max-w-[1180px] px-3.5 pt-3 sm:pt-5">
-    <CtaBand lang={lang} />
+    <CtaBand lang={lang} locale={locale} />
   </div>
-</RapiPage>
+</PageLayout>

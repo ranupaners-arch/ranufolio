@@ -1,0 +1,9 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import ResumePage from '../../components/site/ResumePage.astro';
+import { arabicCopy, arabicRoutes } from '../../data/content';
+---
+
+<PageLayout lang="en" locale="ar" current="resume" paths={{ id: '/resume/', en: '/en/resume/', ar: arabicRoutes.page('resume') }} title={`${arabicCopy.resume.title} | رانوباني ريمبا أرغانا`}>
+  <ResumePage lang="en" locale="ar" />
+</PageLayout>

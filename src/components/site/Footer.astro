@@ -1,14 +1,16 @@
 ---
-import { contact, copy, person } from '../../data/content';
+import { contact, copyFor, person } from '../../data/content';
 import type { Lang } from '../../data/content';
 import { getIcon } from '../../lib/icons';
 import Icon from '../Icon.astro';
 
 interface Props {
   lang: Lang;
+  locale?: 'ar';
+  embedded?: boolean;
 }
-const { lang } = Astro.props;
-const t = copy[lang];
+const { lang, locale, embedded = false } = Astro.props;
+const t = copyFor(lang, locale);
 
 const brand: Record<string, string> = {
   LinkedIn: '#0A66C2',
@@ -21,7 +23,7 @@ const links = [
 ];
 ---
 
-<footer class="glass mt-3 flex flex-col gap-4 rounded-[28px] px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
+<footer class:list={['flex flex-col gap-4 px-6 py-5 sm:flex-row sm:items-center sm:justify-between', embedded ? 'border-t border-line' : 'glass mt-3 rounded-[28px]']}>
   <p class="text-sm text-muted">
     © 2026 {person.name} ·
     <a href={`mailto:${contact.email}`} class="font-semibold text-ink hover:underline">{contact.email}</a>

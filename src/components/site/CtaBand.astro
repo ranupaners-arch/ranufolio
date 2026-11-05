@@ -1,13 +1,14 @@
 ---
-import { contact, copy, routes } from '../../data/content';
+import { arabicRoutes, contact, copyFor, routes } from '../../data/content';
 import type { Lang } from '../../data/content';
 import { getIcon } from '../../lib/icons';
 
 interface Props {
   lang: Lang;
+  locale?: 'ar';
 }
-const { lang } = Astro.props;
-const t = copy[lang];
+const { lang, locale } = Astro.props;
+const t = copyFor(lang, locale);
 const waHref = `https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(t.contact.waText)}`;
 const wa = getIcon(['siWhatsapp']);
 ---
@@ -44,7 +45,7 @@ const wa = getIcon(['siWhatsapp']);
       WhatsApp
     </a>
     <a
-      href={routes.page(lang, 'contact')}
+      href={locale === 'ar' ? arabicRoutes.page('contact') : routes.page(lang, 'contact')}
       class="inline-flex items-center rounded-full px-6 py-3.5 font-semibold shadow-[inset_0_0_0_1px_currentColor] transition-opacity hover:opacity-80"
     >
       {t.contact.formLink}

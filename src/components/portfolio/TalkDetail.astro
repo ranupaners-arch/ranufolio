@@ -1,5 +1,5 @@
 ---
-import { copy, routes, talks } from '../../data/content';
+import { arabicRoutes, copyFor, routes, talks, translateArabic } from '../../data/content';
 import type { Lang } from '../../data/content';
 import Article from './Article.astro';
 import Figure from './Figure.astro';
@@ -7,13 +7,15 @@ import Icon from '../Icon.astro';
 
 interface Props {
   lang: Lang;
+  locale?: 'ar';
   slug: string;
 }
-const { lang, slug } = Astro.props;
-const t = copy[lang];
+const { lang, locale, slug } = Astro.props;
+const t = copyFor(lang, locale);
 const s = t.speaking;
-const other: Lang = lang === 'id' ? 'en' : 'id';
 const talk = talks.find((x) => x.slug === slug)!;
+const localize = (value: { id: string; en: string }) => locale === 'ar' ? translateArabic(value.en) : value[lang];
+const paths = { id: routes.talk('id', slug), en: routes.talk('en', slug), ar: arabicRoutes.talk(slug) };
 const id = (k: string) => `${slug}-${k}`;
 const toc = [
   { id: id('top'), label: s.toc[0] },
@@ -34,33 +36,34 @@ const art = { gradient: talk.gradient, url: 'https://kukerjain.dev' };
 
 <Article
   lang={lang}
+  locale={locale}
+  paths={paths}
   slug={slug}
-  otherHref={routes.talk(other, slug)}
-  backHref={routes.home[lang]}
+  backHref={locale === 'ar' ? arabicRoutes.home : routes.home[lang]}
   backLabel={s.back}
-  title={talk.title[lang]}
-  tagline={talk.tagline[lang]}
+  title={localize(talk.title)}
+  tagline={localize(talk.tagline)}
   toc={toc}
   art={art}
   caption={t.detail.figureCaption}
 >
-  <Fragment slot="meta">{talk.meta[lang]}</Fragment>
+  <Fragment slot="meta">{localize(talk.meta)}</Fragment>
 
-  <p class={para}>{talk.paragraphs[0][lang]}</p>
+  <p class={para}>{localize(talk.paragraphs[0])}</p>
 
   <dl class="my-2 border-t border-border-subtle">
     {
       rows.map(([label, value]) => (
         <div class="grid grid-cols-[96px_1fr] gap-4 border-b border-border-subtle py-3 @xl:grid-cols-[120px_1fr]">
           <dt class="text-[14px]/[1.6] text-fg-secondary">{label}</dt>
-          <dd class="text-pretty text-[16px]/[1.5]">{value[lang]}</dd>
+          <dd class="text-pretty text-[16px]/[1.5]">{localize(value)}</dd>
         </div>
       ))
     }
   </dl>
 
   <h2 id={id('why')} class={h2}>{s.toc[1]}</h2>
-  <p class={para}>{talk.paragraphs[1][lang]}</p>
+  <p class={para}>{localize(talk.paragraphs[1])}</p>
 
   <h2 id={id('covered')} class={h2}>{s.toc[2]}</h2>
   <ul class={`${para} flex flex-col gap-2`}>
@@ -68,7 +71,7 @@ const art = { gradient: talk.gradient, url: 'https://kukerjain.dev' };
       talk.covered.map((b) => (
         <li class="flex gap-2.5">
           <span aria-hidden="true">–</span>
-          <span>{b[lang]}</span>
+          <span>{localize(b)}</span>
         </li>
       ))
     }
@@ -79,7 +82,7 @@ const art = { gradient: talk.gradient, url: 'https://kukerjain.dev' };
   <Fragment slot="footer">
     <p>
       <a
-        href={routes.home[lang]}
+        href={locale === 'ar' ? arabicRoutes.home : routes.home[lang]}
         class="group inline-flex items-center gap-1.5 font-medium decoration-fg/30 decoration-1 underline-offset-[3px] transition-opacity duration-150 ease-out hover:underline active:opacity-70 motion-reduce:transition-none"
       >
         {s.back}

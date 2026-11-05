@@ -1,0 +1,65 @@
+---
+import { arabicRoutes, copyFor, person, routes } from '../../data/content';
+import type { Lang } from '../../data/content';
+
+interface Props {
+  lang: Lang;
+  locale?: 'ar';
+}
+const { lang, locale } = Astro.props;
+const h = copyFor(lang, locale).hero;
+const [bioA, ...bioB] = h.bio.split(person.brand);
+---
+
+<!-- Zona gelap: token tema gelap, bingkai penuh lebar di belakang header sticky -->
+<div class="zone-hero theme-dark" data-zone="dark">
+  <div class="grid-bg grid-bg--zone" aria-hidden="true"></div>
+  <div class="mx-auto max-w-[1180px] px-3.5 pb-8 sm:px-7 sm:pb-12">
+    <section
+      style="--i:0"
+      class="settle glass grid grid-cols-[84px_1fr] items-center gap-4 rounded-[28px] p-5 sm:grid-cols-[104px_1fr] sm:p-6 lg:grid-cols-[140px_1fr] lg:items-start lg:gap-8 lg:p-8"
+    >
+      <img
+        src="/profile.jpg"
+        alt={h.photoAlt}
+        width="280"
+        height="280"
+        fetchpriority="high"
+        decoding="async"
+        class="h-[84px] w-[84px] rounded-[22px] object-cover object-[50%_25%] sm:h-[104px] sm:w-[104px] lg:h-[140px] lg:w-[140px] lg:rounded-[28px]"
+      />
+      <div class="contents lg:block">
+        <h1 class="font-display text-[1.5rem] font-extrabold leading-[1.08] tracking-[-0.025em] sm:text-[2.3rem] lg:text-[3.1rem]">
+          {person.name}
+        </h1>
+        <p class="col-span-2 max-w-[52ch] text-[17px] text-muted lg:mt-4">{h.title} {bioA}{bioB.length > 0 && <><a href={person.brandUrl} target="_blank" rel="noopener noreferrer" class="underline decoration-1 underline-offset-2 transition-colors hover:text-ink">{person.brand}</a>{bioB.join(person.brand)}</>}</p>
+        <p class="col-span-2 mt-1 inline-flex w-fit items-center gap-2 rounded-full bg-soft px-3 py-1.5 text-sm font-semibold lg:mt-5">
+          <span class="relative flex h-2 w-2">
+            <span class="ping-dot absolute inset-0 rounded-full bg-ink opacity-40"></span>
+            <span class="relative h-2 w-2 rounded-full bg-ink"></span>
+          </span>
+          {h.badge}
+        </p>
+
+      </div>
+
+      <!-- Tombol aksi gaya profil Instagram: dua tombol sama lebar berdampingan -->
+      <div class="col-span-2 mx-auto mt-1 grid w-full max-w-[460px] grid-cols-2 gap-3 lg:mt-2">
+        <a
+          href={locale === 'ar' ? arabicRoutes.page('contact') : routes.page(lang, 'contact')}
+          aria-label={`${h.ownerQ} ${h.ownerA}`}
+          class="flex h-11 items-center justify-center rounded-xl bg-inv px-4 text-[15px] font-semibold text-invink transition-[opacity,transform] duration-150 hover:opacity-90 active:scale-[0.97]"
+        >
+          {h.ownerA}
+        </a>
+        <a
+          href={locale === 'ar' ? arabicRoutes.page('learn') : routes.page(lang, 'learn')}
+          aria-label={`${h.learnQ} ${h.learnA}`}
+          class="flex h-11 items-center justify-center rounded-xl bg-soft px-4 text-[15px] font-semibold transition-[opacity,transform] duration-150 hover:opacity-80 active:scale-[0.97]"
+        >
+          {h.learnA}
+        </a>
+      </div>
+    </section>
+  </div>
+</div>

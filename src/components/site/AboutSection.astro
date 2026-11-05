@@ -1,13 +1,14 @@
 ---
-import { copy } from '../../data/content';
+import { copyFor } from '../../data/content';
 import type { Lang } from '../../data/content';
 import WorksWith from './WorksWith.astro';
 
 interface Props {
   lang: Lang;
+  locale?: 'ar';
 }
-const { lang } = Astro.props;
-const t = copy[lang];
+const { lang, locale } = Astro.props;
+const t = copyFor(lang, locale);
 ---
 
 <section id="about" aria-labelledby="about-h" class="grid scroll-mt-20 gap-3 lg:grid-cols-12">
@@ -35,7 +36,7 @@ const t = copy[lang];
   <div id="stack" class="glass scroll-mt-20 rounded-[28px] p-6 sm:p-8 lg:col-span-12">
     <h2 class="font-display text-xl font-bold">{t.stack.title}</h2>
     <div class="mt-4">
-      <WorksWith lang={lang} compact />
+      <WorksWith lang={lang} locale={locale} compact />
     </div>
   </div>
 </section>

@@ -1,13 +1,15 @@
 ---
-import { copy, learnCourse as c, routes, talks } from '../../data/content';
+import { arabicRoutes, copyFor, learnCourse as c, routes, talks, translateArabic } from '../../data/content';
 import type { Lang } from '../../data/content';
 import Icon from '../Icon.astro';
 
 interface Props {
   lang: Lang;
+  locale?: 'ar';
 }
-const { lang } = Astro.props;
-const t = copy[lang];
+const { lang, locale } = Astro.props;
+const t = copyFor(lang, locale);
+const localize = (value: { id: string; en: string }) => locale === 'ar' ? translateArabic(value.en) : value[lang];
 const l = t.learn;
 const talk = talks[0];
 const host = new URL(c.url).host + new URL(c.url).pathname.replace(/\/$/, '');
@@ -22,9 +24,9 @@ const host = new URL(c.url).host + new URL(c.url).pathname.replace(/\/$/, '');
   <section aria-labelledby="course-h" class="flex flex-col gap-6 rounded-[28px] bg-inv p-6 text-invink sm:p-10 lg:flex-row lg:items-end lg:justify-between">
     <div>
       <p class="text-sm font-semibold opacity-75">{l.kicker}</p>
-      <h2 id="course-h" class="mt-2 font-display text-[2rem] font-extrabold leading-tight tracking-[-0.02em] sm:text-[2.8rem]">{c.title[lang]}</h2>
-      <p class="mt-3 max-w-[52ch] text-[17px] leading-relaxed opacity-90">{c.text[lang]}</p>
-      <p class="mt-2 text-sm opacity-70">{c.note[lang]}</p>
+      <h2 id="course-h" class="mt-2 font-display text-[2rem] font-extrabold leading-tight tracking-[-0.02em] sm:text-[2.8rem]">{localize(c.title)}</h2>
+      <p class="mt-3 max-w-[52ch] text-[17px] leading-relaxed opacity-90">{localize(c.text)}</p>
+      <p class="mt-2 text-sm opacity-70">{localize(c.note)}</p>
     </div>
     <div class="flex flex-wrap gap-3">
       <a
@@ -59,7 +61,7 @@ const host = new URL(c.url).host + new URL(c.url).pathname.replace(/\/$/, '');
                   <span class="mr-2 text-sm font-semibold tabular-nums text-muted">
                     {l.module} {i}
                   </span>
-                  <span class="font-display text-lg font-bold">{m.title[lang]}</span>
+                  <span class="font-display text-lg font-bold">{localize(m.title)}</span>
                 </p>
                 {m.lessons.length > 0 ? (
                   <span class="chip">{l.lessons(m.lessons.length)}</span>
@@ -79,7 +81,7 @@ const host = new URL(c.url).host + new URL(c.url).pathname.replace(/\/$/, '');
                       >
                         <span>
                           <span class="mr-2 tabular-nums text-muted">{n + 1}.</span>
-                          <span class="group-hover:underline">{ls[lang]}</span>
+                          <span class="group-hover:underline">{localize(ls)}</span>
                         </span>
                         <Icon name="arrow-up-right" size={16} class="shrink-0 text-muted" />
                       </a>
@@ -101,7 +103,7 @@ const host = new URL(c.url).host + new URL(c.url).pathname.replace(/\/$/, '');
             c.forYou.map((f) => (
               <li class="flex gap-3 text-[15.5px]">
                 <Icon name="check" size={18} class="mt-0.5 shrink-0" />
-                {f[lang]}
+                {localize(f)}
               </li>
             ))
           }
@@ -113,8 +115,8 @@ const host = new URL(c.url).host + new URL(c.url).pathname.replace(/\/$/, '');
           {
             c.asks.map((a) => (
               <div class="grid grid-cols-[6rem_1fr] gap-3 text-[15.5px]">
-                <dt class="font-semibold text-muted">{a.label[lang]}</dt>
-                <dd>{a.text[lang]}</dd>
+                <dt class="font-semibold text-muted">{localize(a.label)}</dt>
+                <dd>{localize(a.text)}</dd>
               </div>
             ))
           }
@@ -149,13 +151,13 @@ const host = new URL(c.url).host + new URL(c.url).pathname.replace(/\/$/, '');
   </section>
 
   <a
-    href={routes.talk(lang, talk.slug)}
+    href={locale === 'ar' ? arabicRoutes.talk(talk.slug) : routes.talk(lang, talk.slug)}
     class="glass group flex items-center justify-between gap-4 rounded-[28px] p-6 transition-transform hover:-translate-y-0.5 sm:p-8"
   >
     <div>
       <p class="text-sm font-semibold text-muted">{l.workshop}</p>
-      <h2 class="mt-1 font-display text-xl font-bold sm:text-2xl">{talk.title[lang]}</h2>
-      <p class="mt-1 text-sm text-muted tabular-nums">{talk.meta[lang]}</p>
+      <h2 class="mt-1 font-display text-xl font-bold sm:text-2xl">{localize(talk.title)}</h2>
+      <p class="mt-1 text-sm text-muted tabular-nums">{localize(talk.meta)}</p>
     </div>
     <span class="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-soft transition-transform duration-300 group-hover:translate-x-1">
       <Icon name="arrow-right" />

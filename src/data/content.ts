@@ -1,6 +1,7 @@
 // Semua isi halaman ada di file ini. Ganti teks, proyek, testimoni, dan kontak di sini saja.
 
 export type Lang = 'id' | 'en';
+export type Locale = Lang | 'ar';
 export type Bilingual = { id: string; en: string };
 
 export const SITE = 'https://ranupane.kukerjain.dev';
@@ -25,6 +26,13 @@ export const routes = {
   talk: (lang: Lang, slug: string) => (lang === 'id' ? `/bicara/${slug}/` : `/en/speaking/${slug}/`),
   /** Pasangan path ID/EN untuk satu halaman, dipakai tombol bahasa dan hreflang. */
   pair: (fn: (lang: Lang) => string): Record<Lang, string> => ({ id: fn('id'), en: fn('en') }),
+};
+
+export const arabicRoutes = {
+  home: '/ar/',
+  page: (key: PageKey) => `/ar/${{ learn: 'learn', resume: 'resume', contact: 'contact' }[key]}/`,
+  project: (slug: string) => `/ar/projects/${slug}/`,
+  talk: (slug: string) => `/ar/speaking/${slug}/`,
 };
 
 export const contact = {
@@ -151,7 +159,6 @@ export const techGroups: { label: Bilingual; items: TechItem[] }[] = [
       { name: 'Laravel', icon: ['siLaravel'] },
       { name: 'Filament', icon: ['siFilament'] },
       { name: 'Node.js', icon: ['siNodedotjs'] },
-      { name: 'REST API' },
     ],
   },
   {
@@ -174,6 +181,8 @@ export const techGroups: { label: Bilingual; items: TechItem[] }[] = [
     label: { id: 'Database', en: 'Database' },
     items: [
       { name: 'MySQL', icon: ['siMysql'] },
+      { name: 'MariaDB', icon: ['siMariadb'] },
+      { name: 'Prisma', icon: ['siPrisma'] },
       { name: 'PostgreSQL', icon: ['siPostgresql'] },
       { name: 'Redis', icon: ['siRedis'] },
     ],
@@ -182,18 +191,16 @@ export const techGroups: { label: Bilingual; items: TechItem[] }[] = [
     label: { id: 'Tools', en: 'Tools' },
     items: [
       { name: 'Git & GitHub', icon: ['siGithub'] },
-      { name: 'GitHub Actions', icon: ['siGithubactions'] },
       { name: 'Linux VPS', icon: ['siLinux'] },
-      { name: 'Nginx', icon: ['siNginx'] },
       { name: 'Cloudflare', icon: ['siCloudflare'] },
       { name: 'Docker', icon: ['siDocker'] },
       { name: 'Figma', icon: ['siFigma'] },
-      { name: 'Pen.dev' },
+      { name: 'Pen.dev', icon: ['siPendev'] },
       { name: 'Cursor', icon: ['siCursor'] },
+      { name: 'Codex', icon: ['siOpenai'] },
+      { name: 'Grok', icon: ['siGrokbot'] },
       { name: 'Claude Code', icon: ['siClaude'] },
-      { name: 'Postman', icon: ['siPostman'] },
       { name: 'Android Studio', icon: ['siAndroidstudio'] },
-      { name: 'CapCut', icon: ['siCapcut'] },
     ],
   },
 ];
@@ -321,7 +328,7 @@ export const copy = {
       },
     },
     footer: { socials: 'Sosial media', made: 'Dibuat di Wonogiri.' },
-    contactCta: { q: 'Tertarik dengan saya?', a: 'Hubungi' },
+    contactCta: { q: 'Tertarik dengan saya?', a: 'Hubungi', placeholder: 'Tulis pesan…', send: 'Kirim' },
     shipping: { title: 'Shipping in public', summary: '{x} kontribusi dalam {n} bulan terakhir', one: 'kontribusi', many: 'kontribusi', on: 'pada', none: 'Tidak ada kontribusi', unavailable: 'Data kontribusi sedang tidak tersedia.' },
     resume: {
       title: 'Resume',
@@ -497,7 +504,7 @@ export const copy = {
       },
     },
     footer: { socials: 'Social media', made: 'Made in Wonogiri.' },
-    contactCta: { q: 'Interested in me?', a: 'Contact' },
+    contactCta: { q: 'Interested in me?', a: 'Contact', placeholder: 'Write a message…', send: 'Send' },
     shipping: { title: 'Shipping in public', summary: '{x} contributions in the last {n} months', one: 'contribution', many: 'contributions', on: 'on', none: 'No contributions', unavailable: 'Contribution data is unavailable right now.' },
     resume: {
       title: 'Resume',
@@ -557,6 +564,74 @@ export const copy = {
     },
   },
 } as const;
+
+export const arabicCopy = {
+  ...copy.en,
+  htmlLang: 'ar',
+  title: 'رانوباني ريمبا أرغانا | مؤسس كوكيرجاين أجا',
+  description: 'رانوباني ريمبا أرغانا، مطوّر مواقع وتطبيقات ومؤسس كوكيرجاين أجا.',
+  skip: 'انتقل إلى المحتوى',
+  nav: { ...copy.en.nav, home: 'الرئيسية', learn: 'التعلّم', resume: 'السيرة الذاتية', contact: 'اتصل بي', aria: 'التنقّل الرئيسي', switchLabel: 'EN', switchAria: 'اقرأ باللغة الإنجليزية', homeAria: 'الذهاب إلى الصفحة الرئيسية', menuOpen: 'فتح القائمة', settings: 'المظهر واللغة' },
+  menu: { theme: 'المظهر', light: 'فاتح', dark: 'داكن', auto: 'تلقائي', glass: 'الزجاج', clear: 'شفاف', frosted: 'ضبابي', language: 'اللغة' },
+  hero: { ...copy.en.hero, role: 'مؤسس كوكيرجاين أجا', title: 'أساعد المشروعات الصغيرة والمؤسسات على امتلاك مواقع وتطبيقات جاهزة للاستخدام.', bio: 'مؤسس كوكيرجاين أجا في وونوجيري، وطالب في تعليم اللغة العربية.', consultA: 'تواصل عبر واتساب', consultText: 'مرحبًا رانوباني، أود الاستفسار عن: ', badge: 'مقيم في وونوجيري، جاوة الوسطى', ownerQ: 'صاحب مشروع؟', ownerA: 'ابدأ مشروعًا', recruiterQ: 'مسؤول توظيف؟', recruiterA: 'السيرة الذاتية', learnQ: 'تريد التعلّم؟', learnA: 'التعلّم', photoAlt: 'صورة رانوباني ريمبا أرغانا' },
+  projects: { ...copy.en.projects, title: 'أعمال مختارة', lead: 'اختر مشروعًا للاطلاع على تفاصيله.', view: 'عرض التفاصيل', prev: 'المشروع السابق', next: 'المشروع التالي' },
+  detail: { ...copy.en.detail, back: 'الأعمال المختارة', toc: 'المحتويات', contents: 'المحتويات', tryIt: 'افتح', zoom: 'تكبير', close: 'إغلاق', copy: 'نسخ', copied: 'تم النسخ', lightboxPrev: 'الصورة السابقة', lightboxNext: 'الصورة التالية', available: 'متاح لمشاريع جديدة', write: 'اكتب رسالة', contactCard: 'التواصل', challenge: 'التحدي', approach: 'النهج', result: 'النتيجة', figureCaption: 'تفاصيل من المشروع.', visit: 'زيارة الموقع', clientWords: 'آراء العملاء', moreWork: 'مشاريع أخرى', ctaTitle: 'هل لديك مشروع يحتاج إلى موقع؟', ctaText: 'أخبرني بما تحتاج إليه عبر واتساب.', ctaButton: 'ابدأ مشروعًا' },
+  about: { ...copy.en.about, title: 'نبذة عني', body: ['أدرس في معهد مسلم جيندكيا في سوكابومي، وحققت معدلًا تراكميًا 4.0 وفزت بميداليتين ذهبيتين وطنيتين في أولمبياد اللغة العربية.', 'إلى جانب الدراسة والعمل في كوكيرجاين أجا، أشارك في الأنشطة الطلابية وأعمل حاليًا أمينًا ثانيًا لمجلس الطلبة.'], doTitle: 'ما أقدمه', does: [{ title: 'تطوير المواقع والتطبيقات', text: 'مواقع وتطبيقات ويب وهواتف للمشروعات الصغيرة والمؤسسات، من التصميم حتى الإطلاق.' }, { title: 'اللغة العربية والكتابة', text: 'أدرّس اللغة العربية وأراجع النصوص، وشاركت في تأليف كتاب منشور.' }] },
+  stack: { title: 'التقنيات', all: 'عرض الكل', less: 'عرض أقل' },
+  testimonial: { title: 'آراء العملاء', prev: 'الرأي السابق', next: 'الرأي التالي' },
+  contact: { ...copy.en.contact, title: 'هل يحتاج مشروعك إلى موقع؟', lead: 'أخبرني بما تحتاج إليه. التواصل عبر واتساب هو الأسرع، أو أرسل رسالة من النموذج.', whatsapp: 'تواصل عبر واتساب', formLink: 'استخدم النموذج', waText: 'مرحبًا رانوباني، شاهدت أعمالك وأحتاج إلى مساعدة في: ', form: { ...copy.en.contact.form, name: 'الاسم', email: 'البريد الإلكتروني', message: 'الرسالة', messagePlaceholder: 'اكتب نبذة عن مشروعك وما تحتاج إليه', send: 'إرسال الرسالة', sending: 'جارٍ الإرسال…', sent: 'تم إرسال رسالتك. سأرد عليك في أقرب وقت.', error: 'تعذّر إرسال الرسالة. حاول مجددًا أو تواصل معي عبر واتساب.', errName: 'يرجى إدخال الاسم.', errEmail: 'يرجى إدخال البريد الإلكتروني.', errEmailInvalid: 'يرجى إدخال بريد إلكتروني صحيح.', errMessage: 'يرجى كتابة رسالتك.', fallback: 'سيفتح تطبيق البريد لديك والرسالة جاهزة للإرسال.', subject: 'رسالة من الموقع' } },
+  footer: { socials: 'وسائل التواصل الاجتماعي', made: 'صُنع في وونوجيري.' },
+  contactCta: { q: 'هل ترغب في العمل معي؟', a: 'تواصل معي', placeholder: 'اكتب رسالة…', send: 'إرسال' },
+  shipping: { title: 'العمل بشفافية', summary: '{x} مساهمة خلال آخر {n} شهرًا', one: 'مساهمة', many: 'مساهمات', on: 'في', none: 'لا توجد مساهمات', unavailable: 'بيانات المساهمات غير متاحة حاليًا.' },
+  resume: { ...copy.en.resume, title: 'السيرة الذاتية', lead: 'ملخص خبراتي وتعليمي وجوائزي ومهاراتي.', experience: 'الخبرة', education: 'التعليم', awards: 'الجوائز', certifications: 'الشهادات', languages: 'اللغات', skills: 'المهارات', current: 'حاليًا', showMore: (n: number) => `عرض ${n} أخرى`, showLess: 'عرض أقل' },
+  learn: { ...copy.en.learn, title: 'التعلّم', lead: 'مواد تعليمية للمبتدئين. لا تزال بعض النصوص قيد الإعداد.', kicker: 'دورة مجانية', start: 'ابدأ الدورة', open: 'افتح المواد', inside: 'محتويات الدورة', module: 'الوحدة', lessons: (n: number) => `${n} دروس`, soon: 'قريبًا', forYou: 'هذه الدورة مناسبة لك إذا', asks: 'المتطلبات', license: 'مرخّص بموجب CC BY-NC-SA 4.0.', preview: 'معاينة', loadPreview: 'تحميل المعاينة', previewText: 'تعرض المعاينة المواد هنا دون مغادرة الموقع.', newTab: 'افتح في علامة تبويب جديدة', workshop: 'ورشة عمل', workshopOpen: 'عرض التفاصيل' },
+  contactPage: { ...copy.en.contactPage, title: 'ابدأ مشروعك', lead: 'أخبرني عن نشاطك التجاري وما الذي تحتاج إلى مساعدة التطبيق فيه. سأرد عليك في أقرب وقت.', need: 'ما الذي تحتاج إليه؟', needs: ['تطبيق ويب', 'نظام إدارة أو نقاط بيع', 'تطبيق جوّال', 'لست متأكدًا بعد'], namePlaceholder: 'الاسم الكامل', emailPlaceholder: 'name@example.com', messagePlaceholder: 'ما طبيعة نشاطك التجاري، وكيف يمكن للتطبيق مساعدتك؟', sendAnother: 'إرسال رسالة أخرى', sentTitle: 'شكرًا لك', whatsappTitle: 'واتساب', whatsappText: 'الأسرع. يفتح محادثة برسالة جاهزة.', emailTitle: 'البريد الإلكتروني' },
+  speaking: { back: 'ورشة العمل', toc: ['نبذة', 'لماذا هذه الجلسة؟', 'الموضوعات'], date: 'التاريخ', venue: 'المكان', host: 'الجهة المنظمة', format: 'الصيغة', audience: 'الجمهور' },
+} satisfies typeof copy.en;
+
+export const copyFor = (lang: Lang, locale?: 'ar') => locale === 'ar' ? arabicCopy : copy[lang];
+
+const arabicDataText: Record<string, string> = {
+  'Overview': 'نظرة عامة',
+  'Project summary coming soon.': 'سيُضاف ملخص المشروع قريبًا.',
+  'Developer': 'مطوّر',
+  'The full write-up for this project is being prepared.': 'يجري إعداد العرض الكامل لهذا المشروع.',
+  'Lorem ipsum dolor sit amet': 'عنوان تجريبي',
+  'Lorem ipsum': 'نص تجريبي',
+  'lorem ipsum': 'مشروع تجريبي',
+  'lorem ipsum.dev': 'مشروع تجريبي',
+  'Dolor sit amet': 'درس تجريبي',
+  'Consectetur adipiscing': 'محتوى تجريبي',
+  'Sed do eiusmod': 'الدرس الأول',
+  'Tempor incididunt': 'الدرس الثاني',
+  'Ut labore et dolore': 'الدرس الثالث',
+  'Magna aliqua': 'الدرس الرابع',
+  'Ut enim ad minim': 'الدرس الخامس',
+  'Quis nostrud': 'الدرس السادس',
+  'Excepteur sint': 'وحدة إضافية',
+  'Occaecat cupidatat': 'وحدة إضافية',
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit.': 'هذا نص تجريبي مؤقت سيُستبدل بالمحتوى الفعلي.',
+  'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.': 'هذا نص تجريبي إضافي قيد الإعداد.',
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.': 'هذه مادة تجريبية مؤقتة للدورة، وسيُضاف المحتوى التعليمي الفعلي عند اكتماله.',
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.': 'هذا نص تجريبي مؤقت، وسيُستبدل بالتفاصيل الفعلية عند اكتمال إعداد المحتوى.',
+  'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.': 'المحتوى التعليمي الكامل قيد الإعداد.',
+  'Lorem ipsum 00 menit': 'نص تجريبي لمدة 00 دقيقة',
+  'Time': 'الوقت', 'Tools': 'الأدوات', 'Language': 'اللغة',
+  'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.': 'ستُضاف تفاصيل هذا القسم عند اكتمال إعداد المحتوى.',
+  'Excepteur sint occaecat cupidatat non proident.': 'سيُضاف محتوى هذا الدرس قريبًا.',
+  'Lorem ipsum dolor sit amet workshop': 'ورشة عمل تجريبية',
+  'Jan 20XX · Wonogiri · 00 people': 'يناير 20XX · وونوجيري · 00 مشارك',
+  'January 00, 20XX': '00 يناير 20XX',
+  'Lorem Ipsum Hall': 'قاعة تجريبية',
+  'Dolor Sit Community': 'مجتمع تجريبي',
+  '00-hour workshop': 'ورشة عمل لمدة 00 ساعة',
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.': 'نص تجريبي مؤقت إلى حين إضافة شهادة العميل الفعلية.',
+  'Lorem Ipsum': 'اسم تجريبي',
+  "At first I was hesitant because I had never used a service like this. But the Kukerjain team explained the process clearly from the start and always responded fast. The final result matched my business needs, and they even offered a few suggestions I hadn't thought of. Really satisfied!": 'كنت مترددًا في البداية لأنني لم أستخدم خدمة كهذه من قبل. لكن فريق كوكيرجاين شرح لي خطوات العمل بوضوح منذ البداية وكان سريع الاستجابة دائمًا. النتيجة النهائية لبّت احتياجات مشروعي، بل قدموا اقتراحات لم تخطر ببالي. أنا راضٍ جدًا عن التجربة!',
+  'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.': 'سيُضاف شرح هذه النتيجة بعد استكمال تفاصيل المشروع.',
+};
+
+export const translateArabic = (text: string) => arabicDataText[text] ?? text;
 
 /* ---------- PLACEHOLDER: isi pengisi untuk tata letak, ganti dengan data asli ---------- */
 

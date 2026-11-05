@@ -48,7 +48,7 @@ Form kontak bisa jalan tanpa konfigurasi apa pun (tombol kirim akan membuka apli
 src/
   components/    # komponen Astro (section beranda, kartu proyek, header/footer, dll.)
   data/          # content.ts — semua teks, data proyek, testimoni, tech stack, kontak
-  layouts/       # layout halaman (Base, FaizLayout, RapiPage)
+  layouts/       # layout halaman (Base, DetailLayout, PageLayout)
   lib/           # logic non-UI, mis. contrib.ts untuk grid kontribusi GitHub
   pages/         # routing: beranda, proyek, belajar, resume, kontak, bicara + versi /en/
   styles/        # global.css — warna dan font

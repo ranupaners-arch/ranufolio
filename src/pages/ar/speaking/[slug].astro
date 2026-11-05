@@ -1,0 +1,16 @@
+---
+import DetailLayout from '../../../layouts/DetailLayout.astro';
+import TalkDetail from '../../../components/portfolio/TalkDetail.astro';
+import { arabicCopy, arabicRoutes, talks, translateArabic } from '../../../data/content';
+
+export function getStaticPaths() {
+  return talks.map((t) => ({ params: { slug: t.slug } }));
+}
+
+const { slug } = Astro.params;
+const talk = talks.find((x) => x.slug === slug)!;
+---
+
+<DetailLayout lang="en" locale="ar" title={`${translateArabic(talk.title.en)} | ${arabicCopy.title}`} description={translateArabic(talk.tagline.en)} paths={{ id: `/bicara/${talk.slug}/`, en: `/en/speaking/${talk.slug}/`, ar: arabicRoutes.talk(talk.slug) }}>
+  <TalkDetail lang="en" locale="ar" slug={talk.slug} />
+</DetailLayout>

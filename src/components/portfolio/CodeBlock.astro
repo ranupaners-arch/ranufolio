@@ -1,15 +1,16 @@
 ---
-import { copy } from '../../data/content';
+import { copyFor } from '../../data/content';
 import type { Lang } from '../../data/content';
 import Icon from '../Icon.astro';
 
 interface Props {
   lang: Lang;
+  locale?: 'ar';
   file: string;
   lines: string[];
 }
-const { lang, file, lines } = Astro.props;
-const t = copy[lang];
+const { lang, locale, file, lines } = Astro.props;
+const t = copyFor(lang, locale);
 ---
 
 <figure class="my-2 overflow-hidden rounded-xl bg-bg-subtle ring-1 ring-inset ring-border [&_pre]:overflow-x-auto [&_pre]:bg-transparent [&_pre]:px-4 [&_pre]:py-3 [&_pre]:font-mono [&_pre]:text-[13px]/[1.65] [&_pre]:tracking-[-0.3px]" data-code-block>

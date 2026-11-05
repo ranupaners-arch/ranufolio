@@ -37,7 +37,7 @@ export function layout(days: Day[]) {
   return { weeks, total, months };
 }
 
-export const fmtNum = (n: number, lang: string) => n.toLocaleString(lang === 'id' ? 'id-ID' : 'en-US');
+export const fmtNum = (n: number, lang: string) => n.toLocaleString(lang === 'id' ? 'id-ID' : lang === 'ar' ? 'ar' : 'en-US');
 export const summaryText = (tpl: string, lang: string, total: number, months: number) =>
   tpl.replace('{x}', fmtNum(total, lang)).replace('{n}', String(months));
 // Pecah jadi angka (tebal) + sisa teks (abu), template diawali {x}.
