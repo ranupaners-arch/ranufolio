@@ -1,6 +1,7 @@
 ---
 import { arabicRoutes, copyFor, person, routes } from '../../data/content';
 import type { Lang } from '../../data/content';
+import { SHOW_LEARN_NAV } from '../../data/flags';
 
 interface Props {
   lang: Lang;
@@ -44,7 +45,7 @@ const [bioA, ...bioB] = h.bio.split(person.brand);
       </div>
 
       <!-- Tombol aksi gaya profil Instagram: dua tombol sama lebar berdampingan -->
-      <div class="col-span-2 mx-auto mt-1 grid w-full max-w-[460px] grid-cols-2 gap-3 lg:mt-2">
+      <div class:list={['col-span-2 mx-auto mt-1 grid w-full gap-3 lg:mt-2', SHOW_LEARN_NAV ? 'max-w-[460px] grid-cols-2' : 'max-w-[224px] grid-cols-1 justify-items-stretch']}>
         <a
           href={locale === 'ar' ? arabicRoutes.page('contact') : routes.page(lang, 'contact')}
           aria-label={`${h.ownerQ} ${h.ownerA}`}
@@ -52,13 +53,15 @@ const [bioA, ...bioB] = h.bio.split(person.brand);
         >
           {h.ownerA}
         </a>
-        <a
-          href={locale === 'ar' ? arabicRoutes.page('learn') : routes.page(lang, 'learn')}
-          aria-label={`${h.learnQ} ${h.learnA}`}
-          class="flex h-11 items-center justify-center rounded-xl bg-soft px-4 text-[15px] font-semibold transition-[opacity,transform] duration-150 hover:opacity-80 active:scale-[0.97]"
-        >
-          {h.learnA}
-        </a>
+        {SHOW_LEARN_NAV && (
+          <a
+            href={locale === 'ar' ? arabicRoutes.page('learn') : routes.page(lang, 'learn')}
+            aria-label={`${h.learnQ} ${h.learnA}`}
+            class="flex h-11 items-center justify-center rounded-xl bg-soft px-4 text-[15px] font-semibold transition-[opacity,transform] duration-150 hover:opacity-80 active:scale-[0.97]"
+          >
+            {h.learnA}
+          </a>
+        )}
       </div>
     </section>
   </div>

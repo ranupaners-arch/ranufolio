@@ -1,6 +1,7 @@
 ---
 import { arabicRoutes, copy, person, routes } from '../../data/content';
 import type { Lang } from '../../data/content';
+import { SHOW_LEARN_NAV } from '../../data/flags';
 import Icon from '../Icon.astro';
 
 interface Props {
@@ -28,9 +29,6 @@ const languages = [
   { code: 'id', label: 'Indonesia', href: paths.id },
   ...(paths.ar ? [{ code: 'ar', label: 'العربية', href: paths.ar }] : []),
 ];
-
-// Sementara disembunyikan: halaman Belajar masih teks pengisi. Ubah ke true untuk menampilkan lagi.
-const SHOW_LEARN_NAV = false;
 
 const allItems = [
   { key: 'home', label: arabic ? arabicCopy.home : t.nav.home, href: arabic ? arabicRoutes.home : routes.home[lang] },
