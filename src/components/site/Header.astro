@@ -29,12 +29,16 @@ const languages = [
   ...(paths.ar ? [{ code: 'ar', label: 'العربية', href: paths.ar }] : []),
 ];
 
-const items = [
+// Sementara disembunyikan: halaman Belajar masih teks pengisi. Ubah ke true untuk menampilkan lagi.
+const SHOW_LEARN_NAV = false;
+
+const allItems = [
   { key: 'home', label: arabic ? arabicCopy.home : t.nav.home, href: arabic ? arabicRoutes.home : routes.home[lang] },
   { key: 'learn', label: arabic ? arabicCopy.learn : t.nav.learn, href: arabic ? arabicRoutes.page('learn') : routes.page(lang, 'learn') },
   { key: 'resume', label: arabic ? arabicCopy.resume : t.nav.resume, href: arabic ? arabicRoutes.page('resume') : routes.page(lang, 'resume') },
   { key: 'contact', label: arabic ? arabicCopy.contact : t.nav.contact, href: arabic ? arabicRoutes.page('contact') : routes.page(lang, 'contact') },
 ] as const;
+const items = allItems.filter((i) => SHOW_LEARN_NAV || i.key !== 'learn');
 const m = arabic ? { theme: arabicCopy.theme, light: arabicCopy.light, dark: arabicCopy.dark, auto: arabicCopy.auto, glass: arabicCopy.glass, clear: arabicCopy.clear, frosted: arabicCopy.frosted, language: arabicCopy.language } : t.menu;
 const icons = { home: 'home', learn: 'book', resume: 'document', contact: 'mail' } as const;
 const themes = [
