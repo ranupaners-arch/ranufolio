@@ -153,6 +153,8 @@ body {
   line-height: 1.55;
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
+  /* Cegah scroll samping dari elemen yang menyebar (mis. kipas kartu); clip tidak merusak sticky. */
+  overflow-x: clip;
 }
 ::selection {
   background: var(--inv);
@@ -169,6 +171,12 @@ body {
   -webkit-backdrop-filter: blur(calc(4px + var(--g) * 30px)) saturate(160%);
   backdrop-filter: blur(calc(4px + var(--g) * 30px)) saturate(160%);
   box-shadow: inset 0 1px 0 hsla(0, 0%, 100%, 0.22), inset 0 0 0 1px hsla(0, 0%, 50%, 0.14);
+}
+/* Kartu kaca yang selalu gelap seperti kartu hero, di tema apa pun.
+   Pakai bersama .theme-dark .glass: lapisan kaca ditumpuk di atas warna bingkai gelap. */
+.glass.glass-dark {
+  background: linear-gradient(rgb(var(--glass-rgb) / calc(0.12 + var(--g) * 0.72)), rgb(var(--glass-rgb) / calc(0.12 + var(--g) * 0.72))), var(--frame);
+  color: var(--ink);
 }
 .glass-strong {
   background: rgb(var(--glass-rgb) / calc(0.8 + var(--g) * 0.15));

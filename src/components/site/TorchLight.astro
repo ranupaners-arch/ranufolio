@@ -1,0 +1,160 @@
+---
+/**
+ * Sorotan cahaya bergaya blok/pixel di sekitar kursor, untuk latar zona gelap.
+ * - Cahaya terdiri dari kotak yang menempel pas ke pola `.grid-bg` (48px),
+ *   termasuk saat grid bergeser pelan (animasi grid-drift).
+ * - Terang bertingkat: tingkat = LEVELS - jarak kotak (Manhattan) dari kursor,
+ *   jadi bentuknya belah ketupat bergerigi, tanpa gradasi halus.
+ * - Kotak yang ditinggal kursor meredup satu tingkat demi satu tingkat.
+ * Taruh di dalam elemen `.grid-bg`; kursor dilacak pada elemen induk grid (zona).
+ * Hanya untuk mouse/pen; di layar sentuh tidak aktif.
+ * Dua gaya mengikuti tema grid (color-scheme):
+ * - gelap: obor — kotak menyala hangat bertingkat.
+ * - terang: bayangan — kotak menggelap bertingkat dengan tinta tipis,
+ *   plus garis tepi tegas pada kotak tepat di bawah kursor (penanda pilihan).
+ */
+---
+
+<canvas
+    data-torch
+    class="pointer-events-none absolute inset-0 size-full"
+    aria-hidden="true"
+></canvas>
+
+<script>
+    const CELL = 48; // sama dengan background-size .grid-bg::before
+    const LEVELS = 5; // tingkat cahaya maksimum di kotak kursor
+    const DECAY_MS = 70; // jeda turun satu tingkat
+    const STYLES = {
+        dark: { color: "255, 168, 64", maxAlpha: 0.17 }, // obor hangat
+        light: { color: "18, 18, 18", maxAlpha: 0.17 }, // bayangan tinta
+    };
+    const OUTLINE = "rgba(18, 18, 18, 0.55)"; // penanda kotak kursor (tema terang)
+
+    const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
+
+    document
+        .querySelectorAll<HTMLCanvasElement>("[data-torch]")
+        .forEach((canvas) => {
+            const grid = canvas.parentElement!;
+            const zone = grid.parentElement!;
+            const ctx = canvas.getContext("2d")!;
+            // Tingkat cahaya per kotak, kunci "kolom,baris" dalam koordinat grid.
+            const levels = new Map<string, number>();
+            let pointer: { x: number; y: number } | null = null;
+            let mode: keyof typeof STYLES = "dark";
+            let raf = 0;
+            let lastDecay = 0;
+
+            // Posisi garis grid mengikuti animasi grid-drift pada ::before.
+            const driftAnim = () =>
+                document.getAnimations().find((a) => {
+                    const fx = a.effect as KeyframeEffect | null;
+                    return (
+                        fx?.target === grid && fx.pseudoElement === "::before"
+                    );
+                });
+            const offset = () => {
+                const t = Number(driftAnim()?.currentTime ?? 0);
+                const shift = ((t % 24000) / 24000) * CELL; // 48px per 24 detik
+                return (((shift - CELL) % CELL) + CELL) % CELL; // ::before mulai di -48px
+            };
+
+            const resize = () => {
+                const dpr = Math.min(devicePixelRatio || 1, 2);
+                canvas.width = Math.round(grid.clientWidth * dpr);
+                canvas.height = Math.round(grid.clientHeight * dpr);
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                draw(offset());
+            };
+
+            const draw = (o: number) => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                const { color, maxAlpha } = STYLES[mode];
+                levels.forEach((level, key) => {
+                    const [c, r] = key.split(",").map(Number);
+                    ctx.fillStyle = `rgba(${color}, ${(level / LEVELS) * maxAlpha})`;
+                    // Sisakan 1px agar garis grid tetap terlihat.
+                    ctx.fillRect(
+                        o + c * CELL + 1,
+                        o + r * CELL + 1,
+                        CELL - 1,
+                        CELL - 1,
+                    );
+                });
+                if (mode === "light" && pointer) {
+                    const c = Math.floor((pointer.x - o) / CELL);
+                    const r = Math.floor((pointer.y - o) / CELL);
+                    ctx.strokeStyle = OUTLINE;
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(
+                        o + c * CELL + 2,
+                        o + r * CELL + 2,
+                        CELL - 3,
+                        CELL - 3,
+                    );
+                }
+            };
+
+            const frame = (now: number) => {
+                raf = 0;
+                const o = offset();
+
+                // Target cahaya dari posisi kursor saat ini.
+                const target = new Map<string, number>();
+                if (pointer) {
+                    const pc = Math.floor((pointer.x - o) / CELL);
+                    const pr = Math.floor((pointer.y - o) / CELL);
+                    for (let dc = -LEVELS + 1; dc < LEVELS; dc++) {
+                        for (let dr = -LEVELS + 1; dr < LEVELS; dr++) {
+                            const level =
+                                LEVELS - (Math.abs(dc) + Math.abs(dr));
+                            if (level > 0)
+                                target.set(`${pc + dc},${pr + dr}`, level);
+                        }
+                    }
+                }
+
+                // Naik langsung, turun bertahap satu tingkat per DECAY_MS.
+                const step =
+                    reduceMotion.matches || now - lastDecay >= DECAY_MS;
+                if (step) lastDecay = now;
+                target.forEach((level, key) => {
+                    if ((levels.get(key) ?? 0) < level) levels.set(key, level);
+                });
+                levels.forEach((level, key) => {
+                    const goal = target.get(key) ?? 0;
+                    if (level > goal && step) {
+                        const next = reduceMotion.matches ? goal : level - 1;
+                        if (next <= 0) levels.delete(key);
+                        else levels.set(key, next);
+                    }
+                });
+
+                draw(o);
+                if (pointer || levels.size) raf = requestAnimationFrame(frame);
+            };
+            const kick = () => {
+                if (!raf) raf = requestAnimationFrame(frame);
+            };
+
+            zone.addEventListener("pointermove", (e) => {
+                if (e.pointerType === "touch") return;
+                const next =
+                    getComputedStyle(grid).colorScheme === "dark"
+                        ? "dark"
+                        : "light";
+                if (next !== mode) levels.clear(); // ganti tema: mulai bersih
+                mode = next;
+                const rect = grid.getBoundingClientRect();
+                pointer = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+                kick();
+            });
+            zone.addEventListener("pointerleave", () => {
+                pointer = null;
+                kick();
+            });
+
+            new ResizeObserver(resize).observe(grid);
+        });
+</script>

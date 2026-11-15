@@ -1,0 +1,107 @@
+---
+/**
+ * Animasi latar: 15 batang membentuk gelombang yang mengikuti bola memantul.
+ * Port dari WavePhysicsLoader (amicro, MIT) ke Astro + requestAnimationFrame,
+ * tanpa React/framer-motion. Rumus per frame sama dengan aslinya (siklus 4 detik).
+ * Dipasang absolut dekat dasar elemen induk (induk harus `relative`).
+ */
+interface Props {
+  class?: string;
+}
+const { class: className = '' } = Astro.props;
+const numBars = 15;
+---
+
+<div
+  data-wave-physics
+  aria-hidden="true"
+  class:list={['wave-physics pointer-events-none absolute bottom-8 left-1/2 sm:bottom-12 lg:bottom-16 select-none', className]}
+>
+  <div class="relative flex h-48 w-[292px] items-end gap-2">
+    {Array.from({ length: numBars }).map(() => <div data-wave-bar class="w-3 rounded-full" style="height:16px;background-color:rgb(228,228,231)" />)}
+    <div data-wave-ball class="absolute bottom-0 left-0 z-10 size-3 rounded-full bg-zinc-900 shadow-sm" style="transform-origin:bottom center" />
+  </div>
+</div>
+
+<style>
+  .wave-physics {
+    /* Skala keseluruhan; titik jangkar di dasar agar dasar animasi tetap di posisi `bottom-*`. */
+    transform: translateX(-50%) scale(var(--wave-scale, 1.6));
+    transform-origin: 50% 100%;
+  }
+  @media (min-width: 40rem) {
+    .wave-physics {
+      --wave-scale: 2.3;
+    }
+  }
+  @media (min-width: 64rem) {
+    .wave-physics {
+      --wave-scale: 3;
+    }
+  }
+</style>
+
+<script>
+  const NUM_BARS = 15;
+  const BAR_TOTAL = 12 + 8; // lebar batang + jarak
+  const DURATION = 4000;
+  const B = 4; // jumlah pantulan per sapuan
+  const MAX_BOUNCE = 60;
+  const BASE_H = 16;
+  const PEAK_H = 48;
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  document.querySelectorAll<HTMLElement>('[data-wave-physics]').forEach((root) => {
+    const bars = [...root.querySelectorAll<HTMLElement>('[data-wave-bar]')];
+    const ball = root.querySelector<HTMLElement>('[data-wave-ball]')!;
+    let raf = 0;
+    let start = 0;
+    let visible = false;
+
+    const render = (t: number) => {
+      const xFrac = t < 0.5 ? t / 0.5 : (1 - t) / 0.5;
+      const ballIdx = xFrac * (NUM_BARS - 1);
+      const bounceF = xFrac === 0 || xFrac === 1 ? 0 : (xFrac * B) % 1;
+      const bounceH = 4 * bounceF * (1 - bounceF);
+      const heightFactor = Math.max(0, 1 - bounceH * 2);
+      const ballY = BASE_H + PEAK_H - heightFactor * 20 + bounceH * MAX_BOUNCE;
+
+      ball.style.transform = `translate(${ballIdx * BAR_TOTAL}px, -${ballY}px) scale(${1 + heightFactor * 0.25}, ${1 - heightFactor * 0.3})`;
+
+      bars.forEach((bar, i) => {
+        const dist = Math.abs(i - ballIdx);
+        const wave = dist < 3 ? Math.cos((dist / 3) * (Math.PI / 2)) : 0;
+        const indent = dist < 1.5 ? Math.cos((dist / 1.5) * (Math.PI / 2)) * heightFactor * 20 : 0;
+        bar.style.height = `${Math.max(4, BASE_H + wave * PEAK_H - indent)}px`;
+        // Tema terang: zinc-200 (diam) → zinc-800 (puncak gelombang).
+        const rg = Math.round(228 - wave * (228 - 39));
+        const b = Math.round(231 - wave * (231 - 42));
+        bar.style.backgroundColor = `rgb(${rg}, ${rg}, ${b})`;
+      });
+    };
+
+    const loop = (now: number) => {
+      if (!start) start = now;
+      render(((now - start) % DURATION) / DURATION);
+      raf = requestAnimationFrame(loop);
+    };
+
+    const sync = () => {
+      cancelAnimationFrame(raf);
+      if (reduceMotion.matches) {
+        render(0.15); // bingkai diam yang tetap memperlihatkan gelombang
+        return;
+      }
+      if (visible) raf = requestAnimationFrame(loop);
+    };
+
+    // Hanya berjalan saat terlihat di layar, hemat baterai.
+    new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      sync();
+    }).observe(root);
+    reduceMotion.addEventListener('change', sync);
+    render(0);
+  });
+</script>
