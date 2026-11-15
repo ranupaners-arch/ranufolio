@@ -1,0 +1,207 @@
+---
+/**
+ * Kipas 5 kartu yang membuka saat hover (mouse), fokus (keyboard),
+ * atau ketukan pertama (layar sentuh). Saat kipas terbuka, mengeklik
+ * sebuah kartu menampilkannya besar di tengah layar dengan latar blur.
+ * Port dari versi React + framer-motion ke CSS + sedikit JS.
+ *
+ * Varian:
+ * - `arc` (bawaan): kartu menyebar ke samping dan melengkung dari tengah.
+ *   `angle={0}` + `yOffset={0}` = sebaran lurus (linear spread).
+ * - `corner`: kartu berputar dari pojok kiri bawah seperti kipas tangan.
+ */
+interface Props {
+  variant?: 'arc' | 'corner';
+  /** Rotasi kartu terluar (derajat). */
+  angle?: number;
+  /** Geser horizontal kartu terluar (px). */
+  gap?: number;
+  /** Turun vertikal kartu terluar (px). */
+  yOffset?: number;
+  /** Durasi transisi (detik). */
+  duration?: number;
+  hoverIntensity?: number;
+  cardClassName?: string;
+  /** Kelas ukuran wadah (lebar/tinggi satu kartu). */
+  sizeClass?: string;
+  /** Label aksesibel tiap kartu; `{n}` diganti nomor kartu. */
+  cardLabel?: string;
+  /** Label tombol tutup pada tampilan besar. */
+  closeLabel?: string;
+  class?: string;
+}
+
+const {
+  variant = 'arc',
+  angle = variant === 'corner' ? 40 : 15,
+  gap = 140,
+  yOffset = 20,
+  duration = 0.45,
+  hoverIntensity = 1,
+  cardClassName = 'bg-neutral-800',
+  sizeClass = 'h-[11rem] w-[8rem]',
+  cardLabel = 'Kartu {n}',
+  closeLabel = 'Tutup',
+  class: className = '',
+} = Astro.props;
+
+const center = 2;
+const total = 5;
+const cards = [0, 1, 2, 3, 4].map((i) => {
+  const label = cardLabel.replace('{n}', String(i + 1));
+  if (variant === 'corner') {
+    const startAngle = -10;
+    return {
+      i,
+      label,
+      rotate: (startAngle + (i / (total - 1)) * angle) * hoverIntensity,
+      x: 0,
+      y: 0,
+      scale: i === center ? 1.03 : 1,
+      z: 5 - i,
+      origin: '0% 100%',
+    };
+  }
+  const dist = i - center;
+  const abs = Math.abs(dist);
+  const yFactor = abs === 2 ? 1 : abs === 1 ? 0.25 : -0.25;
+  return {
+    i,
+    label,
+    rotate: dist * (angle / center) * hoverIntensity,
+    x: dist * (gap / center) * hoverIntensity,
+    y: yFactor * yOffset * hoverIntensity,
+    scale: dist === 0 ? 1.05 : 1,
+    z: 3 - abs,
+    origin: '50% 100%',
+  };
+});
+const cardBase = 'rounded-2xl border border-white/5 shadow-[0_4px_10px_-2px_rgba(0,0,0,0.15)]';
+---
+
+<div data-card-arc class:list={['card-arc relative', sizeClass, className]} style={`--arc-duration:${duration}s`}>
+  {
+    cards.map((c) => (
+      <button
+        type="button"
+        data-card-arc-card
+        aria-label={c.label}
+        class:list={['card-arc__card absolute inset-0 cursor-pointer', cardBase, cardClassName]}
+        style={`--r:${c.rotate}deg;--x:${c.x}px;--y:${c.y}px;--s:${c.scale};--o:${c.origin};z-index:${c.z}`}
+      />
+    ))
+  }
+
+  <dialog
+    data-card-arc-dialog
+    class="card-arc__dialog fixed inset-0 m-0 h-full max-h-none w-full max-w-none bg-transparent p-0 open:flex open:items-center open:justify-center"
+  >
+    <button
+      type="button"
+      data-card-arc-close
+      class="absolute right-4 top-4 rounded-full bg-white/15 px-4 py-2 text-[14px] font-medium text-white transition-[background-color,scale] duration-150 ease-out hover:bg-white/25 active:scale-[0.96] focus-visible:outline-white motion-reduce:transition-none"
+    >
+      {closeLabel}
+    </button>
+    <div
+      data-card-arc-stage
+      class:list={['card-arc__stage', cardBase, cardClassName]}
+      style="width:min(80vw, calc(80dvh * 8 / 11), 30rem); aspect-ratio: 8 / 11"
+    >
+    </div>
+  </dialog>
+</div>
+
+<style>
+  .card-arc__card {
+    transform-origin: var(--o, 50% 100%);
+    transform: translate(0, 0) rotate(0deg) scale(1);
+    /* Kurva sedikit overshoot untuk meniru pegas framer-motion. */
+    transition: transform var(--arc-duration) cubic-bezier(0.34, 1.3, 0.64, 1);
+  }
+
+  /* Kipas terbuka: hover (mouse), fokus keyboard, atau ketukan pertama (sentuh). */
+  .card-arc:hover .card-arc__card,
+  .card-arc:focus-within .card-arc__card,
+  .card-arc.is-open .card-arc__card {
+    /* --arc-k: pengali sebaran (bisa dikecilkan di layar sempit). */
+    transform: translate(calc(var(--x) * var(--arc-k, 1)), calc(var(--y) * var(--arc-k, 1))) rotate(var(--r)) scale(var(--s));
+  }
+
+  /* Kipas yang sedang terbuka naik ke atas kipas tetangganya. */
+  .card-arc:hover,
+  .card-arc:focus-within,
+  .card-arc.is-open {
+    z-index: 10;
+  }
+
+  .card-arc__dialog::backdrop {
+    background: rgb(0 0 0 / 0.35);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+  }
+
+  .card-arc__dialog[open] .card-arc__stage {
+    animation: card-arc-zoom 0.35s cubic-bezier(0.34, 1.3, 0.64, 1) both;
+  }
+  .card-arc__dialog[open]::backdrop {
+    animation: card-arc-fade 0.2s ease-out both;
+  }
+
+  @keyframes card-arc-zoom {
+    from {
+      opacity: 0;
+      transform: scale(0.6) translateY(24px);
+    }
+  }
+  @keyframes card-arc-fade {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card-arc__card {
+      transition: none;
+    }
+    .card-arc__dialog[open] .card-arc__stage,
+    .card-arc__dialog[open]::backdrop {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-card-arc]').forEach((arc) => {
+    const dialog = arc.querySelector<HTMLDialogElement>('[data-card-arc-dialog]')!;
+    const cards = [...arc.querySelectorAll<HTMLButtonElement>('[data-card-arc-card]')];
+    let lastPointer = 'mouse';
+
+    arc.addEventListener('pointerdown', (e) => {
+      lastPointer = e.pointerType;
+    });
+
+    cards.forEach((card) =>
+      card.addEventListener('click', () => {
+        // Layar sentuh: ketukan pertama hanya membuka kipas.
+        if (lastPointer === 'touch' && !arc.classList.contains('is-open')) {
+          arc.classList.add('is-open');
+          return;
+        }
+        dialog.setAttribute('aria-label', card.getAttribute('aria-label') ?? '');
+        dialog.showModal();
+      }),
+    );
+
+    // Ketuk di luar kipas menutupnya kembali.
+    document.addEventListener('pointerdown', (e) => {
+      if (!arc.contains(e.target as Node)) arc.classList.remove('is-open');
+    });
+
+    dialog.querySelector('[data-card-arc-close]')!.addEventListener('click', () => dialog.close());
+    // Klik di latar blur (di luar kartu besar) menutup tampilan.
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) dialog.close();
+    });
+  });
+</script>

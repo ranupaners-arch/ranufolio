@@ -3,6 +3,7 @@ import Base from './Base.astro';
 import Header from '../components/site/Header.astro';
 import ContactCta from '../components/site/ContactCta.astro';
 import Footer from '../components/site/Footer.astro';
+import TorchLight from '../components/site/TorchLight.astro';
 import type { Lang } from '../data/content';
 
 interface Props {
@@ -22,7 +23,7 @@ const { lang, paths, locale, current, title, description, contained = true, cont
 ---
 
 <Base lang={lang} paths={paths} locale={locale} title={title} description={description} variant="themed">
-  <div class="grid-bg" aria-hidden="true"></div>
+  <div class="grid-bg" aria-hidden="true"><TorchLight /></div>
   <Header lang={lang} paths={paths} locale={locale} current={current} initialTheme={initialTheme} />
   <main id="konten">
     {contained ? <div class="mx-auto max-w-[1180px] px-3.5 sm:px-7"><slot /></div> : <slot />}

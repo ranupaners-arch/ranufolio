@@ -2,6 +2,8 @@
 import { arabicRoutes, copyFor, person, routes } from '../../data/content';
 import type { Lang } from '../../data/content';
 import { SHOW_LEARN_NAV } from '../../data/flags';
+import ScrambleText from './ScrambleText.astro';
+import TorchLight from './TorchLight.astro';
 
 interface Props {
   lang: Lang;
@@ -10,11 +12,19 @@ interface Props {
 const { lang, locale } = Astro.props;
 const h = copyFor(lang, locale).hero;
 const [bioA, ...bioB] = h.bio.split(person.brand);
+// Gaya acak nama yang bergiliran tiap kali kursor menyentuh nama.
+const nameScramble = [
+  { scrambleSpeed: 60 }, // 1. acak huruf sendiri, kembali serentak
+  { sequential: true, revealDirection: 'start' as const, scrambleSpeed: 70 }, // 2. terungkap dari kiri
+  { useOriginalCharsOnly: false, characters: '!<>-_\\/[]{}—=+*^?#', scrambleSpeed: 55, scrambledClass: 'font-mono text-accent' }, // 3. simbol + warna aksen
+  { sequential: true, revealDirection: 'center' as const, scrambleSpeed: 90 }, // 4. terungkap dari tengah
+  { sequential: true, revealDirection: 'end' as const, scrambleSpeed: 70 }, // 5. terungkap dari kanan
+];
 ---
 
 <!-- Zona gelap: token tema gelap, bingkai penuh lebar di belakang header sticky -->
 <div class="zone-hero theme-dark" data-zone="dark">
-  <div class="grid-bg grid-bg--zone" aria-hidden="true"></div>
+  <div class="grid-bg grid-bg--zone" aria-hidden="true"><TorchLight /></div>
   <div class="mx-auto max-w-[1180px] px-3.5 pb-8 sm:px-7 sm:pb-12">
     <section
       style="--i:0"
@@ -31,7 +41,7 @@ const [bioA, ...bioB] = h.bio.split(person.brand);
       />
       <div class="contents lg:block">
         <h1 class="font-display text-[1.5rem] font-extrabold leading-[1.08] tracking-[-0.025em] sm:text-[2.3rem] lg:text-[3.1rem]">
-          {person.name}
+          <ScrambleText text={person.name} variants={nameScramble} />
         </h1>
         <p class="col-span-2 max-w-[52ch] text-[17px] text-muted lg:mt-4">{h.title} {bioA}{bioB.length > 0 && <><a href={person.brandUrl} target="_blank" rel="noopener noreferrer" class="underline decoration-1 underline-offset-2 transition-colors hover:text-ink">{person.brand}</a>{bioB.join(person.brand)}</>}</p>
         <p class="col-span-2 mt-1 inline-flex w-fit items-center gap-2 rounded-full bg-soft px-3 py-1.5 text-sm font-semibold lg:mt-5">

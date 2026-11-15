@@ -1,0 +1,67 @@
+---
+import CardLongArc5 from './CardLongArc5.astro';
+import { copyFor } from '../../data/content';
+import type { Lang } from '../../data/content';
+
+interface Props {
+  lang: Lang;
+  locale?: 'ar';
+}
+const { lang, locale } = Astro.props;
+const t = copyFor(lang, locale);
+// lg: sedikit lebih kecil agar tiga kipas muat berdampingan; xl: ukuran penuh.
+const size = 'h-[15.125rem] w-[11rem] sm:h-[20.625rem] sm:w-[15rem] lg:h-[16.5rem] lg:w-[12rem] xl:h-[19.25rem] xl:w-[14rem]';
+const cardLabel = locale === 'ar' ? 'البطاقة {n}' : lang === 'en' ? 'Card {n}' : 'Kartu {n}';
+---
+
+<!-- Section khusus kipas kartu: klik kartu saat terbuka untuk melihatnya besar. -->
+<div class="cards-section flex flex-col items-center gap-y-16 py-16 sm:py-24 lg:flex-row lg:justify-center lg:gap-x-36 xl:gap-x-40">
+  <!-- Kiri: linear spread (sebaran lurus, tanpa rotasi). -->
+  <CardLongArc5
+    angle={0}
+    gap={160}
+    yOffset={0}
+    sizeClass={size}
+    cardLabel={cardLabel}
+    closeLabel={t.detail.close}
+  />
+  <!-- Tengah: long arc (kipas melengkung). -->
+  <CardLongArc5
+    angle={18}
+    gap={240}
+    yOffset={32}
+    sizeClass={size}
+    cardLabel={cardLabel}
+    closeLabel={t.detail.close}
+  />
+  <!-- Kanan: corner fan (berputar dari pojok kiri bawah). -->
+  <CardLongArc5
+    variant="corner"
+    sizeClass={size}
+    cardLabel={cardLabel}
+    closeLabel={t.detail.close}
+  />
+</div>
+
+<style>
+  /* Layar sempit: sebaran dikecilkan agar kipas tetap muat. */
+  .cards-section {
+    --arc-k: 0.45;
+  }
+  @media (min-width: 40rem) {
+    .cards-section {
+      --arc-k: 1;
+    }
+  }
+  /* Tiga kolom berdampingan: sebaran dirapatkan agar tidak saling tumpang. */
+  @media (min-width: 64rem) {
+    .cards-section {
+      --arc-k: 0.5;
+    }
+  }
+  @media (min-width: 80rem) {
+    .cards-section {
+      --arc-k: 0.6;
+    }
+  }
+</style>

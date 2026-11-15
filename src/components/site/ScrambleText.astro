@@ -1,0 +1,128 @@
+---
+/**
+ * Teks yang hurufnya diacak sesaat ketika di-hover (atau diketuk di layar sentuh),
+ * lalu kembali ke teks asli.
+ * Port dari ScrambleHover (amicro, MIT) ke Astro + JS kecil, tanpa React.
+ *
+ * `variants`: daftar gaya yang bergiliran — sentuhan ke-1 memakai gaya pertama,
+ * ke-2 gaya kedua, dst., lalu kembali ke awal. Tiap gaya menimpa opsi bawaan.
+ * Sentuhan selama acakan masih berjalan tidak dihitung.
+ */
+interface Style {
+  /** Jeda antar-acakan (ms). */
+  scrambleSpeed?: number;
+  /** Jumlah putaran acak (mode non-sequential). */
+  maxIterations?: number;
+  /** true = huruf terungkap satu per satu sesuai `revealDirection`. */
+  sequential?: boolean;
+  revealDirection?: 'start' | 'end' | 'center';
+  /** true = acakan hanya memakai huruf dari teks itu sendiri. */
+  useOriginalCharsOnly?: boolean;
+  characters?: string;
+  /** Kelas tambahan selama teks sedang diacak. */
+  scrambledClass?: string;
+}
+
+interface Props extends Style {
+  text: string;
+  variants?: Style[];
+  class?: string;
+}
+
+const {
+  text,
+  variants,
+  class: className = '',
+  scrambleSpeed = 40,
+  maxIterations = 10,
+  sequential = false,
+  revealDirection = 'start',
+  useOriginalCharsOnly = true,
+  characters = 'ABCDEFGHIJKLMNO PQRSTUVWXYZ abcdefghijklmno pqrstuvwxyz 0123456789 !@#$%^&*()_+',
+  scrambledClass = '',
+} = Astro.props;
+
+const base: Required<Style> = {
+  scrambleSpeed,
+  maxIterations,
+  sequential,
+  revealDirection,
+  useOriginalCharsOnly,
+  characters,
+  scrambledClass,
+};
+const styles = (variants?.length ? variants : [{}]).map((v) => ({ ...base, ...v }));
+---
+
+<span
+  data-scramble
+  data-text={text}
+  data-styles={JSON.stringify(styles)}
+  aria-label={text}
+  class:list={['cursor-pointer transition-colors duration-150', className]}
+><span data-scramble-out aria-hidden="true">{text}</span></span>
+
+<script>
+  type Style = {
+    scrambleSpeed: number;
+    maxIterations: number;
+    sequential: boolean;
+    revealDirection: 'start' | 'end' | 'center';
+    useOriginalCharsOnly: boolean;
+    characters: string;
+    scrambledClass: string;
+  };
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  document.querySelectorAll<HTMLElement>('[data-scramble]').forEach((el) => {
+    const out = el.querySelector<HTMLElement>('[data-scramble-out]')!;
+    const text = el.dataset.text ?? '';
+    const styles: Style[] = JSON.parse(el.dataset.styles ?? '[]');
+    let next = 0;
+    let timer: number | undefined;
+    let running = false;
+
+    const run = (s: Style) => {
+      const pool = s.useOriginalCharsOnly ? text.replace(/\s/g, '') : s.characters;
+      if (!pool) return;
+      const total = s.sequential
+        ? s.revealDirection === 'center'
+          ? Math.ceil(text.length / 2)
+          : text.length
+        : s.maxIterations;
+      const classes = s.scrambledClass.split(/\s+/).filter(Boolean);
+      const isRevealed = (index: number, iteration: number) => {
+        if (!s.sequential) return iteration >= s.maxIterations;
+        if (s.revealDirection === 'end') return index >= text.length - iteration;
+        if (s.revealDirection === 'center') return Math.abs(index - Math.floor(text.length / 2)) <= iteration;
+        return index < iteration;
+      };
+
+      let iteration = 0;
+      running = true;
+      el.classList.add(...classes);
+      timer = window.setInterval(() => {
+        out.textContent = [...text]
+          .map((char, i) =>
+            char === ' ' || isRevealed(i, iteration) ? char : pool[Math.floor(Math.random() * pool.length)] || char,
+          )
+          .join('');
+        iteration++;
+        if ((!s.sequential && iteration > s.maxIterations) || (s.sequential && iteration >= total)) {
+          window.clearInterval(timer);
+          out.textContent = text;
+          el.classList.remove(...classes);
+          running = false;
+        }
+      }, s.scrambleSpeed);
+    };
+
+    el.addEventListener('pointerenter', () => {
+      if (running || reduceMotion.matches || !styles.length) return;
+      const style = styles[next];
+      next = (next + 1) % styles.length;
+      run(style);
+    });
+  });
+</script>
