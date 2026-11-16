@@ -57,6 +57,8 @@ public/          # aset statis: font, favicon, foto, screenshot proyek
 
 Untuk mengubah isi situs (teks, proyek, testimoni, tech stack, kontak), cukup edit `src/data/content.ts`.
 
+Pixel Pet V2 di daftar proyek memakai `src/components/pixel-pet/PixelPet.astro` dan aset WebP asli di `public/assets/ranufolio-pet/`. Maskot mengikuti kursor dengan mata, berjalan, melompat antarkartu, memanjat, bersembunyi, tidur, dan bereaksi terhadap klik/touch/keyboard dengan partikel pixel. Pengaturan gerak, arsitektur, serta cara menjalankan typecheck dan pengujian browser ada di [dokumentasi Pixel Pet V2](docs/pixel-pet-v2.md).
+
 ## Deploy
 
 Workflow GitHub Actions (`.github/workflows/deploy.yml`) berjalan otomatis setiap push ke `main`: build situs lalu `rsync` hasil `dist/` ke VPS lewat SSH, menggunakan secret `VPS_SSH_KEY`, `VPS_HOST`, dan `VPS_USER`.

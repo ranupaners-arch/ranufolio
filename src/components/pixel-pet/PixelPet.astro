@@ -1,0 +1,103 @@
+---
+import { ASSET_BASE, manifest } from './config';
+
+interface Props { lang: 'id' | 'en' | 'ar' }
+const { lang } = Astro.props;
+const label = {
+  id: { play: 'Ajak Pixel Pet bermain', hint: 'Klik, sentuh, atau tekan Enter untuk bermain', reaction: 'Pixel Pet terkejut dan melompat senang!' },
+  en: { play: 'Play with Pixel Pet', hint: 'Click, tap, or press Enter to play', reaction: 'Pixel Pet is surprised and jumps with joy!' },
+  ar: { play: 'العب مع الشخصية', hint: 'انقر أو المس أو اضغط Enter للعب', reaction: 'الشخصية متفاجئة وتقفز بسعادة!' },
+}[lang];
+---
+
+<ranufolio-pixel-pet data-pet data-mode="idle">
+  <div data-pet-back class="pet-plane pet-plane-back" aria-hidden="true"></div>
+  <div data-pet-front class="pet-plane pet-plane-front">
+    <div data-pet-actor class="pet-actor" aria-hidden="true" hidden>
+      <div data-pet-layers class="pet-canvas">
+        <img src={ASSET_BASE + manifest.layers['body-no-eyes'].file} width="225" height="225" alt="" draggable="false" />
+        <img data-pet-eyes src={ASSET_BASE + manifest.layers['eyes-open'].file} width="225" height="225" alt="" draggable="false" />
+      </div>
+      <div data-pet-frame class="pet-canvas pet-atlas" style={`background-image:url(${ASSET_BASE + manifest.atlas.file})`} hidden></div>
+      <span data-pet-sleep class="pet-sleep" hidden>zZ</span>
+    </div>
+    <button data-pet-button type="button" class="pet-button" aria-label={label.play} title={label.hint} data-reaction-label={label.reaction} hidden></button>
+    <div data-pet-effects class="pet-effects" aria-hidden="true"></div>
+    <span data-pet-status class="sr-only" role="status" aria-live="polite"></span>
+  </div>
+</ranufolio-pixel-pet>
+
+<style is:global>
+  /* display:contents lets the two visual planes straddle the existing card track. */
+  ranufolio-pixel-pet { display: contents; }
+  ranufolio-pixel-pet [hidden] { display: none !important; }
+  ranufolio-pixel-pet .pet-plane { position: absolute; inset: 0; overflow: clip; pointer-events: none; }
+  ranufolio-pixel-pet .pet-plane-back { z-index: 0; }
+  ranufolio-pixel-pet .pet-plane-front { z-index: 2; }
+  ranufolio-pixel-pet .pet-actor {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: var(--pet-width);
+    height: var(--pet-height);
+    transform-origin: center;
+    will-change: transform;
+    pointer-events: none;
+    user-select: none;
+  }
+  ranufolio-pixel-pet .pet-canvas {
+    position: absolute;
+    left: var(--pet-left);
+    top: var(--pet-top);
+    width: var(--pet-size);
+    height: var(--pet-size);
+    image-rendering: pixelated;
+  }
+  ranufolio-pixel-pet .pet-canvas img { position: absolute; inset: 0; width: 100%; height: 100%; }
+  ranufolio-pixel-pet .pet-atlas { background-repeat: no-repeat; }
+  ranufolio-pixel-pet .pet-button {
+    position: absolute;
+    z-index: 3;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 4px;
+    background: transparent;
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  ranufolio-pixel-pet .pet-button:focus-visible { outline: 2px solid #d87756; outline-offset: 3px; }
+  ranufolio-pixel-pet .pet-sleep {
+    position: absolute;
+    left: calc(100% - 4px);
+    top: -15px;
+    border: 1px solid #d8775640;
+    padding: 1px 5px;
+    border-radius: 5px;
+    background: #fff;
+    color: #333;
+    font: 11px/1.2 var(--font-mono);
+    letter-spacing: 1px;
+  }
+  ranufolio-pixel-pet .pet-effects { position: absolute; inset: 0; pointer-events: none; }
+  ranufolio-pixel-pet .pet-particle { position: absolute; left: 0; top: 0; background: #d87756; }
+</style>
+
+<script>
+  import { PixelPetController } from './controller';
+  import type { Action, Direction } from './config';
+
+  class PixelPetElement extends HTMLElement {
+    private controller?: PixelPetController;
+    connectedCallback() {
+      if (this.controller) return;
+      const root = this.closest<HTMLElement>('[data-carousel]');
+      const track = root?.querySelector<HTMLElement>('[data-track]');
+      if (root && track?.querySelector('[data-project-tile]')) this.controller = new PixelPetController(this, root, track);
+    }
+    disconnectedCallback() { this.controller?.dispose(); this.controller = undefined; }
+    play(action: Action, direction?: Direction) { return this.controller?.play(action, direction) ?? false; }
+  }
+  if (!customElements.get('ranufolio-pixel-pet')) customElements.define('ranufolio-pixel-pet', PixelPetElement);
+</script>

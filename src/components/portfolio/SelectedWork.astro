@@ -4,6 +4,7 @@ import type { Lang } from '../../data/content';
 import Icon from '../Icon.astro';
 import ProjectArt from './ProjectArt.astro';
 import WavePhysicsBg from './WavePhysicsBg.astro';
+import PixelPet from '../pixel-pet/PixelPet.astro';
 
 interface Props {
   lang: Lang;
@@ -20,8 +21,8 @@ const arrow =
   <!-- Latar: gelombang bola memantul, menempel di dasar section, di belakang konten. -->
   <WavePhysicsBg />
   <div class="relative z-[1] pb-16 pt-20 @3xl:pb-[108px] @3xl:pt-[108px]">
-    <div class="group/carousel" data-carousel>
-      <div class="pad-wide flex items-center justify-between">
+    <div class="group/carousel relative isolate" data-carousel>
+      <div class="pad-wide relative z-[3] flex items-center justify-between">
         <h2 id="work-h" class="text-[14px] text-fg/65">{t.projects.title}</h2>
         <div class="flex items-center gap-1 [@media(hover:none)]:hidden">
           <button type="button" data-prev aria-label={t.projects.prev} class={arrow}>
@@ -35,11 +36,11 @@ const arrow =
 
       <ul
         data-track
-        class="pad-wide scrollbar-none mt-3 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain py-1 @3xl:gap-6"
+        class="pad-wide scrollbar-none relative z-[1] mt-3 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain pb-1 pt-[50px] @3xl:gap-6"
       >
         {
           projects.map((p, i) => (
-            <li class="shrink-0 snap-start">
+            <li data-project-tile class="shrink-0 snap-start">
               <a
                 href={locale === 'ar' ? arabicRoutes.project(p.slug) : routes.project(lang, p.slug)}
                 aria-label={p.name}
@@ -54,6 +55,7 @@ const arrow =
           ))
         }
       </ul>
+      <PixelPet lang={locale ?? lang} />
     </div>
   </div>
 </section>
@@ -63,17 +65,19 @@ const arrow =
     const track = root.querySelector<HTMLElement>('[data-track]')!;
     const prev = root.querySelector<HTMLButtonElement>('[data-prev]')!;
     const next = root.querySelector<HTMLButtonElement>('[data-next]')!;
-    const tiles = [...track.children] as HTMLElement[];
+    const tiles = [...track.querySelectorAll<HTMLElement>('[data-project-tile]')];
+    const rtl = getComputedStyle(track).direction === 'rtl';
     const reduce = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const step = () => {
       const [a, b] = tiles;
-      return b ? b.offsetLeft - a.offsetLeft : track.clientWidth;
+      return b ? Math.abs(b.offsetLeft - a.offsetLeft) : track.clientWidth;
     };
-    const go = (d: number) => track.scrollBy({ left: d * step(), behavior: reduce() ? 'auto' : 'smooth' });
+    const go = (d: number) => track.scrollBy({ left: d * step() * (rtl ? -1 : 1), behavior: reduce() ? 'auto' : 'smooth' });
     const sync = () => {
-      prev.disabled = track.scrollLeft <= 1;
-      next.disabled = track.scrollLeft + track.clientWidth >= track.scrollWidth - 1;
+      const offset = Math.abs(track.scrollLeft);
+      prev.disabled = offset <= 1;
+      next.disabled = offset + track.clientWidth >= track.scrollWidth - 1;
     };
 
     let raf = 0;

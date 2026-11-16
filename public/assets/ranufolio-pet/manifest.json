@@ -1,0 +1,496 @@
+{
+  "name": "Ranufolio Pixel Pet",
+  "version": "2.0.0",
+  "format": "image/webp",
+  "frameWidth": 225,
+  "frameHeight": 225,
+  "transparent": true,
+  "encoding": "lossless",
+  "characterColor": "#d87756",
+  "eyeColor": "#0a0a0b",
+  "originalSpriteBounds": {
+    "x": 34,
+    "y": 67,
+    "width": 157,
+    "height": 98
+  },
+  "footAnchor": {
+    "x": 112,
+    "y": 165
+  },
+  "atlas": {
+    "file": "atlas.webp",
+    "columns": 6,
+    "rows": 7,
+    "width": 1350,
+    "height": 1575
+  },
+  "frames": {
+    "idle_01": {
+      "file": "frames/idle_01.webp",
+      "x": 0,
+      "y": 0,
+      "width": 225,
+      "height": 225
+    },
+    "idle_02": {
+      "file": "frames/idle_02.webp",
+      "x": 225,
+      "y": 0,
+      "width": 225,
+      "height": 225
+    },
+    "idle_03": {
+      "file": "frames/idle_03.webp",
+      "x": 450,
+      "y": 0,
+      "width": 225,
+      "height": 225
+    },
+    "blink_01": {
+      "file": "frames/blink_01.webp",
+      "x": 675,
+      "y": 0,
+      "width": 225,
+      "height": 225
+    },
+    "blink_02": {
+      "file": "frames/blink_02.webp",
+      "x": 900,
+      "y": 0,
+      "width": 225,
+      "height": 225
+    },
+    "look_left": {
+      "file": "frames/look_left.webp",
+      "x": 1125,
+      "y": 0,
+      "width": 225,
+      "height": 225
+    },
+    "look_right": {
+      "file": "frames/look_right.webp",
+      "x": 0,
+      "y": 225,
+      "width": 225,
+      "height": 225
+    },
+    "look_up": {
+      "file": "frames/look_up.webp",
+      "x": 225,
+      "y": 225,
+      "width": 225,
+      "height": 225
+    },
+    "look_down": {
+      "file": "frames/look_down.webp",
+      "x": 450,
+      "y": 225,
+      "width": 225,
+      "height": 225
+    },
+    "look_up_left": {
+      "file": "frames/look_up_left.webp",
+      "x": 675,
+      "y": 225,
+      "width": 225,
+      "height": 225
+    },
+    "look_up_right": {
+      "file": "frames/look_up_right.webp",
+      "x": 900,
+      "y": 225,
+      "width": 225,
+      "height": 225
+    },
+    "look_down_left": {
+      "file": "frames/look_down_left.webp",
+      "x": 1125,
+      "y": 225,
+      "width": 225,
+      "height": 225
+    },
+    "look_down_right": {
+      "file": "frames/look_down_right.webp",
+      "x": 0,
+      "y": 450,
+      "width": 225,
+      "height": 225
+    },
+    "squint": {
+      "file": "frames/squint.webp",
+      "x": 225,
+      "y": 450,
+      "width": 225,
+      "height": 225
+    },
+    "squint_left": {
+      "file": "frames/squint_left.webp",
+      "x": 450,
+      "y": 450,
+      "width": 225,
+      "height": 225
+    },
+    "squint_right": {
+      "file": "frames/squint_right.webp",
+      "x": 675,
+      "y": 450,
+      "width": 225,
+      "height": 225
+    },
+    "squint_up": {
+      "file": "frames/squint_up.webp",
+      "x": 900,
+      "y": 450,
+      "width": 225,
+      "height": 225
+    },
+    "squint_down": {
+      "file": "frames/squint_down.webp",
+      "x": 1125,
+      "y": 450,
+      "width": 225,
+      "height": 225
+    },
+    "walk_right_01": {
+      "file": "frames/walk_right_01.webp",
+      "x": 0,
+      "y": 675,
+      "width": 225,
+      "height": 225
+    },
+    "walk_right_02": {
+      "file": "frames/walk_right_02.webp",
+      "x": 225,
+      "y": 675,
+      "width": 225,
+      "height": 225
+    },
+    "walk_right_03": {
+      "file": "frames/walk_right_03.webp",
+      "x": 450,
+      "y": 675,
+      "width": 225,
+      "height": 225
+    },
+    "walk_right_04": {
+      "file": "frames/walk_right_04.webp",
+      "x": 675,
+      "y": 675,
+      "width": 225,
+      "height": 225
+    },
+    "walk_left_01": {
+      "file": "frames/walk_left_01.webp",
+      "x": 900,
+      "y": 675,
+      "width": 225,
+      "height": 225
+    },
+    "walk_left_02": {
+      "file": "frames/walk_left_02.webp",
+      "x": 1125,
+      "y": 675,
+      "width": 225,
+      "height": 225
+    },
+    "walk_left_03": {
+      "file": "frames/walk_left_03.webp",
+      "x": 0,
+      "y": 900,
+      "width": 225,
+      "height": 225
+    },
+    "walk_left_04": {
+      "file": "frames/walk_left_04.webp",
+      "x": 225,
+      "y": 900,
+      "width": 225,
+      "height": 225
+    },
+    "jump_01": {
+      "file": "frames/jump_01.webp",
+      "x": 450,
+      "y": 900,
+      "width": 225,
+      "height": 225
+    },
+    "jump_02": {
+      "file": "frames/jump_02.webp",
+      "x": 675,
+      "y": 900,
+      "width": 225,
+      "height": 225
+    },
+    "jump_03": {
+      "file": "frames/jump_03.webp",
+      "x": 900,
+      "y": 900,
+      "width": 225,
+      "height": 225
+    },
+    "jump_04": {
+      "file": "frames/jump_04.webp",
+      "x": 1125,
+      "y": 900,
+      "width": 225,
+      "height": 225
+    },
+    "touch_01": {
+      "file": "frames/touch_01.webp",
+      "x": 0,
+      "y": 1125,
+      "width": 225,
+      "height": 225
+    },
+    "touch_02": {
+      "file": "frames/touch_02.webp",
+      "x": 225,
+      "y": 1125,
+      "width": 225,
+      "height": 225
+    },
+    "touch_03": {
+      "file": "frames/touch_03.webp",
+      "x": 450,
+      "y": 1125,
+      "width": 225,
+      "height": 225
+    },
+    "climb_right_01": {
+      "file": "frames/climb_right_01.webp",
+      "x": 675,
+      "y": 1125,
+      "width": 225,
+      "height": 225
+    },
+    "climb_right_02": {
+      "file": "frames/climb_right_02.webp",
+      "x": 900,
+      "y": 1125,
+      "width": 225,
+      "height": 225
+    },
+    "climb_left_01": {
+      "file": "frames/climb_left_01.webp",
+      "x": 1125,
+      "y": 1125,
+      "width": 225,
+      "height": 225
+    },
+    "climb_left_02": {
+      "file": "frames/climb_left_02.webp",
+      "x": 0,
+      "y": 1350,
+      "width": 225,
+      "height": 225
+    },
+    "peek_01": {
+      "file": "frames/peek_01.webp",
+      "x": 225,
+      "y": 1350,
+      "width": 225,
+      "height": 225
+    },
+    "peek_02": {
+      "file": "frames/peek_02.webp",
+      "x": 450,
+      "y": 1350,
+      "width": 225,
+      "height": 225
+    },
+    "sleep_01": {
+      "file": "frames/sleep_01.webp",
+      "x": 675,
+      "y": 1350,
+      "width": 225,
+      "height": 225
+    },
+    "sleep_02": {
+      "file": "frames/sleep_02.webp",
+      "x": 900,
+      "y": 1350,
+      "width": 225,
+      "height": 225
+    }
+  },
+  "animations": {
+    "idle": {
+      "file": "animations/idle.webp",
+      "frames": [
+        "idle_01",
+        "idle_02",
+        "idle_03",
+        "idle_02"
+      ],
+      "durationsMs": [
+        500,
+        220,
+        500,
+        220
+      ],
+      "loop": true
+    },
+    "blink": {
+      "file": "animations/blink.webp",
+      "frames": [
+        "idle_01",
+        "blink_01",
+        "blink_02",
+        "blink_01",
+        "idle_01"
+      ],
+      "durationsMs": [
+        300,
+        100,
+        110,
+        90,
+        400
+      ],
+      "loop": false
+    },
+    "walk-right": {
+      "file": "animations/walk-right.webp",
+      "frames": [
+        "walk_right_01",
+        "walk_right_02",
+        "walk_right_03",
+        "walk_right_04"
+      ],
+      "durationsMs": [
+        110,
+        110,
+        110,
+        110
+      ],
+      "loop": true
+    },
+    "walk-left": {
+      "file": "animations/walk-left.webp",
+      "frames": [
+        "walk_left_01",
+        "walk_left_02",
+        "walk_left_03",
+        "walk_left_04"
+      ],
+      "durationsMs": [
+        110,
+        110,
+        110,
+        110
+      ],
+      "loop": true
+    },
+    "jump": {
+      "file": "animations/jump.webp",
+      "frames": [
+        "jump_01",
+        "jump_02",
+        "jump_03",
+        "jump_04",
+        "idle_01"
+      ],
+      "durationsMs": [
+        130,
+        180,
+        210,
+        160,
+        220
+      ],
+      "loop": false
+    },
+    "touch": {
+      "file": "animations/touch.webp",
+      "frames": [
+        "touch_01",
+        "touch_02",
+        "touch_03",
+        "idle_01"
+      ],
+      "durationsMs": [
+        180,
+        200,
+        180,
+        240
+      ],
+      "loop": false
+    },
+    "climb-right": {
+      "file": "animations/climb-right.webp",
+      "frames": [
+        "climb_right_01",
+        "climb_right_02"
+      ],
+      "durationsMs": [
+        130,
+        130
+      ],
+      "loop": true
+    },
+    "climb-left": {
+      "file": "animations/climb-left.webp",
+      "frames": [
+        "climb_left_01",
+        "climb_left_02"
+      ],
+      "durationsMs": [
+        130,
+        130
+      ],
+      "loop": true
+    },
+    "peek": {
+      "file": "animations/peek.webp",
+      "frames": [
+        "peek_01",
+        "peek_02",
+        "peek_01"
+      ],
+      "durationsMs": [
+        650,
+        130,
+        450
+      ],
+      "loop": true
+    },
+    "sleep": {
+      "file": "animations/sleep.webp",
+      "frames": [
+        "sleep_01",
+        "sleep_02"
+      ],
+      "durationsMs": [
+        850,
+        850
+      ],
+      "loop": true
+    }
+  },
+  "layers": {
+    "body-no-eyes": {
+      "file": "layers/body-no-eyes.webp",
+      "width": 225,
+      "height": 225
+    },
+    "eyes-open": {
+      "file": "layers/eyes-open.webp",
+      "width": 225,
+      "height": 225
+    },
+    "eyes-squint": {
+      "file": "layers/eyes-squint.webp",
+      "width": 225,
+      "height": 225
+    },
+    "eyes-closed": {
+      "file": "layers/eyes-closed.webp",
+      "width": 225,
+      "height": 225
+    },
+    "eyes-surprised": {
+      "file": "layers/eyes-surprised.webp",
+      "width": 225,
+      "height": 225
+    }
+  }
+}
