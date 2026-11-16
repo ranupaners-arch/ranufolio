@@ -22,8 +22,6 @@ export class PixelPetController {
   private plan?: Action;
   private queued?: Action;
   private actions: Action[] = [];
-  private commanded = false;
-  private lastTransfer = performance.now();
   private lastAttention = -Infinity;
   private visible = false;
   private pageVisible = true;
@@ -68,6 +66,10 @@ export class PixelPetController {
     this.machine.enter('idle', now, duration, this.pose);
   }
 
+  private finishActivity(now: number) {
+    this.idle(now, random(C.activityPauseMin, C.activityPauseMax));
+  }
+
   /** Public reusable API. Requests use the same safe paths as autonomous behavior. */
   play(action: Action, direction?: Direction): boolean {
     if (this.disposed) return false;
@@ -77,7 +79,7 @@ export class PixelPetController {
     if (action === 'react') { this.react(now); this.requestFrame(); return true; }
     if (this.motion.matches && action !== 'sleep') return false;
     if (['jump', 'climb', 'hide', 'react'].includes(this.machine.state.mode)) this.queued = action;
-    else { this.commanded = true; this.beginPlan(action, now); }
+    else this.beginPlan(action, now);
     this.requestFrame();
     return true;
   }
@@ -92,13 +94,14 @@ export class PixelPetController {
       else this.direction = target.x > card.x ? 1 : -1;
     }
     if (action === 'climb') {
-      // Prefer an edge with room in the viewport; card dimensions never change.
-      const leftRoom = card.x - this.cards.viewport.left;
-      const rightRoom = this.cards.viewport.right - card.x - card.width;
-      if (Math.max(leftRoom, rightRoom) > this.renderer.height) this.direction = rightRoom >= leftRoom ? 1 : -1;
+      // Reach the nearest real edge before climbing. Walking to the far edge could
+      // consume the entire awake period before this activity becomes visible.
+      const bounds = this.cards.surfaceBounds(card, this.renderer.width);
+      this.direction = Math.abs(this.pose.x - bounds.right) < Math.abs(this.pose.x - bounds.left) ? 1 : -1;
     }
     this.plan = action;
-    this.machine.enter('walk', now, action === 'jump' ? C.jumpApproachMax : random(1800, 3800), this.pose, { side: this.direction });
+    const duration = action === 'jump' ? C.jumpApproachMax : action === 'hide' ? C.hideApproachMax : random(1800, 3800);
+    this.machine.enter('walk', now, duration, this.pose, { side: this.direction });
   }
 
   private startJump(targetId: number, now: number) {
@@ -121,7 +124,7 @@ export class PixelPetController {
     }
     if (action === 'climb') this.machine.enter('climb', now, C.climbDuration, this.pose, { side: this.direction });
     else if (action === 'hide') this.machine.enter('hide', now, C.hideDuration, this.pose);
-    else { this.commanded = false; this.direction = this.direction > 0 ? -1 : 1; this.idle(now); }
+    else { this.direction = this.direction > 0 ? -1 : 1; this.finishActivity(now); }
   }
 
   private react(now: number) {
@@ -139,12 +142,13 @@ export class PixelPetController {
 
   private activity(now: number) {
     this.lastInput = now;
-    if (this.machine.state.mode === 'sleep') { this.idle(now, 900); this.plan = this.cards.cards.length > 1 ? 'jump' : undefined; }
+    // Keep both the pending plan and cycle position across sleep/wake.
+    if (this.machine.state.mode === 'sleep') this.idle(now, 900);
   }
 
   private nextAction(): Action {
-    if (!this.actions.length) this.actions = (['walk', 'jump', 'climb', 'hide'] satisfies Action[]).sort(() => Math.random() - 0.5);
-    return this.actions.pop()!;
+    if (!this.actions.length) this.actions = [...C.behaviorCycle];
+    return this.actions.shift()!;
   }
 
   private measure() {
@@ -168,7 +172,7 @@ export class PixelPetController {
     const state = this.machine.state;
     const p = this.machine.progress(now);
     const safe = state.mode === 'idle' || state.mode === 'walk';
-    if (safe && now - this.lastInput >= C.sleepAfter) { this.plan = undefined; this.machine.enter('sleep', now, Infinity, this.pose); return; }
+    if (safe && now - this.lastInput >= C.sleepAfter) { this.machine.enter('sleep', now, Infinity, this.pose); return; }
 
     // A swipe may move the occupied card out of view. Fly to the newly visible card,
     // using both cards' live coordinates rather than switching the occupied index.
@@ -178,20 +182,10 @@ export class PixelPetController {
       return;
     }
 
-    // Touring is a deadline, not a random activity that sleep can indefinitely starve.
-    // Explicit host commands and direct interaction still take priority.
-    if (safe && !this.motion.matches && !this.commanded && !this.queued && this.plan !== 'jump'
-      && this.cards.cards.length > 1 && now - this.lastTransfer >= C.tourInterval
-      && !this.hovering && !this.pressed && !this.renderer.button.matches(':focus-visible')) {
-      this.beginPlan('jump', now);
-      return;
-    }
-
     switch (state.mode) {
       case 'idle': {
         this.pose.y = card.y - height / 2;
         if (!this.motion.matches && now >= state.started + state.duration && !this.hovering && !this.pressed && !this.renderer.button.matches(':focus-visible')) {
-          if (this.queued) this.commanded = true;
           this.beginPlan(this.queued ?? this.plan ?? this.nextAction(), now);
           this.queued = undefined;
         }
@@ -210,7 +204,7 @@ export class PixelPetController {
         this.pose.y = card.y - height / 2;
         if (Math.abs(this.pose.x - goal) < 1) this.edge(now);
         else if (now >= state.started + state.duration) {
-          if (this.plan === 'jump') this.edge(now);
+          if (this.plan === 'jump' || this.plan === 'hide') this.edge(now);
           else this.idle(now);
         }
         break;
@@ -224,10 +218,8 @@ export class PixelPetController {
         this.pose = jumpPose(state.origin, landing, p, this.motion.matches ? 0 : arc);
         if (p >= 1) {
           this.cardId = target.id;
-          this.lastTransfer = now;
-          this.commanded = false;
           this.pose = { ...this.pose, ...landing, sx: 1, sy: 1 };
-          this.idle(now, 650);
+          this.finishActivity(now);
         }
         break;
       }
@@ -236,14 +228,13 @@ export class PixelPetController {
         if (p >= 1 || this.motion.matches) {
           this.pose = { ...state.origin, angle: 0, sx: 1, sy: 1, behind: false };
           this.direction = state.side > 0 ? -1 : 1;
-          this.commanded = false;
-          this.idle(now);
+          this.finishActivity(now);
         }
         break;
       }
       case 'hide': {
         this.pose = hidePose(state.origin, card, p, height);
-        if (p >= 1 || this.motion.matches) { this.commanded = false; this.pose = { ...state.origin, behind: false }; this.idle(now); }
+        if (p >= 1 || this.motion.matches) { this.pose = { ...state.origin, behind: false }; this.finishActivity(now); }
         break;
       }
       case 'sleep': {
@@ -310,7 +301,6 @@ export class PixelPetController {
       this.eyes.shift(paused);
       this.renderer.shift(paused);
       this.camera.shift(paused);
-      if (this.lastTransfer <= this.pausedAt) this.lastTransfer += paused;
       if (this.lastInput <= this.pausedAt) this.lastInput += paused;
       this.lastFrame = now;
       this.cards.dirty = true;
