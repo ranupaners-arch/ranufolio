@@ -565,6 +565,11 @@ export const copy = {
   },
 } as const;
 
+// Keep the English copy's structure while allowing translated string values.
+type Localized<T> = T extends string ? string
+  : T extends (...args: infer A) => infer R ? (...args: A) => Localized<R>
+  : T extends object ? { [K in keyof T]: Localized<T[K]> } : T;
+
 export const arabicCopy = {
   ...copy.en,
   htmlLang: 'ar',
@@ -587,7 +592,7 @@ export const arabicCopy = {
   learn: { ...copy.en.learn, title: 'التعلّم', lead: 'مواد تعليمية للمبتدئين. لا تزال بعض النصوص قيد الإعداد.', kicker: 'دورة مجانية', start: 'ابدأ الدورة', open: 'افتح المواد', inside: 'محتويات الدورة', module: 'الوحدة', lessons: (n: number) => `${n} دروس`, soon: 'قريبًا', forYou: 'هذه الدورة مناسبة لك إذا', asks: 'المتطلبات', license: 'مرخّص بموجب CC BY-NC-SA 4.0.', preview: 'معاينة', loadPreview: 'تحميل المعاينة', previewText: 'تعرض المعاينة المواد هنا دون مغادرة الموقع.', newTab: 'افتح في علامة تبويب جديدة', workshop: 'ورشة عمل', workshopOpen: 'عرض التفاصيل' },
   contactPage: { ...copy.en.contactPage, title: 'ابدأ مشروعك', lead: 'أخبرني عن نشاطك التجاري وما الذي تحتاج إلى مساعدة التطبيق فيه. سأرد عليك في أقرب وقت.', need: 'ما الذي تحتاج إليه؟', needs: ['تطبيق ويب', 'نظام إدارة أو نقاط بيع', 'تطبيق جوّال', 'لست متأكدًا بعد'], namePlaceholder: 'الاسم الكامل', emailPlaceholder: 'name@example.com', messagePlaceholder: 'ما طبيعة نشاطك التجاري، وكيف يمكن للتطبيق مساعدتك؟', sendAnother: 'إرسال رسالة أخرى', sentTitle: 'شكرًا لك', whatsappTitle: 'واتساب', whatsappText: 'الأسرع. يفتح محادثة برسالة جاهزة.', emailTitle: 'البريد الإلكتروني' },
   speaking: { back: 'ورشة العمل', toc: ['نبذة', 'لماذا هذه الجلسة؟', 'الموضوعات'], date: 'التاريخ', venue: 'المكان', host: 'الجهة المنظمة', format: 'الصيغة', audience: 'الجمهور' },
-} satisfies typeof copy.en;
+} satisfies Localized<typeof copy.en>;
 
 export const copyFor = (lang: Lang, locale?: 'ar') => locale === 'ar' ? arabicCopy : copy[lang];
 

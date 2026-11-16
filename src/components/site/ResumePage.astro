@@ -36,7 +36,6 @@ const ar: Record<string, string> = {
   'Aug 2025 – Jul 2026': 'أغسطس 2025 – يوليو 2026',
   'Aug 2025 – Jun 2026': 'أغسطس 2025 – يونيو 2026',
   'Aug 2021 – Jun 2022': 'أغسطس 2021 – يونيو 2022',
-  'Aug 2024 – Present': 'أغسطس 2024 – الآن',
   'Vice Chairman': 'نائب الرئيس',
   'Assisted the chairman in planning and implementing organizational programs.': 'ساعدت الرئيس في تخطيط برامج المؤسسة وتنفيذها.',
   'Coordinated activities with lecturers, students, and external stakeholders.': 'نسّقت الأنشطة مع أعضاء هيئة التدريس والطلاب والجهات الخارجية.',
@@ -164,7 +163,7 @@ const split = (e: ResumeEntry) => [e.bullets.slice(0, 2), e.bullets.slice(2)] as
     </div>
   </section>
 
-  <h2 class={h2}>{r.stack}</h2>
+  <h2 class={h2}>{t.stack.title}</h2>
   <section class="glass rounded-[28px] p-6 sm:p-8">
     <WorksWith lang={lang} locale={locale} />
   </section>
