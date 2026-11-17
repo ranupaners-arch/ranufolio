@@ -14,11 +14,10 @@ const size = 'h-[15.125rem] w-[11rem] sm:h-[20.625rem] sm:w-[15rem] lg:h-[16.5re
 const cardLabel = locale === 'ar' ? 'البطاقة {n}' : lang === 'en' ? 'Card {n}' : 'Kartu {n}';
 ---
 
-<!-- Section khusus kipas kartu: klik kartu saat terbuka untuk melihatnya besar. Di HP hanya kipas tengah yang tampil. -->
-<div class="cards-section flex flex-col items-center gap-y-10 py-10 sm:gap-y-16 sm:py-24 lg:flex-row lg:justify-center lg:gap-x-36 xl:gap-x-40">
+<!-- Section khusus kipas kartu: klik kartu saat terbuka untuk melihatnya besar. -->
+<div class="cards-section flex flex-col items-center gap-y-16 py-16 sm:py-24 lg:flex-row lg:justify-center lg:gap-x-36 xl:gap-x-40">
   <!-- Kiri: linear spread (sebaran lurus, tanpa rotasi). -->
   <CardLongArc5
-    class="max-sm:hidden"
     angle={0}
     gap={160}
     yOffset={0}
@@ -37,7 +36,6 @@ const cardLabel = locale === 'ar' ? 'البطاقة {n}' : lang === 'en' ? 'Card
   />
   <!-- Kanan: corner fan (berputar dari pojok kiri bawah). -->
   <CardLongArc5
-    class="max-sm:hidden"
     variant="corner"
     sizeClass={size}
     cardLabel={cardLabel}

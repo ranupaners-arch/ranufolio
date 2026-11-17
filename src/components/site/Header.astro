@@ -224,19 +224,20 @@ const themes = [
     [data-float-bubble] {
       position: absolute; top: 50%; right: -0.5rem; display: grid; place-items: center;
       width: 1.75rem; height: 3.5rem; border-radius: 9999px 0 0 9999px; padding-left: 0.2rem;
-      opacity: 0; pointer-events: none; transform: translate(100%, -50%);
-      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease;
+      opacity: 0; pointer-events: none; transform: translate(0, -50%) scale(0.6); visibility: hidden;
+      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease, visibility 0.3s;
     }
     [data-float-bubble]::after { content: ''; position: absolute; inset: -0.25rem -0.5rem -0.25rem -1rem; }
     html[data-nav-pos='left'] [data-float-bubble]::after { inset: -0.25rem -1rem -0.25rem -0.5rem; }
-    [data-float-nav][data-min] [data-float-body] { transform: translateX(calc(100% + 1rem)); opacity: 0; pointer-events: none; }
-    [data-float-nav][data-min] [data-float-bubble] { opacity: 1; pointer-events: auto; transform: translate(0, -50%); }
+    /* Menciut tanpa keluar layar: elemen fixed di luar viewport bikin Chrome Android zoom out halaman. */
+    [data-float-nav][data-min] [data-float-body] { transform: scale(0.6); transform-origin: right center; opacity: 0; visibility: hidden; pointer-events: none; transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease, visibility 0.3s; }
+    [data-float-nav][data-min] [data-float-bubble] { opacity: 1; visibility: visible; pointer-events: auto; transform: translate(0, -50%); }
     [data-bubble-icon='right'] { display: none; }
     [data-float-nav][data-dragging] [data-float-body] { transition: none; }
 
     html[data-nav-pos='left'] [data-float-nav] { right: auto; left: 0.5rem; }
-        html[data-nav-pos='left'] [data-float-bubble] { right: auto; left: -0.5rem; border-radius: 0 9999px 9999px 0; padding: 0 0.2rem 0 0; transform: translate(-100%, -50%); }
-    html[data-nav-pos='left'] [data-float-nav][data-min] [data-float-body] { transform: translateX(calc(-100% - 1rem)); }
+        html[data-nav-pos='left'] [data-float-bubble] { right: auto; left: -0.5rem; border-radius: 0 9999px 9999px 0; padding: 0 0.2rem 0 0; transform: translate(0, -50%) scale(0.6); }
+    html[data-nav-pos='left'] [data-float-nav][data-min] [data-float-body] { transform-origin: left center; }
     html[data-nav-pos='left'] [data-float-nav][data-min] [data-float-bubble] { transform: translate(0, -50%); }
     html[data-nav-pos='left'] [data-bubble-icon='left'] { display: none; }
     html[data-nav-pos='left'] [data-bubble-icon='right'] { display: block; }
