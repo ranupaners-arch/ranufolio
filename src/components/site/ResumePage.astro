@@ -120,7 +120,7 @@ const split = (e: ResumeEntry) => [e.bullets.slice(0, 2), e.bullets.slice(2)] as
                   )}
                   {more.length > 0 && (
                     <details class="group mt-3 max-w-[66ch]">
-                      <summary class="w-fit cursor-pointer list-none rounded-full bg-soft px-3.5 py-1.5 text-sm font-semibold hover:bg-line [&::-webkit-details-marker]:hidden">
+                      <summary class="w-fit cursor-pointer list-none max-sm:inline-flex max-sm:min-h-11 max-sm:items-center rounded-full bg-soft px-3.5 py-1.5 text-sm font-semibold hover:bg-line [&::-webkit-details-marker]:hidden">
                         <span class="group-open:hidden">{r.showMore(more.length)}</span>
                         <span class="hidden group-open:inline">{r.showLess}</span>
                       </summary>
