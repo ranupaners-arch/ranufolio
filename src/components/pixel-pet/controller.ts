@@ -15,6 +15,8 @@ export class PixelPetController {
   private eyes: EyeController;
   private machine: PetStateMachine;
   private motion = matchMedia('(prefers-reduced-motion: reduce)');
+  private compact = matchMedia('(max-width: 639.98px)');
+  private userScrolled = false;
   private intersection: IntersectionObserver;
   private pose: Pose;
   private cardId: number;
@@ -272,7 +274,8 @@ export class PixelPetController {
     this.lastFrame = now;
     this.measure();
     this.update(now, dt);
-    if (!this.motion.matches && ['idle', 'walk', 'jump'].includes(this.machine.state.mode)
+    // Di layar kecil carousel baru boleh digeser kamera pet setelah pengguna berinteraksi dengannya.
+    if (!this.motion.matches && (this.userScrolled || !this.compact.matches) && ['idle', 'walk', 'jump'].includes(this.machine.state.mode)
       && this.camera.follow(this.pose, this.cards, this.renderer.width, now, dt)) {
       this.cards.dirty = true;
       this.measure();
@@ -328,6 +331,7 @@ export class PixelPetController {
     track.addEventListener('scroll', () => { this.cards.dirty = true; this.requestFrame(); }, { passive: true, signal });
     const manualScroll = () => {
       const now = performance.now();
+      this.userScrolled = true;
       this.activity(now);
       this.camera.pause(now, C.manualScrollPause, true);
       this.cards.dirty = true;
