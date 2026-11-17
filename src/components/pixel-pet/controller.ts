@@ -63,6 +63,9 @@ export class PixelPetController {
     this.render(now, 0.016);
   }
 
+  /** Camera belum boleh menggeser carousel (HP, belum ada interaksi): patroli hanya ke card yang terlihat. */
+  private get cameraLocked() { return this.compact.matches && !this.userScrolled; }
+
   private idle(now: number, duration = random(C.idleMin, C.idleMax)) {
     this.pose = { ...this.pose, angle: 0, sx: 1, sy: 1, behind: false };
     this.machine.enter('idle', now, duration, this.pose);
@@ -91,7 +94,7 @@ export class PixelPetController {
     if (action === 'sleep') { this.plan = undefined; this.machine.enter('sleep', now, Infinity, this.pose); return; }
     if (action === 'react') { this.react(now); return; }
     if (action === 'jump') {
-      const target = this.cards.neighbor(card, this.direction, this.renderer.width);
+      const target = this.cards.neighbor(card, this.direction, this.renderer.width, this.cameraLocked);
       if (!target) action = 'climb';
       else this.direction = target.x > card.x ? 1 : -1;
     }
@@ -121,7 +124,7 @@ export class PixelPetController {
     const action = this.plan;
     this.plan = undefined;
     if (action === 'jump') {
-      const neighbor = this.cards.neighbor(this.cards.get(this.cardId)!, this.direction, this.renderer.width);
+      const neighbor = this.cards.neighbor(this.cards.get(this.cardId)!, this.direction, this.renderer.width, this.cameraLocked);
       if (neighbor) { this.startJump(neighbor.id, now); return; }
     }
     if (action === 'climb') this.machine.enter('climb', now, C.climbDuration, this.pose, { side: this.direction });
@@ -275,7 +278,7 @@ export class PixelPetController {
     this.measure();
     this.update(now, dt);
     // Di layar kecil carousel baru boleh digeser kamera pet setelah pengguna berinteraksi dengannya.
-    if (!this.motion.matches && (this.userScrolled || !this.compact.matches) && ['idle', 'walk', 'jump'].includes(this.machine.state.mode)
+    if (!this.motion.matches && !this.cameraLocked && ['idle', 'walk', 'jump'].includes(this.machine.state.mode)
       && this.camera.follow(this.pose, this.cards, this.renderer.width, now, dt)) {
       this.cards.dirty = true;
       this.measure();
