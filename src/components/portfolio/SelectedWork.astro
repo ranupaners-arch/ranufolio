@@ -20,10 +20,10 @@ const arrow =
 <section id="work" data-zone="light" class="plain-page @container relative isolate scroll-mt-6 overflow-x-clip" aria-labelledby="work-h">
   <!-- Latar: gelombang bola memantul, menempel di dasar section, di belakang konten. -->
   <WavePhysicsBg />
-  <div class="relative z-[1] pb-16 pt-20 @3xl:pb-[108px] @3xl:pt-[108px]">
+  <div class="relative z-[1] pb-16 pt-10 sm:pt-20 @3xl:pb-[108px] @3xl:pt-[108px]">
     <div class="group/carousel relative isolate" data-carousel>
       <div class="pad-wide relative z-[3] flex items-center justify-between">
-        <h2 id="work-h" class="text-[14px] text-fg/65">{t.projects.title}</h2>
+        <h2 id="work-h" class="text-[14px] text-fg/65 max-sm:text-[15px] max-sm:font-medium max-sm:text-fg/85">{t.projects.title}</h2>
         <div class="flex items-center gap-1 [@media(hover:none)]:hidden">
           <button type="button" data-prev aria-label={t.projects.prev} class={arrow}>
             <Icon name="chevron-left" size={16} stroke={64} />
