@@ -106,14 +106,27 @@ try {
     await open(path);
     await evaluate(`window.patrol=[];window.autoModes=[];window.autoSeen={hideOccluded:false,climbRotated:false};window.watchPatrol=true;window.patrolStarted=performance.now();document.querySelector('[data-pet]').addEventListener('pixel-pet:mode',e=>autoModes.push({mode:e.detail.mode,ms:Math.round(performance.now()-patrolStarted)}));function watch(){const h=document.querySelector('[data-pet]'),card=+h.dataset.card,a=h.querySelector('[data-pet-actor]'),b=h.querySelector('button');if(!patrol.length||patrol.at(-1).card!==card)patrol.push({card,ms:Math.round(performance.now()-patrolStarted),mode:h.dataset.mode});if(h.dataset.mode==='hide'&&a.parentElement.hasAttribute('data-pet-back')&&b.offsetHeight<parseFloat(h.style.getPropertyValue('--pet-height'))/2)autoSeen.hideOccluded=true;if(h.dataset.mode==='climb'&&Math.abs(+a.dataset.angle)>85)autoSeen.climbRotated=true;if(watchPatrol)requestAnimationFrame(watch)}watch()`);
     await waitFor('autoSeen.hideOccluded',9000);await screenshot('auto-hide-'+name);
+    let result;
+    if(width<640){
+      // HP: carousel tidak boleh digeser kamera sebelum ada interaksi, jadi pet hanya berpatroli di card yang terlihat.
+      await waitFor('performance.now()-patrolStarted>7500',9000);
+      result=await evaluate(`({cards:patrol,scroll:document.querySelector('[data-track]').scrollLeft,camera:document.querySelector('[data-track]').dataset.petCamera||'',overflow:document.documentElement.scrollWidth>innerWidth})`);
+      assert.equal(result.scroll,0,'Mobile carousel must start at scrollLeft 0 and stay there before user interaction');
+      assert.notEqual(result.camera,'following','Pet camera must not follow before user interaction on mobile');
+      assert.deepEqual([...new Set(result.cards.map(p=>p.card))],[0],'Mobile pet must stay on the visible card before user interaction');
+      assert.ok(!result.overflow);
+      await screenshot('tour-'+name);
+      pass(`Autonomous ${name} patrol keeps carousel at scrollLeft 0 before user interaction`);
+    } else {
     await waitFor(`new Set(patrol.map(p=>p.card)).size===document.querySelectorAll('[data-project-tile]').length`,11000);
-    const result=await evaluate(`({cards:patrol,scroll:document.querySelector('[data-track]').scrollLeft,overflow:document.documentElement.scrollWidth>innerWidth})`);
+    result=await evaluate(`({cards:patrol,scroll:document.querySelector('[data-track]').scrollLeft,overflow:document.documentElement.scrollWidth>innerWidth})`);
     assert.deepEqual(result.cards.slice(0,3).map(p=>p.card),[0,1,2]);
     assert.ok(result.cards.at(-1).ms<11000,'Visit all cards before the inactivity sleep deadline');
     assert.ok(Math.abs(result.scroll)>10,'Carousel must follow visits to previously hidden cards');
     assert.ok(!result.overflow);
     await screenshot('tour-'+name);
     pass(`Autonomous ${name} patrol: cards 1 → 2 → 3 without play(), swipe, or user activity`);
+    }
     await waitFor('autoSeen.climbRotated',5000);await screenshot('auto-climb-'+name);
     await waitFor(`document.querySelector('[data-pet]').dataset.mode==='sleep'`,6500);
     const behavior=await evaluate(`watchPatrol=false;({modes:autoModes,seen:autoSeen,elapsed:Math.round(performance.now()-patrolStarted)})`);

@@ -52,8 +52,8 @@ export class CardMap {
     return bounds.right >= bounds.left ? { x: clamp(fromX, bounds.left, bounds.right), y: card.y - height / 2 } : null;
   }
 
-  neighbor(card: Card, direction: Direction, width: number) {
-    const candidates = this.cards.filter(c => c.id !== card.id && c.width >= width + 10);
+  neighbor(card: Card, direction: Direction, width: number, visibleOnly = false) {
+    const candidates = this.cards.filter(c => c.id !== card.id && c.width >= width + 10 && (!visibleOnly || this.visibleWidth(c) >= width + 10));
     const forward = candidates.filter(c => Math.sign(c.x - card.x) === direction);
     return (forward.length ? forward : candidates).sort((a, b) => Math.abs(a.x - card.x) - Math.abs(b.x - card.x))[0];
   }

@@ -307,6 +307,7 @@ export const copy = {
     contact: {
       title: 'Punya usaha yang butuh website?',
       lead: 'Ceritakan kebutuhanmu. WhatsApp paling cepat, atau isi form di samping.',
+      leadStacked: 'Ceritakan kebutuhanmu. WhatsApp paling cepat, atau isi form di halaman Kontak.',
       whatsapp: 'Chat lewat WhatsApp',
       formLink: 'Isi form',
       waText: 'Halo Ranupane, saya melihat portofolio Anda. Saya butuh bantuan untuk: ',
@@ -483,6 +484,7 @@ export const copy = {
     contact: {
       title: 'Got a business that needs a website?',
       lead: 'Tell me what you need. WhatsApp is fastest, or use the form beside this.',
+      leadStacked: 'Tell me what you need. WhatsApp is fastest, or use the form on the Contact page.',
       whatsapp: 'Chat on WhatsApp',
       formLink: 'Use the form',
       waText: 'Hi Ranupane, I saw your portfolio. I need help with: ',
@@ -584,7 +586,7 @@ export const arabicCopy = {
   about: { ...copy.en.about, title: 'نبذة عني', body: ['أدرس في معهد مسلم جيندكيا في سوكابومي، وحققت معدلًا تراكميًا 4.0 وفزت بميداليتين ذهبيتين وطنيتين في أولمبياد اللغة العربية.', 'إلى جانب الدراسة والعمل في كوكيرجاين أجا، أشارك في الأنشطة الطلابية وأعمل حاليًا أمينًا ثانيًا لمجلس الطلبة.'], doTitle: 'ما أقدمه', does: [{ title: 'تطوير المواقع والتطبيقات', text: 'مواقع وتطبيقات ويب وهواتف للمشروعات الصغيرة والمؤسسات، من التصميم حتى الإطلاق.' }, { title: 'اللغة العربية والكتابة', text: 'أدرّس اللغة العربية وأراجع النصوص، وشاركت في تأليف كتاب منشور.' }] },
   stack: { title: 'التقنيات', all: 'عرض الكل', less: 'عرض أقل' },
   testimonial: { title: 'آراء العملاء', prev: 'الرأي السابق', next: 'الرأي التالي' },
-  contact: { ...copy.en.contact, title: 'هل يحتاج مشروعك إلى موقع؟', lead: 'أخبرني بما تحتاج إليه. التواصل عبر واتساب هو الأسرع، أو أرسل رسالة من النموذج.', whatsapp: 'تواصل عبر واتساب', formLink: 'استخدم النموذج', waText: 'مرحبًا رانوباني، شاهدت أعمالك وأحتاج إلى مساعدة في: ', form: { ...copy.en.contact.form, name: 'الاسم', email: 'البريد الإلكتروني', message: 'الرسالة', messagePlaceholder: 'اكتب نبذة عن مشروعك وما تحتاج إليه', send: 'إرسال الرسالة', sending: 'جارٍ الإرسال…', sent: 'تم إرسال رسالتك. سأرد عليك في أقرب وقت.', error: 'تعذّر إرسال الرسالة. حاول مجددًا أو تواصل معي عبر واتساب.', errName: 'يرجى إدخال الاسم.', errEmail: 'يرجى إدخال البريد الإلكتروني.', errEmailInvalid: 'يرجى إدخال بريد إلكتروني صحيح.', errMessage: 'يرجى كتابة رسالتك.', fallback: 'سيفتح تطبيق البريد لديك والرسالة جاهزة للإرسال.', subject: 'رسالة من الموقع' } },
+  contact: { ...copy.en.contact, title: 'هل يحتاج مشروعك إلى موقع؟', lead: 'أخبرني بما تحتاج إليه. التواصل عبر واتساب هو الأسرع، أو أرسل رسالة من النموذج.', leadStacked: 'أخبرني بما تحتاج إليه. التواصل عبر واتساب هو الأسرع، أو املأ النموذج في صفحة التواصل.', whatsapp: 'تواصل عبر واتساب', formLink: 'استخدم النموذج', waText: 'مرحبًا رانوباني، شاهدت أعمالك وأحتاج إلى مساعدة في: ', form: { ...copy.en.contact.form, name: 'الاسم', email: 'البريد الإلكتروني', message: 'الرسالة', messagePlaceholder: 'اكتب نبذة عن مشروعك وما تحتاج إليه', send: 'إرسال الرسالة', sending: 'جارٍ الإرسال…', sent: 'تم إرسال رسالتك. سأرد عليك في أقرب وقت.', error: 'تعذّر إرسال الرسالة. حاول مجددًا أو تواصل معي عبر واتساب.', errName: 'يرجى إدخال الاسم.', errEmail: 'يرجى إدخال البريد الإلكتروني.', errEmailInvalid: 'يرجى إدخال بريد إلكتروني صحيح.', errMessage: 'يرجى كتابة رسالتك.', fallback: 'سيفتح تطبيق البريد لديك والرسالة جاهزة للإرسال.', subject: 'رسالة من الموقع' } },
   footer: { socials: 'وسائل التواصل الاجتماعي', made: 'صُنع في وونوجيري.' },
   contactCta: { q: 'هل ترغب في العمل معي؟', a: 'تواصل معي', placeholder: 'اكتب رسالة…', send: 'إرسال' },
   shipping: { title: 'العمل بشفافية', summary: '{x} مساهمة خلال آخر {n} شهرًا', one: 'مساهمة', many: 'مساهمات', on: 'في', none: 'لا توجد مساهمات', unavailable: 'بيانات المساهمات غير متاحة حاليًا.' },

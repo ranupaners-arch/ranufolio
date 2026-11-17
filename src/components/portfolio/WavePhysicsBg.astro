@@ -29,6 +29,17 @@ const numBars = 15;
     transform: translateX(-50%) scale(var(--wave-scale, 1.6));
     transform-origin: 50% 100%;
   }
+  /* Lebar dasar 292px: skala dibatasi agar gelombang tidak lebih lebar dari layar HP. */
+  @media (max-width: 21.99rem) {
+    .wave-physics {
+      --wave-scale: 1;
+    }
+  }
+  @media (min-width: 22rem) and (max-width: 29.99rem) {
+    .wave-physics {
+      --wave-scale: 1.2;
+    }
+  }
   @media (min-width: 40rem) {
     .wave-physics {
       --wave-scale: 2.3;
