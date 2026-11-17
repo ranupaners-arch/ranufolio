@@ -59,6 +59,7 @@ const nameScramble = [
         <a
           href={locale === 'ar' ? arabicRoutes.page('contact') : routes.page(lang, 'contact')}
           aria-label={`${h.ownerQ} ${h.ownerA}`}
+          data-nav-avoid
           class="flex h-11 items-center justify-center rounded-xl bg-inv px-4 text-[15px] font-semibold text-invink transition-[opacity,transform] duration-150 hover:opacity-90 active:scale-[0.97]"
         >
           {h.ownerA}
@@ -67,6 +68,7 @@ const nameScramble = [
           <a
             href={locale === 'ar' ? arabicRoutes.page('learn') : routes.page(lang, 'learn')}
             aria-label={`${h.learnQ} ${h.learnA}`}
+            data-nav-avoid
             class="flex h-11 items-center justify-center rounded-xl bg-soft px-4 text-[15px] font-semibold transition-[opacity,transform] duration-150 hover:opacity-80 active:scale-[0.97]"
           >
             {h.learnA}
