@@ -4,6 +4,10 @@ import type { EyeController } from './eyes';
 
 type Particle = { element: HTMLElement; vx: number; vy: number; size: number };
 
+/** Tulis ke DOM hanya kalau nilainya berubah, supaya frame yang sama tidak memicu style/layout ulang. */
+const setHidden = (element: HTMLElement, hidden: boolean) => { if (element.hidden !== hidden) element.hidden = hidden; };
+const setData = (element: HTMLElement, key: string, value: string) => { if (element.dataset[key] !== value) element.dataset[key] = value; };
+
 export class PetRenderer {
   readonly actor: HTMLElement;
   readonly button: HTMLButtonElement;
@@ -24,6 +28,9 @@ export class PetRenderer {
   private burstStart = -Infinity;
   private burstOrigin = { x: 0, y: 0 };
   private reducedBurst = false;
+  private actorTransform = '';
+  private eyeTransform = '';
+  private buttonBox = '';
 
   constructor(readonly host: HTMLElement) {
     const q = <T extends HTMLElement>(s: string) => host.querySelector<T>(s)!;
@@ -79,27 +86,29 @@ export class PetRenderer {
   }
 
   render(pose: Pose, mode: Mode, direction: Direction, now: number, elapsed: number, eyes: EyeController, cards: CardMap, reduced: boolean) {
-    this.actor.hidden = false;
-    this.button.hidden = false;
+    setHidden(this.actor, false);
+    setHidden(this.button, false);
     const plane = pose.behind ? this.back : this.front;
     if (this.actor.parentElement !== plane) plane.append(this.actor);
     const x = pose.x - this.width / 2;
     const y = pose.y - this.height / 2;
-    this.actor.style.transform = `translate3d(${x}px,${y}px,0) rotate(${pose.angle}deg) scale(${pose.sx},${pose.sy})`;
-    this.actor.dataset.behind = String(pose.behind);
-    this.actor.dataset.angle = String(pose.angle);
-    this.bubble.hidden = mode !== 'sleep';
+    const transform = `translate3d(${x}px,${y}px,0) rotate(${pose.angle}deg) scale(${pose.sx},${pose.sy})`;
+    if (this.actorTransform !== transform) { this.actor.style.transform = transform; this.actorTransform = transform; }
+    setData(this.actor, 'behind', String(pose.behind));
+    setData(this.actor, 'angle', String(pose.angle));
+    setHidden(this.bubble, mode !== 'sleep');
 
     const layered = reduced || mode === 'idle' || mode === 'hide' || mode === 'sleep' || mode === 'react' && elapsed < 230;
-    this.layers.hidden = !layered;
-    this.sprite.hidden = layered;
-    this.host.dataset.visual = layered ? 'layers' : 'atlas';
+    setHidden(this.layers, !layered);
+    setHidden(this.sprite, layered);
+    setData(this.host, 'visual', layered ? 'layers' : 'atlas');
     if (layered) {
       const key = `eyes-${eyes.expression}` as keyof typeof manifest.layers;
       const file = manifest.layers[key].file;
       if (this.eyeFile !== file) { this.eyeImage.src = ASSET_BASE + file; this.eyeFile = file; }
-      this.eyeImage.style.transform = `translate(${eyes.x.toFixed(3)}px,${eyes.y.toFixed(3)}px)`;
-      this.eyeImage.dataset.expression = eyes.expression;
+      const eyeTransform = `translate(${eyes.x.toFixed(3)}px,${eyes.y.toFixed(3)}px)`;
+      if (this.eyeTransform !== eyeTransform) { this.eyeImage.style.transform = eyeTransform; this.eyeTransform = eyeTransform; }
+      setData(this.eyeImage, 'expression', eyes.expression);
     } else {
       this.animate(mode === 'react' ? 'touch' : mode === 'jump' ? 'jump' : direction < 0 ? 'walk-left' : 'walk-right', mode === 'react' ? elapsed - 230 : elapsed);
     }
@@ -111,10 +120,14 @@ export class PetRenderer {
     const bh = Math.abs(this.height * Math.cos(angle)) + Math.abs(this.width * Math.sin(angle));
     const hitHeight = Math.max(44, bh);
     const hit = cards.exposedHitBox({ x: pose.x - bw / 2, y: pose.y + bh / 2 - hitHeight, width: bw, height: hitHeight });
-    Object.assign(this.button.style, { left: `${hit.x}px`, top: `${hit.y}px`, width: `${hit.width}px`, height: `${hit.height}px`, pointerEvents: hit.width > 1 && hit.height > 1 ? 'auto' : 'none' });
-    this.host.dataset.x = pose.x.toFixed(2);
-    this.host.dataset.y = pose.y.toFixed(2);
-    this.host.dataset.facing = direction > 0 ? 'right' : 'left';
+    const box = `${hit.x}|${hit.y}|${hit.width}|${hit.height}`;
+    if (this.buttonBox !== box) {
+      this.buttonBox = box;
+      Object.assign(this.button.style, { left: `${hit.x}px`, top: `${hit.y}px`, width: `${hit.width}px`, height: `${hit.height}px`, pointerEvents: hit.width > 1 && hit.height > 1 ? 'auto' : 'none' });
+    }
+    setData(this.host, 'x', pose.x.toFixed(2));
+    setData(this.host, 'y', pose.y.toFixed(2));
+    setData(this.host, 'facing', direction > 0 ? 'right' : 'left');
     this.renderParticles(now);
   }
 

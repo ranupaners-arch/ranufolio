@@ -17,7 +17,7 @@ const numBars = 15;
   aria-hidden="true"
   class:list={['wave-physics pointer-events-none absolute bottom-8 left-1/2 sm:bottom-12 lg:bottom-16 select-none', className]}
 >
-  <div class="relative flex h-48 w-[292px] items-end gap-2">
+  <div class="wave-physics__bars relative flex h-48 w-[292px] items-end gap-2">
     {Array.from({ length: numBars }).map(() => <div data-wave-bar class="w-3 rounded-full" style="height:16px;background-color:rgb(228,228,231)" />)}
     <div data-wave-ball class="absolute bottom-0 left-0 z-10 size-3 rounded-full bg-zinc-900 shadow-sm" style="transform-origin:bottom center" />
   </div>
@@ -28,6 +28,12 @@ const numBars = 15;
     /* Skala keseluruhan; titik jangkar di dasar agar dasar animasi tetap di posisi `bottom-*`. */
     transform: translateX(-50%) scale(var(--wave-scale, 1.6));
     transform-origin: 50% 100%;
+  }
+  /* Batas layout: tinggi batang berubah tiap frame, tapi ukuran kotak ini tetap,
+     jadi browser cukup menghitung ulang layout di dalam kotak ini saja, bukan seluruh halaman.
+     Tanpa `paint`, jadi bola yang sedikit keluar kotak saat memantul tetap terlihat. */
+  .wave-physics__bars {
+    contain: layout size style;
   }
   /* Lebar dasar 292px: skala dibatasi agar gelombang tidak lebih lebar dari layar HP. */
   @media (max-width: 21.99rem) {
