@@ -36,6 +36,9 @@ export class PixelPetController {
   private raf = 0;
   private timer?: ReturnType<typeof setTimeout>;
   private disposed = false;
+  /** Posisi root di viewport hanya berubah saat scroll/resize/perubahan ukuran dokumen; dibaca ulang hanya saat itu. */
+  private rectDirty = true;
+  private documentObserver?: ResizeObserver;
 
   constructor(private host: HTMLElement, private root: HTMLElement, track: HTMLElement) {
     const now = performance.now();
@@ -160,6 +163,7 @@ export class PixelPetController {
     if (!this.cards.dirty) return;
     const previous = this.cards.get(this.cardId);
     this.cards.read();
+    this.rectDirty = false;
     this.renderer.resize();
     const current = this.cards.get(this.cardId);
     if (current && previous) {
@@ -265,7 +269,7 @@ export class PixelPetController {
 
   private render(now: number, dt: number) {
     const state = this.machine.state;
-    this.cards.rootRect = this.root.getBoundingClientRect();
+    if (this.rectDirty) { this.cards.rootRect = this.root.getBoundingClientRect(); this.rectDirty = false; }
     this.eyes.update(now, dt, this.pose, this.cards.rootRect, this.renderer.size, state.mode, now - state.started, this.motion.matches);
     this.renderer.render(this.pose, state.mode, this.direction, now, now - state.started, this.eyes, this.cards, this.motion.matches);
   }
@@ -312,6 +316,7 @@ export class PixelPetController {
       this.cards.dirty = true;
     } else if (!active && this.active) this.pausedAt = now;
     this.active = active;
+    this.rectDirty = true;
     cancelAnimationFrame(this.raf);
     this.raf = 0;
     clearTimeout(this.timer);
@@ -329,8 +334,13 @@ export class PixelPetController {
     document.addEventListener('pointerleave', () => { this.eyes.pointer = null; this.hovering = false; this.requestFrame(); }, { signal });
     window.addEventListener('pointerdown', () => { this.activity(performance.now()); this.requestFrame(); }, { passive: true, signal });
     window.addEventListener('keydown', () => { this.activity(performance.now()); this.requestFrame(); }, { signal });
-    window.addEventListener('scroll', () => { this.activity(performance.now()); this.requestFrame(); }, { passive: true, signal });
-    window.addEventListener('resize', () => { this.cards.dirty = true; this.requestFrame(); }, { passive: true, signal });
+    window.addEventListener('scroll', () => { this.rectDirty = true; this.activity(performance.now()); this.requestFrame(); }, { passive: true, signal });
+    // Scroll di elemen lain (bukan track carousel) juga bisa menggeser root di viewport.
+    document.addEventListener('scroll', event => { if (event.target !== track) this.rectDirty = true; }, { capture: true, passive: true, signal });
+    window.addEventListener('resize', () => { this.rectDirty = true; this.cards.dirty = true; this.requestFrame(); }, { passive: true, signal });
+    // Konten di atas root berubah tinggi (font, gambar, data kontribusi): posisi root ikut bergeser.
+    this.documentObserver = new ResizeObserver(() => { this.rectDirty = true; this.requestFrame(); });
+    this.documentObserver.observe(document.documentElement);
     track.addEventListener('scroll', () => { this.cards.dirty = true; this.requestFrame(); }, { passive: true, signal });
     const manualScroll = () => {
       const now = performance.now();
@@ -377,6 +387,7 @@ export class PixelPetController {
     cancelAnimationFrame(this.raf);
     clearTimeout(this.timer);
     this.intersection.disconnect();
+    this.documentObserver?.disconnect();
     this.cards.dispose();
     this.camera.dispose();
     this.renderer.dispose();
