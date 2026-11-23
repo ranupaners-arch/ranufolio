@@ -41,3 +41,42 @@ const { lang, paths, locale, current, title, description, contained = true, cont
     }
   </div>
 </Base>
+
+<script>
+  /* Animasi infinite (grid-drift, ping) dijeda saat di luar layar atau tab tersembunyi.
+     startTime disimpan lalu dipasang lagi saat terlihat, jadi fase animasinya sama persis
+     seperti tidak pernah dijeda (grid & sorotan obor tetap sejajar). Saat terlihat tidak ada yang berubah. */
+  const targets = [...document.querySelectorAll<HTMLElement>('.grid-bg, .ping-dot')];
+  if (targets.length && 'IntersectionObserver' in window) {
+    const saved = new Map<Element, Map<Animation, number>>();
+    const inView = new Set<Element>();
+    const pause = (el: Element) => {
+      const held = saved.get(el) ?? new Map<Animation, number>();
+      for (const a of el.getAnimations({ subtree: true })) {
+        if (held.has(a) || a.playState !== 'running' || a.startTime === null) continue;
+        if (a.effect?.getComputedTiming().iterations !== Infinity) continue;
+        held.set(a, Number(a.startTime));
+        a.pause();
+      }
+      saved.set(el, held);
+    };
+    const resume = (el: Element) => {
+      const held = saved.get(el);
+      if (!held) return;
+      held.forEach((start, a) => {
+        if (a.playState === 'paused') a.startTime = start;
+      });
+      saved.delete(el);
+    };
+    const apply = (el: Element) => (inView.has(el) && !document.hidden ? resume(el) : pause(el));
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) inView.add(e.target);
+        else inView.delete(e.target);
+        apply(e.target);
+      }
+    });
+    targets.forEach((el) => io.observe(el));
+    document.addEventListener('visibilitychange', () => targets.forEach(apply));
+  }
+</script>
